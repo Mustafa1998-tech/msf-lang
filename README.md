@@ -124,21 +124,21 @@ See the normative specification: [English](docs/en/SPEC-v0.1.md) · [العرب�
 
 ```text
 Source (.msf)
-   │
-   ▼
+   |
+   v
 SourceText / line map
-   │
-   ▼
-Lexer        → tokens            (E1xxx)
-   │
-   ▼
-Parser       → AST               (E2xxx)
-   │
-   ▼
-Resolver     → bindings/IDs      (E3xxx)
-   │
-   ▼
-Interpreter  → execution/output  (E4xxx)
+   |
+   v
+Lexer        -> tokens            (E1xxx)
+   |
+   v
+Parser       -> AST               (E2xxx)
+   |
+   v
+Resolver     -> bindings/IDs      (E3xxx)
+   |
+   v
+Interpreter  -> execution/output  (E4xxx)
 ```
 
 - **Core engine:** [`src/MsfLang.Core`](src/MsfLang.Core)
@@ -172,21 +172,21 @@ Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.m
 
 ```text
 .
-├── src/
-│   ├── MsfLang.Core/        # Language engine (source, diagnostics, lex/parse/resolve/runtime/repl)
-│   └── MsfLang.Cli/         # msf command-line interface
-├── tests/
-│   ├── conformance/         # .msf programs + .expected.json fixtures
-│   ├── MsfLang.*.Tests/     # Unit, CLI, and conformance test projects
-│   └── MsfLang.TestSupport/
-├── examples/                # Runnable .msf programs
-├── benchmarks/              # Benchmark programs, runner, and results
-├── docs/                    # Specs, plans, guides, architecture, roadmap, decisions, evidence (EN/AR)
-├── grammar/                 # Machine-readable EBNF
-├── branding/                # Brand concepts and review materials
-├── MSFLang.slnx
-├── Directory.Build.props
-└── global.json
+|-- src/
+|   |-- MsfLang.Core/        # Language engine (source, diagnostics, lex/parse/resolve/runtime/repl)
+|   `-- MsfLang.Cli/         # msf command-line interface
+|-- tests/
+|   |-- conformance/         # .msf programs + .expected.json fixtures
+|   |-- MsfLang.*.Tests/     # Unit, CLI, and conformance test projects
+|   `-- MsfLang.TestSupport/
+|-- examples/                # Runnable .msf programs
+|-- benchmarks/              # Benchmark programs, runner, and results
+|-- docs/                    # Specs, plans, guides, architecture, roadmap, decisions, evidence (EN/AR)
+|-- grammar/                 # Machine-readable EBNF
+|-- branding/                # Brand concepts and review materials
+|-- MSFLang.slnx
+|-- Directory.Build.props
+`-- global.json
 ```
 
 ---
