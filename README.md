@@ -16,7 +16,7 @@
 
 *Deterministic semantics · clear diagnostics · implementation-first specification*
 
-[User Guide](docs/guide/README.md) · [Specification](docs/en/SPEC-v0.1.md) · [Architecture](docs/ARCHITECTURE.md) · [Roadmap](docs/ROADMAP.md) · [العربية](#العربية)
+[User Guide](docs/guide/README.md) · [Specification](docs/en/SPEC-v0.1.md) · [Architecture](docs/ARCHITECTURE.md) · [Contributing](CONTRIBUTING.md) · [العربية](#العربية)
 
 </div>
 
@@ -217,6 +217,12 @@ Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.m
 - [Brand Concepts](branding/CONCEPTS.md)
 - [Changelog](CHANGELOG.md)
 
+### Community & Project
+- [Contributing](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security Policy](SECURITY.md)
+- [License](LICENSE)
+
 ---
 
 ## العربية
@@ -233,7 +239,15 @@ Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.m
 
 ## Contributing
 
-Contributions, issues, and design discussions are welcome. If you propose a language change, please align it with the [specification](docs/en/SPEC-v0.1.md), [decisions log](docs/DECISIONS.md), and implementation plan.
+Contributions, issues, and design discussions are welcome. Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) for guidelines. If you propose a language change, align it with the [specification](docs/en/SPEC-v0.1.md), [decisions log](docs/DECISIONS.md), and implementation plan, and include tests/evidence.
+
+## Code of Conduct
+
+Participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Security
+
+To report a vulnerability, see the [Security Policy](SECURITY.md). Do not open public issues for security bugs.
 
 ## License
 
