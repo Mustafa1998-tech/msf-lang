@@ -4,6 +4,7 @@ using System.Text;
 using MsfLang.Core;
 using MsfLang.Core.Diagnostics;
 using MsfLang.Core.Source;
+using MsfLang.Core.Runtime;
 
 namespace MsfLang.Cli;
 
@@ -91,8 +92,100 @@ internal static class CommandLine
             return ExitCode.UsageError;
         }
 
-        Console.Error.WriteLine("error[E5002]: invalid usage: repl not implemented yet");
-        return ExitCode.UsageError;
+        var interactive = !Console.IsInputRedirected;
+        var session = new Core.Repl.ReplSession(Console.Out);
+        if (interactive)
+        {
+            Console.Out.Write("MSF Lang REPL v0.1.0\n");
+            Console.Out.Write("Type :help for help, :quit to exit.\n");
+        }
+
+        var buffer = new StringBuilder();
+        var continuing = false;
+        while (true)
+        {
+            if (interactive)
+            {
+                Console.Out.Write(continuing ? "...> " : "msf> ");
+                Console.Out.Flush();
+            }
+
+            var line = Console.In.ReadLine();
+            if (line is null)
+            {
+                if (continuing && buffer.Length > 0)
+                {
+                    // EOF while incomplete -> evaluate to get incomplete diagnostic
+                    var result = session.Evaluate(buffer.ToString());
+                    if (!result.Ok && result.Diagnostic is not null)
+                    {
+                        var src = new SourceText("<repl>", buffer.ToString());
+                        Console.Error.Write(DiagnosticFormatter.Format(result.Diagnostic, src));
+                    }
+                }
+                return ExitCode.Success;
+            }
+
+            if (!continuing)
+            {
+                var trimmed = line.Trim();
+                if (trimmed == ":quit") return ExitCode.Success;
+                if (trimmed == ":help")
+                {
+                    Console.Out.Write("Commands:\n  :help  Show this help\n  :quit  Exit the REPL\n");
+                    continue;
+                }
+                if (trimmed.StartsWith(':'))
+                {
+                    Console.Error.WriteLine($"error[E5001]: unknown command '{trimmed}'");
+                    continue;
+                }
+            }
+
+            if (buffer.Length > 0) buffer.Append('\n');
+            buffer.Append(line);
+
+            if (continuing && line.Length == 0)
+            {
+                var pending = buffer.ToString();
+                buffer.Clear();
+                continuing = false;
+                var result = session.Evaluate(pending);
+                if (!result.Ok && result.Diagnostic is not null)
+                {
+                    var src = new SourceText("<repl>", pending);
+                    Console.Error.Write(DiagnosticFormatter.Format(result.Diagnostic, src));
+                }
+                continue;
+            }
+
+            var eval = session.Evaluate(buffer.ToString());
+            if (!eval.Ok && eval.IsIncomplete)
+            {
+                continuing = true;
+                continue;
+            }
+
+            continuing = false;
+            var sourceText = buffer.ToString();
+            buffer.Clear();
+
+            if (!eval.Ok)
+            {
+                if (eval.Diagnostic is not null)
+                {
+                    var src = new SourceText("<repl>", sourceText);
+                    Console.Error.Write(DiagnosticFormatter.Format(eval.Diagnostic, src));
+                }
+                continue;
+            }
+
+            foreach (var value in eval.Displays)
+            {
+                Console.Out.Write(Core.Runtime.ValueFormatter.Format(value));
+                Console.Out.Write('\n');
+            }
+        }
     }
 
     private static int Help()

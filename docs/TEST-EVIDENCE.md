@@ -25,7 +25,9 @@ specification.
 | 2026-11-16 | M6 | `dotnet run --project src/MsfLang.Cli -c Release --no-build -- run examples/hello.msf` | Exit 0. Output: `Hello, MSF!` | Basic run pipeline works |
 | 2026-11-16 | M6 | `dotnet run --project src/MsfLang.Cli -c Release --no-build -- run examples/factorial.msf` | Exit 0. Output: `3628800`, `55` | Functions/recursion/arithmetic/control flow |
 | 2026-11-16 | M6 | `dotnet run --project src/MsfLang.Cli -c Release --no-build -- run %TEMP%\msf-depth-ok.msf` / `...bad.msf` | Exit 0 for `f(999)`; Exit 2 with `E4005` for `f(1000)` | Call-depth limit enforced (1000 active user calls) |
-| — | M7 | — | Not started | — |
+| 2026-11-16 | M6/M7 | `dotnet test tests/MsfLang.Core.Tests/MsfLang.Core.Tests.csproj -c Release` | Exit 0. Passed: 85, Failed: 0, Skipped: 0. | All Core tests pass including basic `ReplSession` sequence/persistence/auto-display behavior |
+| 2026-11-16 | M7 | `Get-Content %TEMP%\msf-repl-test.txt \| dotnet run --project src/MsfLang.Cli -c Release --no-build -- repl` | Exit 0. Output: `10`, `25` (no prompts/banner in piped mode). | Basic REPL CLI (piped) with persistence and auto-display of non-nil expression results |
+| — | M8 | — | Not started | — |
 | — | M3 | — | Not started | — |
 | — | M4 | — | Not started | — |
 | — | M5 | — | Not started | — |

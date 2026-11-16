@@ -29,4 +29,21 @@ public sealed class SemanticModel
     public IReadOnlyList<Binding> GetParameters(FunctionDecl node) => _parameterBindings[node];
 
     public bool TryGet(NameExpr node, out Binding binding) => _nameBindings.TryGetValue(node, out binding!);
+
+    public void MergeFrom(SemanticModel other)
+    {
+        foreach (var kv in other._nameBindings) _nameBindings[kv.Key] = kv.Value;
+        foreach (var kv in other._assignBindings) _assignBindings[kv.Key] = kv.Value;
+        foreach (var kv in other._callBindings) _callBindings[kv.Key] = kv.Value;
+        foreach (var kv in other._functionBindings) _functionBindings[kv.Key] = kv.Value;
+        foreach (var kv in other._varBindings) _varBindings[kv.Key] = kv.Value;
+        foreach (var kv in other._parameterBindings) _parameterBindings[kv.Key] = kv.Value;
+    }
+
+    public SemanticModel Clone()
+    {
+        var clone = new SemanticModel();
+        clone.MergeFrom(this);
+        return clone;
+    }
 }

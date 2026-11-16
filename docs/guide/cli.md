@@ -28,7 +28,11 @@ Prints usage information and exits `0`.
 Prints the version string (e.g. `msf 0.1.0`) and exits `0`.
 
 ### `msf repl`
-Starts an interactive REPL session (**not implemented yet** in the current build).
+Starts a REPL session.
+
+- **Interactive mode:** shows a banner and prompts (`msf>`, `...>`), supports multiline input and commands `:help`, `:quit`
+- **Piped/non-interactive mode:** no banner/prompts; reads input from stdin and prints auto-displayed expression results
+- Persists declarations/state across entries (basic implementation; spec-level rollback/edge-case behavior continues to be refined)
 
 ## Exit Codes
 
@@ -50,4 +54,4 @@ Starts an interactive REPL session (**not implemented yet** in the current build
 ## Current Limitations
 
 - Script arguments, `--` separator, and additional subcommands are not available in v0.1
-- REPL behavior described in the spec (persistence, rollback, multiline input) is planned but not yet implemented
+- REPL implementation is in progress: core behavior works, but full spec compliance (all rollback/edge cases and contract tests) is not complete yet

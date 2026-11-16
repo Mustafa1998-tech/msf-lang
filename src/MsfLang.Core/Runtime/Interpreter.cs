@@ -29,27 +29,30 @@ public sealed class Interpreter
     public void Execute(ProgramNode program)
     {
         var globals = new MsEnvironment();
-        // Bindings for top-level functions/vars are in model; builtin print not represented as AST binding except semantic id exists in resolver?
-        // Resolver defined print in global scope with its own id but we don't have direct access to that binding object from model except by resolving names.
-        // However, calls to print will resolve to builtin binding in model; we need runtime to know print's binding id.
-        // Easier: predefine by scanning - but simpler: when we encounter print call/name in semantics we got builtin binding; runtime can define print for that id on demand.
-        ExecuteBlockLike(program.Declarations, globals, isGlobal: true);
+        ExecuteBlockLike(program.Declarations, globals, isGlobal: true, replAutoDisplay: false, displays: null);
     }
 
-    private void ExecuteBlockLike(IReadOnlyList<Declaration> declarations, MsEnvironment env, bool isGlobal)
+    public IReadOnlyList<MsfValue> ExecuteReplEntry(ProgramNode program, MsEnvironment globals)
+    {
+        ArgumentNullException.ThrowIfNull(globals);
+        var displays = new List<MsfValue>();
+        ExecuteBlockLike(program.Declarations, globals, isGlobal: true, replAutoDisplay: true, displays: displays);
+        return displays;
+    }
+
+    private void ExecuteBlockLike(IReadOnlyList<Declaration> declarations, MsEnvironment env, bool isGlobal, bool replAutoDisplay, List<MsfValue>? displays)
     {
         foreach (var decl in declarations)
         {
-            ExecuteDeclaration(decl, env, isGlobal);
+            ExecuteDeclaration(decl, env, isGlobal, replAutoDisplay, displays);
         }
     }
 
-    private void ExecuteDeclaration(Declaration decl, MsEnvironment env, bool isGlobal)
+    private void ExecuteDeclaration(Declaration decl, MsEnvironment env, bool isGlobal, bool replAutoDisplay, List<MsfValue>? displays)
     {
         switch (decl)
         {
             case FunctionDecl fn:
-                // define function value by its binding id
                 var fb = _model.Get(fn);
                 env.Define(fb.Id, new UserFunction(fn));
                 break;
@@ -59,14 +62,14 @@ public sealed class Interpreter
                 env.Define(vb.Id, value);
                 break;
             case Statement stmt:
-                ExecuteStatement(stmt, env);
+                ExecuteStatement(stmt, env, isGlobal, replAutoDisplay, displays);
                 break;
             default:
                 throw new InvalidOperationException($"Unknown declaration {decl.GetType().Name}");
         }
     }
 
-    private void ExecuteStatement(Statement stmt, MsEnvironment env)
+    private void ExecuteStatement(Statement stmt, MsEnvironment env, bool inGlobal, bool replAutoDisplay, List<MsfValue>? displays)
     {
         switch (stmt)
         {
@@ -85,7 +88,11 @@ public sealed class Interpreter
                 env.Assign(ab.Id, rhs);
                 break;
             case ExprStmt exprStmt:
-                Evaluate(exprStmt.Expression, env);
+                var result = Evaluate(exprStmt.Expression, env);
+                if (replAutoDisplay && inGlobal && displays is not null && result is not MsfNil)
+                {
+                    displays.Add(result);
+                }
                 break;
             default:
                 throw new InvalidOperationException($"Unknown statement {stmt.GetType().Name}");
@@ -96,7 +103,7 @@ public sealed class Interpreter
     {
         foreach (var decl in block.Declarations)
         {
-            ExecuteDeclaration(decl, env, isGlobal: false);
+            ExecuteDeclaration(decl, env, isGlobal: false, replAutoDisplay: false, displays: null);
         }
     }
 
@@ -110,11 +117,11 @@ public sealed class Interpreter
 
         if (b.Value)
         {
-            ExecuteStatement(ifs.ThenBranch, env);
+            ExecuteStatement(ifs.ThenBranch, env, inGlobal: false, replAutoDisplay: false, displays: null);
         }
         else if (ifs.ElseBranch is not null)
         {
-            ExecuteStatement(ifs.ElseBranch, env);
+            ExecuteStatement(ifs.ElseBranch, env, inGlobal: false, replAutoDisplay: false, displays: null);
         }
     }
 
@@ -283,7 +290,7 @@ public sealed class Interpreter
 
             try
             {
-                ExecuteBlockLike(decl.Body.Declarations, callEnv, isGlobal: false);
+                ExecuteBlockLike(decl.Body.Declarations, callEnv, isGlobal: false, replAutoDisplay: false, displays: null);
             }
             catch (ReturnSignal rs)
             {

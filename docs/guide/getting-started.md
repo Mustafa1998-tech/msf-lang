@@ -56,8 +56,8 @@ dotnet run --project src/MsfLang.Cli -c Release -- run examples/factorial.msf
 
 ## Current Limitations
 
-- `msf repl` is **not implemented yet** (planned)
+- `msf repl` is available in a **basic implementation** (full spec contract still in progress)
 - v0.1 has **no loops**, arrays/maps, modules/imports, closures, or file/network I/O
-- Some edge-case/runtime behaviors and full conformance coverage are still being completed
+- Some edge-case/runtime behaviors and full conformance/CLI contract coverage are still being completed
 
 For the full, normative behavior, see the [specification](../en/SPEC-v0.1.md).

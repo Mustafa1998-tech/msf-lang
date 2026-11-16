@@ -57,7 +57,7 @@ Hello, MSF!
 ### CLI
 ```text
 msf run <path>       Execute a .msf program
-msf repl             Interactive REPL (in progress)
+msf repl             Interactive/piped REPL
 msf --help | -h      Show usage
 msf --version | -v   Print version
 ```
@@ -150,7 +150,7 @@ Interpreter  → execution/output  (E4xxx)
 | M4 | Parser & AST | ✅ Complete |
 | M5 | Resolver & semantic checks | ✅ Complete |
 | M6 | Interpreter & runtime | 🚧 Core implemented, test coverage expanding |
-| M7 | CLI & REPL contract | ⏳ Planned |
+| M7 | CLI & REPL contract | 🚧 Basic REPL and CLI run implemented, contract/tests in progress |
 | M8 | Conformance suite & examples | ⏳ Planned |
 | M9 | Hardening & release candidate | ⏳ Planned |
 
@@ -204,7 +204,7 @@ Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.m
 **MSF Lang** لغة برمجة صغيرة ودقيقة بامتداد `.msf`، طورتها **Mustafa Software Factory** مع تركيز على الوضوح، التشخيص الدقيق، والاختبارية.
 
 - المواصفة والخطة والقرارات متاحة بالعربية والإنجليزية داخل [`docs/`](docs/)
-- الحالة الحالية: تنفيذ نواة اللغة (المعجم، المحلل، الدلالات، المفسر) وتشغيل البرامج عبر `msf run`، مع استمرار العمل على REPL وحزمة المطابقة والتقسية
+- الحالة الحالية: تنفيذ نواة اللغة (المعجم، المحلل، الدلالات، المفسر) وتشغيل البرامج عبر `msf run` و`msf repl` (أساسي)، مع استمرار العمل على اكتمال العقد، وحزمة المطابقة، والتقسية
 - الكلمات المحجوزة إنجليزية في v0.1، مع دعم كامل للنصوص والتعليقات والمخرجات العربية
 
 ---

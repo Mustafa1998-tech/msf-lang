@@ -6,22 +6,22 @@ namespace MsfLang.Core.Semantics;
 
 public sealed class Resolver
 {
-    private sealed class Scope
+    internal sealed class Scope
     {
         public Scope? Parent { get; }
-        private readonly Dictionary<string, Binding> _bindings = new(StringComparer.Ordinal);
+        internal readonly Dictionary<string, Binding> Bindings = new(StringComparer.Ordinal);
 
         public Scope(Scope? parent) => Parent = parent;
 
-        public bool TryDefine(Binding binding) => _bindings.TryAdd(binding.Name, binding);
+        public bool TryDefine(Binding binding) => Bindings.TryAdd(binding.Name, binding);
 
-        public bool TryGetLocal(string name, out Binding binding) => _bindings.TryGetValue(name, out binding!);
+        public bool TryGetLocal(string name, out Binding binding) => Bindings.TryGetValue(name, out binding!);
 
         public Binding? Resolve(string name)
         {
             for (var scope = this; scope is not null; scope = scope.Parent)
             {
-                if (scope._bindings.TryGetValue(name, out var binding))
+                if (scope.Bindings.TryGetValue(name, out var binding))
                 {
                     return binding;
                 }
@@ -29,16 +29,29 @@ public sealed class Resolver
 
             return null;
         }
+
+        public Scope CloneShallow()
+        {
+            var clone = new Scope(Parent);
+            foreach (var kv in Bindings)
+            {
+                clone.Bindings[kv.Key] = kv.Value;
+            }
+            return clone;
+        }
     }
 
-    private readonly Scope _global = new(null);
-    private readonly SemanticModel _model = new();
-    private int _nextId = 1;
+    private Scope _global;
+    private SemanticModel _model;
+    private int _nextId;
     private int _functionDepth;
     private FunctionDecl? _currentFunction;
 
     public Resolver()
     {
+        _global = new Scope(null);
+        _model = new SemanticModel();
+        _nextId = 1;
         _global.TryDefine(new Binding
         {
             Id = _nextId++,
@@ -52,27 +65,55 @@ public sealed class Resolver
 
     public SemanticModel Resolve(ProgramNode program)
     {
+        ResolveInto(program, _global);
+        return _model;
+    }
+
+    public (SemanticModel Model, ResolverSnapshot SnapshotBefore) ResolveEntryTransactional(ProgramNode program, ResolverSnapshot committed)
+    {
+        // Restore committed state into a working resolver, resolve, and return new snapshot on success.
+        _global = committed.Global.CloneShallow();
+        _nextId = committed.NextId;
+        _model = committed.Model; // model accumulates mappings across entries; on failure we restore snapshot model ref/copy
+        ResolveInto(program, _global);
+        var after = new ResolverSnapshot(_global, _nextId, _model);
+        return (_model, after);
+    }
+
+    public ResolverSnapshot CreateSnapshot(SemanticModel model)
+    {
+        return new ResolverSnapshot(_global.CloneShallow(), _nextId, model);
+    }
+
+    public static Resolver CreateForRepl(out ResolverSnapshot snapshot, out SemanticModel model)
+    {
+        var r = new Resolver();
+        model = r._model;
+        snapshot = r.CreateSnapshot(model);
+        return r;
+    }
+
+    private void ResolveInto(ProgramNode program, Scope global)
+    {
         foreach (var decl in program.Declarations)
         {
             switch (decl)
             {
                 case FunctionDecl fn:
-                    DeclareFunction(fn, _global, isTopLevel: true);
-                    ResolveFunctionBody(fn, _global);
+                    DeclareFunction(fn, global, isTopLevel: true);
+                    ResolveFunctionBody(fn, global);
                     break;
                 case VarDecl v:
-                    ResolveExpression(v.Initializer, _global);
-                    DeclareVariable(v, _global);
+                    ResolveExpression(v.Initializer, global);
+                    DeclareVariable(v, global);
                     break;
                 case Statement stmt:
-                    ResolveStatement(stmt, _global);
+                    ResolveStatement(stmt, global);
                     break;
                 default:
                     throw new InvalidOperationException($"Unknown declaration type {decl.GetType().Name}");
             }
         }
-
-        return _model;
     }
 
     private void DeclareFunction(FunctionDecl fn, Scope scope, bool isTopLevel)
