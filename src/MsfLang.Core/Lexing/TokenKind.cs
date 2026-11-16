@@ -9,6 +9,8 @@ public enum TokenKind
     If,
     Else,
     While,
+    Break,
+    Continue,
     Return,
     True,
     False,

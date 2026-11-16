@@ -16,7 +16,7 @@ v0.1 is intentionally small and deterministic. v0.2 adds the minimum required to
 
 | Area | Included |
 |---|---|
-| Iteration | `while (condition) { block }` with boolean condition |
+| Iteration | `while (condition) { block }` with boolean condition, plus `break;` / `continue;` loop control |
 | Collections | `list` value: dynamic heterogeneous array |
 | Indexing | list reads and writes (`xs[i]`, `xs[i] = value;`) |
 | Builtins | `len(listOrString)`, `append(list, value)` |
@@ -65,7 +65,8 @@ print(total); // 45
 ```
 
 - Evaluation order: left-to-right as usual; condition is evaluated before each iteration.
-- There is no `break`/`continue` in v0.2 (deferred).
+- v0.2 includes loop control: `break;` exits the innermost enclosing `while`, and `continue;` skips to the next iteration.
+- There is no labeled `break`/`continue` and no `else` on loops in v0.2.
 - A `while` loop may not terminate; the implementation may apply host resource limits outside the language semantics. For tests, use bounded loops.
 
 ### 2.3 Diagnostics

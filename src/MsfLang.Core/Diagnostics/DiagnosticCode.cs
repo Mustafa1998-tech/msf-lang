@@ -36,6 +36,9 @@ public static class DiagnosticCode
     public const string E3009 = "E3009";
     public const string E3010 = "E3010";
     public const string E3011 = "E3011";
+    public const string E3012 = "E3012";
+    public const string E3013 = "E3013";
+    public const string E3014 = "E3014";
 
     // Runtime
     public const string E4001 = "E4001";

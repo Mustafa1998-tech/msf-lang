@@ -45,6 +45,7 @@ public sealed class Resolver
     private SemanticModel _model;
     private int _nextId;
     private int _functionDepth;
+    private int _loopDepth;
     private FunctionDecl? _currentFunction;
 
     public Resolver()
@@ -266,9 +267,18 @@ public sealed class Resolver
     {
         switch (stmt)
         {
+            case BreakStmt breakStmt:
+                if (_loopDepth == 0) throw Semantic(breakStmt.Span, DiagnosticCode.E3013, "'break' is only allowed inside a loop");
+                break;
+            case ContinueStmt continueStmt:
+                if (_loopDepth == 0) throw Semantic(continueStmt.Span, DiagnosticCode.E3014, "'continue' is only allowed inside a loop");
+                break;
             case WhileStmt whileStmt:
                 ResolveExpression(whileStmt.Condition, scope);
+                var previousLoop = _loopDepth;
+                _loopDepth++;
                 ResolveStatement(whileStmt.Body, scope);
+                _loopDepth = previousLoop;
                 break;
             case AssignIndexStmt assignIndex:
                 ResolveExpression(assignIndex.Target, scope);

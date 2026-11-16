@@ -25,6 +25,8 @@ public sealed record WhileStmt(Expression Condition, BlockStmt Body, TextSpan Sp
 
 public sealed record AssignIndexStmt(Expression Target, Expression Index, Expression Value, TextSpan Span) : Statement(Span);
 
+public sealed record BreakStmt(TextSpan Span) : Statement(Span);
+public sealed record ContinueStmt(TextSpan Span) : Statement(Span);
 public abstract record Expression(TextSpan Span) : AstNode(Span);
 
 public sealed record LiteralExpr(object? Value, Token Token, TextSpan Span) : Expression(Span);

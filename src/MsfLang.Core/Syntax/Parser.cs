@@ -90,6 +90,20 @@ public sealed class Parser
             return ParseWhileStmt(Previous());
         }
 
+        if (Match(TokenKind.Break))
+        {
+            var keyword = Previous();
+            var breakSemi = Consume(TokenKind.Semicolon, DiagnosticCode.E2002, "expected ';'");
+            return new BreakStmt(Span(keyword.Span.Start, breakSemi.Span.End));
+        }
+
+        if (Match(TokenKind.Continue))
+        {
+            var keyword = Previous();
+            var continueSemi = Consume(TokenKind.Semicolon, DiagnosticCode.E2002, "expected ';'");
+            return new ContinueStmt(Span(keyword.Span.Start, continueSemi.Span.End));
+        }
+
         if (Match(TokenKind.Return))
         {
             return ParseReturnStmt(Previous());

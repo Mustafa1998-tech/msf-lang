@@ -1,0 +1,40 @@
+(*
+  MSF Lang v0.2 — "Practical Programming" grammar addendum (draft)
+  Adds: while, break, continue, list literals, list indexing.
+  Normative v0.1 grammar is in grammar/msf-v0.1.ebnf.
+*)
+
+statement        = if-stmt
+                 | while-stmt
+                 | break-stmt
+                 | continue-stmt
+                 | return-stmt
+                 | block
+                 | assignment-stmt
+                 | expression-stmt ;
+
+while-stmt       = "while" , "(" , expression , ")" , block ;
+break-stmt       = "break" , ";" ;
+continue-stmt    = "continue" , ";" ;
+
+primary          = number
+                 | string
+                 | "true"
+                 | "false"
+                 | "nil"
+                 | identifier
+                 | list-literal
+                 | "(" , expression , ")" ;
+
+list-literal     = "[" , [ expression , { "," , expression } ] , "]" ;
+
+postfix-expr     = call-or-primary , { "[" , expression , "]" } ;
+
+assignment-stmt  = identifier , "=" , expression , ";"
+                 | identifier , "[" , expression , "]" , "=" , expression , ";" ;
+
+Keywords (reserved, lowercase) added in v0.2:
+  while break continue
+
+Reserved builtin names added in v0.2:
+  len append
