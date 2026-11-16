@@ -1,0 +1,9 @@
+var scores = map { "ada": 90, "sam": 80 };
+set(scores, "maya", 100);
+print(get(scores, "ada"));
+print(get(scores, "missing"));
+print(has(scores, "maya"));
+print(has(scores, "nobody"));
+print(len(scores));
+print(remove(scores, "ada"));
+print(len(scores));

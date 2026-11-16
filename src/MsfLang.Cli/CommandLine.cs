@@ -36,6 +36,10 @@ internal static class CommandLine
         catch (Exception ex)
         {
             Console.Error.WriteLine($"internal error: {ex.Message}");
+            if (Environment.GetEnvironmentVariable("MSF_DEBUG") == "1" && !string.IsNullOrWhiteSpace(ex.StackTrace))
+            {
+                Console.Error.WriteLine(ex.StackTrace);
+            }
             return ExitCode.InternalError;
         }
     }

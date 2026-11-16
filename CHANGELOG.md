@@ -26,8 +26,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   - `break;` / `continue;` loop control
   - `list` value: dynamic heterogeneous arrays, list literals, zero-based indexing, in-place element assignment
   - Builtins: `len(list|string)`, `append(list, value)`
-  - New diagnostics: `E4007` (list index/type failures), `E4008` (`len`/`append` argument mismatch), `E3013` (`break` outside loop), `E3014` (`continue` outside loop)
-  - Draft spec: `docs/en/SPEC-v0.2-practical.md`
+  - New diagnostics: `E4007` (list index/type failures), `E4008` (`len`/`append` argument mismatch), `E3013` (`break` outside loop), `E3014` (`continue` outside loop), `E4009` (map builtin/key mismatch)
+  - Maps: string-keyed `map { "k": v }` literal, map runtime value, `get/set/has/remove` builtins, `len(map)`
+  - Specs: `docs/en/SPEC-v0.2-practical.md`, `docs/en/SPEC-v0.2-maps.md` (AR mirror: `docs/ar/SPEC-v0.2-practical.md`, `docs/ar/SPEC-v0.2-maps.md`)
 
 ### Notes
 - Latest recorded full-suite result: **175 passed / 0 failed / 0 skipped** (Core 88, Conformance 72, CLI 15) with **71 conformance cases**.

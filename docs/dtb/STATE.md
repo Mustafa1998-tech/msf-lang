@@ -2,13 +2,13 @@
 
 - Product / repository: MSF Lang (`msf-lang`) — small, spec-driven programming language in C#/.NET
 - Active branch: `feature/msf-lang-branding-update`
-- Authorized scope: Repository work on MSF Lang v0.1/v0.2 practical draft, docs/tests/benchmarks; no production deployment, no registry/Windows integration changes, no paid services
-- Last verified iteration: Synced v0.2 grammar/EN/AR docs and operator-facing docs (help/CLI/getting-started/guide index/roadmap/test evidence); reran full suite green
-- Current item / status: DTB cycle 3 complete; v0.2 practical draft documented across user-facing docs; larger items blocked on ADR/approval
-- Relevant files: `README.md`, `docs/guide/cli.md`, `docs/guide/getting-started.md`, `docs/guide/README.md`, `docs/ROADMAP.md`, `docs/TEST-EVIDENCE.md`, `docs/en/SPEC-v0.2-practical.md`, `docs/dtb/*`
-- Baseline checks and results: `dotnet test MSFLang.slnx -c Release` → **181 passed** (before DTB edit), 0 failed
-- Most recent checks and results: `dotnet test MSFLang.slnx -c Release` → **184 passed**, 0 failed, 0 skipped (Core 88, Conformance 81, CLI 15)
-- Unverified checks / limitations: No production release; no formal security audit; v0.2 is draft not production-ready; MSF_DEBUG stack trace and maps unimplemented; Arabic mirror is condensed
-- Known risks / blockers: v0.2 reserves new names; maps require ADR/spec approval; v0.2 runtime limits/spec still need broad acceptance scenarios before release RC
-- Next safe action: Request ADR approval to implement DTB-008 (maps) or select DTB-006 (`MSF_DEBUG`) after env-gating design; otherwise hold at current verified state
-- Approval required (if any): Maps ADR/spec; RC/release tag; production; package registry changes; breaking semantics
+- Authorized scope: MSF Lang language/CLI/docs/tests work; no production release, package signing, deployment, Windows registry changes, or breaking contracts without approval
+- Last verified iteration: v0.2 maps implemented in code/docs/tests; `MSF_DEBUG=1` internal-error stack-trace path implemented and CLI tests added
+- Current item / status: Maps (`DTB-008`) and MSF_DEBUG (`DTB-013`) implemented and pushed as draft work; still not production-ready
+- Relevant files: `src/`, `tests/`, `docs/en/SPEC-v0.2-maps.md`, `docs/ar/SPEC-v0.2-maps.md`, `docs/DECISIONS.md`, `CHANGELOG.md`, `docs/dtb/*`
+- Baseline checks and results: Before this iteration: `dotnet test MSFLang.slnx -c Release` → 184/184 green
+- Most recent checks and results: `dotnet test MSFLang.slnx -c Release` → **188 passed**, 0 failed, 0 skipped (Core 88, Conformance 83, CLI 17)
+- Unverified checks / limitations: v0.2 remains draft; no formal security audit; map iteration order unspecified; stdlib/modules/file IO/packages/toolset missing; `MSF_DEBUG` internal branch implemented but not triggered in process tests
+- Known risks / blockers: Maps change API surface and reserve new names; needs acceptance/spec review and possibly RC tagging; MSF_DEBUG is env-gated but internal-error branch not directly exercised
+- Next safe action: User reviews maps draft/ADR and RC scope; do not release/tag without approval
+- Approval required (if any): Release candidate/tag/production/package distribution/maps stabilization

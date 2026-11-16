@@ -151,6 +151,30 @@ public sealed class CliSmokeTests
         Assert.Contains("error[E5002]", Normalize(stderr));
     }
 
+    [Fact]
+    public void DebugEnv_NormalProgram_RemainsSuccess()
+    {
+        var (exit, stdout, stderr) = RunCliWithEnv("MSF_DEBUG", "1", "--version");
+        Assert.Equal(0, exit);
+        Assert.Equal("msf 0.1.0\n", Normalize(stdout));
+        Assert.Equal("", Normalize(stderr));
+    }
+
+    [Fact]
+    public void DebugEnv_LanguageError_DoesNotStackTrace()
+    {
+        var path = WriteTemp("print(1 / 0);\n");
+        try
+        {
+            var (exit, _, stderr) = RunCliWithEnv("MSF_DEBUG", "1", "run", path);
+            Assert.Equal(2, exit);
+            Assert.Contains("error[E4002]", Normalize(stderr));
+            Assert.DoesNotContain("at MsfLang.", Normalize(stderr));
+            Assert.DoesNotContain("System.Exception", Normalize(stderr));
+        }
+        finally { File.Delete(path); }
+    }
+
     private static string Normalize(string s) => (s ?? "").Replace("\r\n", "\n");
 
     private static string WriteTemp(string content)
@@ -162,6 +186,39 @@ public sealed class CliSmokeTests
 
     private static (int ExitCode, string Stdout, string Stderr) RunCli(params string[] args)
         => RunCliWithInput(null, args);
+
+    private static (int ExitCode, string Stdout, string Stderr) RunCliWithEnv(string? envName, string? envValue, params string[] args)
+    {
+        var (exit, stdout, stderr) = RunCliWithEnvCore(null, envName, envValue, args);
+        return (exit, stdout, stderr);
+    }
+
+    private static (int ExitCode, string Stdout, string Stderr) RunCliWithEnvCore(string? stdin, string? envName, string? envValue, params string[] args)
+    {
+        var repoRoot = FindRepoRoot();
+        var cliDll = Path.Combine(repoRoot, "src", "MsfLang.Cli", "bin", "Release", "net10.0", "msf.dll");
+        var psi = new ProcessStartInfo("dotnet")
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            RedirectStandardInput = stdin is not null,
+            UseShellExecute = false,
+            StandardOutputEncoding = new UTF8Encoding(false),
+            StandardErrorEncoding = new UTF8Encoding(false),
+        };
+        psi.ArgumentList.Add(cliDll);
+        foreach (var a in args) psi.ArgumentList.Add(a);
+        if (envName is not null)
+        {
+            if (envValue is null) psi.Environment.Remove(envName); else psi.Environment[envName] = envValue;
+        }
+        using var p = Process.Start(psi)!;
+        if (stdin is not null) { p.StandardInput.Write(stdin); p.StandardInput.Close(); }
+        var stdout = p.StandardOutput.ReadToEnd();
+        var stderr = p.StandardError.ReadToEnd();
+        p.WaitForExit();
+        return (p.ExitCode, stdout, stderr);
+    }
 
     private static (int ExitCode, string Stdout, string Stderr) RunCliWithInput(string? stdin, params string[] args)
     {

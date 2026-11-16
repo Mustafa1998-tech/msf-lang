@@ -2,13 +2,15 @@
 
 | Date | ID | Change | Verification | Result |
 |---|---|---|---|---|
-| 2026-11-16 | DTB-001 | Created DTB ledger and recorded pre-change baseline | `dotnet test MSFLang.slnx -c Release` | 181 passed / 0 failed / 0 skipped |
-| 2026-11-16 | DTB-002 | Improved `msf --help` output with usage/commands/v0.1 summary/spec URL and CLI assertion | `dotnet test MSFLang.slnx -c Release` | 183 passed / 0 failed |
-| 2026-11-16 | DTB-003 | Added `examples/practical-lists.msf` and guide docs | `dotnet run --project src/MsfLang.Cli -c Release -- run examples/practical-lists.msf` | Exit 0; expected output |
-| 2026-11-16 | DTB-004 | Added Arabic v0.2 practical spec mirror | docs-only | File created |
-| 2026-11-16 | DTB-005 | Added E4008 conformance cases | `dotnet test MSFLang.slnx -c Release` | 183 passed / 0 failed |
-| 2026-11-16 | DTB-007 | Added ADR-0018 to `docs/DECISIONS.md` | docs-only | ADR documented as v0.2 draft |
-| 2026-11-16 | DTB-009 | Added negative `continue` outside-loop fixture (`E3014`) | `dotnet test MSFLang.slnx -c Release` | 184 passed / 0 failed |
-| 2026-11-16 | DTB-010 | Synced EN/AR v0.2 spec diagnostic tables/lists | docs-only | EN documents E3013/E3014; AR mirrors them |
-| 2026-11-16 | DTB-011 | Updated README current-state note for v0.2 draft | docs-only | README now says v0.1 complete, v0.2 draft tested |
-| 2026-11-16 | DTB-012 | Synced user-facing/v0.2 docs (help/CLI/getting-started/guide index/roadmap/test evidence) | `dotnet test MSFLang.slnx -c Release` | 184 passed / 0 failed / 0 skipped (Core 88, Conformance 81, CLI 15) |
+| 2026-11-16 | DTB-001 | Created DTB ledger and baseline | `dotnet test MSFLang.slnx -c Release` | 181 passed |
+| 2026-11-16 | DTB-002 | Improved `msf --help` | `dotnet test MSFLang.slnx -c Release` | help/v0.1/tests green |
+| 2026-11-16 | DTB-003 | Added practical lists example and guide docs | `dotnet run -- ... examples/practical-lists.msf` | output `doubled: [2, 4, 6, 8, 10]`, `total: 30` |
+| 2026-11-16 | DTB-004 | Added AR v0.2 practical mirror | docs-only | created |
+| 2026-11-16 | DTB-005 | Added E4008 conformance fixtures | `dotnet test ...` | 183 passed |
+| 2026-11-16 | DTB-007 | ADR-0018 for v0.2 loops/lists | docs-only | created |
+| 2026-11-16 | DTB-009 | continue-outside-loop conformance fixture | `dotnet test ...` | 184 passed |
+| 2026-11-16 | DTB-010 | Sync v0.2 spec diagnostics EN/AR | docs-only | synced |
+| 2026-11-16 | DTB-011 | README current-state update | docs-only | updated |
+| 2026-11-16 | DTB-012 | Sync docs: CLI/getting-started/guide/roadmap/evidence | `dotnet test ...` | 184 passed |
+| 2026-11-16 | DTB-008 | Implemented maps draft: `map {}`, map type, `get/set/has/remove`, `len(map)`, ADR-0019, EN/AR map specs, conformance fixtures | `dotnet test MSFLang.slnx -c Release` | 188 passed (Core 88, Conformance 83, CLI 17) |
+| 2026-11-16 | DTB-013 | Implemented env-gated `MSF_DEBUG=1` raw stack trace path for internal errors; CLI tests assert normal language errors do not print stack traces | `dotnet test MSFLang.slnx -c Release` | 188 passed |

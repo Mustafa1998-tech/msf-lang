@@ -17,6 +17,7 @@ public sealed class Lexer
         ["while"] = TokenKind.While,
         ["break"] = TokenKind.Break,
         ["continue"] = TokenKind.Continue,
+        ["map"] = TokenKind.Map,
         ["return"] = TokenKind.Return,
         ["true"] = TokenKind.True,
         ["false"] = TokenKind.False,
@@ -113,6 +114,9 @@ public sealed class Lexer
                 return;
             case '>':
                 Add(Match('=') ? TokenKind.GreaterEqual : TokenKind.Greater, start);
+                return;
+            case ':':
+                Add(TokenKind.Colon, start);
                 return;
             case '/':
                 if (Match('/'))

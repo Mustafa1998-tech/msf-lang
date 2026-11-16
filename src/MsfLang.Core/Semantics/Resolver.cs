@@ -74,6 +74,42 @@ public sealed class Resolver
         _global.TryDefine(new Binding
         {
             Id = _nextId++,
+            Name = "get",
+            Kind = BindingKind.Builtin,
+            IsMutable = false,
+            Arity = 2,
+            DeclarationSpan = TextSpan.Empty
+        });
+        _global.TryDefine(new Binding
+        {
+            Id = _nextId++,
+            Name = "set",
+            Kind = BindingKind.Builtin,
+            IsMutable = false,
+            Arity = 3,
+            DeclarationSpan = TextSpan.Empty
+        });
+        _global.TryDefine(new Binding
+        {
+            Id = _nextId++,
+            Name = "has",
+            Kind = BindingKind.Builtin,
+            IsMutable = false,
+            Arity = 2,
+            DeclarationSpan = TextSpan.Empty
+        });
+        _global.TryDefine(new Binding
+        {
+            Id = _nextId++,
+            Name = "remove",
+            Kind = BindingKind.Builtin,
+            IsMutable = false,
+            Arity = 2,
+            DeclarationSpan = TextSpan.Empty
+        });
+        _global.TryDefine(new Binding
+        {
+            Id = _nextId++,
             Name = "print",
             Kind = BindingKind.Builtin,
             IsMutable = false,
@@ -340,6 +376,12 @@ public sealed class Resolver
     {
         switch (expr)
         {
+            case MapLiteralExpr map:
+                foreach (var item in map.Items)
+                {
+                    ResolveExpression(item.Value, scope);
+                }
+                break;
             case ListLiteralExpr list:
                 foreach (var item in list.Items)
                 {

@@ -41,6 +41,14 @@ public sealed record MsfList : MsfValue
     public override string TypeName => "list";
 }
 
+public sealed record MsfMap : MsfValue
+{
+    public MsfMap() { }
+    public MsfMap(IReadOnlyDictionary<string, MsfValue> items) { foreach (var kv in items) Items[kv.Key] = kv.Value; }
+    public Dictionary<string, MsfValue> Items { get; } = new(StringComparer.Ordinal);
+    public override string TypeName => "map";
+}
+
 public sealed record MsfNil : MsfValue
 {
     public override string TypeName => "nil";
