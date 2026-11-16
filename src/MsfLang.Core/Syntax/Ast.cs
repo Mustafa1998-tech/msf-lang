@@ -19,6 +19,8 @@ public sealed record ReturnStmt(Token Keyword, Expression? Value, TextSpan Span)
 public sealed record AssignStmt(Token Name, Expression Value, TextSpan Span) : Statement(Span);
 public sealed record ExprStmt(Expression Expression, TextSpan Span) : Statement(Span);
 
+public sealed record MapEntry(Token Key, Expression Value);
+public sealed record MapLiteralExpr(IReadOnlyList<MapEntry> Items, TextSpan Span) : Expression(Span);
 public sealed record ListLiteralExpr(IReadOnlyList<Expression> Items, TextSpan Span) : Expression(Span);
 public sealed record IndexExpr(Expression Target, Expression Index, TextSpan Span) : Expression(Span);
 public sealed record WhileStmt(Expression Condition, BlockStmt Body, TextSpan Span) : Statement(Span);

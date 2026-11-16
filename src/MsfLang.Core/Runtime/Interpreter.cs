@@ -187,6 +187,7 @@ public sealed class Interpreter
         return expr switch
         {
             ListLiteralExpr list => EvaluateList(list, env),
+            MapLiteralExpr map => EvaluateMap(map, env),
             IndexExpr index => EvaluateIndex(index, env),
             LiteralExpr lit => LiteralToValue(lit),
             GroupingExpr g => Evaluate(g.Expression, env),
@@ -196,6 +197,18 @@ public sealed class Interpreter
             CallExpr c => EvaluateCall(c, env),
             _ => throw new InvalidOperationException($"Unknown expression {expr.GetType().Name}")
         };
+    }
+
+    private MsfMap EvaluateMap(MapLiteralExpr expr, MsEnvironment env)
+    {
+        var map = new MsfMap();
+        foreach (var item in expr.Items)
+        {
+            var key = Convert.ToString(item.Key.Literal, System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
+            map.Items[key] = Evaluate(item.Value, env);
+        }
+
+        return map;
     }
 
     private MsfList EvaluateList(ListLiteralExpr expr, MsEnvironment env)
@@ -349,6 +362,7 @@ public sealed class Interpreter
             {
                 var arg = Evaluate(call.Arguments[0], env);
                 if (arg is MsfList list) return new MsfNumber(list.Items.Count);
+                if (arg is MsfMap map) return new MsfNumber(map.Items.Count);
                 if (arg is MsfString s) return new MsfNumber(CountScalars(s.Value));
                 throw RuntimeError(DiagnosticCode.E4008, $"len expects a list or string, got {arg.TypeName}", call.Span);
             }
@@ -361,6 +375,34 @@ public sealed class Interpreter
                     throw RuntimeError(DiagnosticCode.E4008, $"append expects a list as its first argument, got {listArg.TypeName}", call.Span);
                 list.Items.Add(valueArg);
                 return MsfValue.Nil;
+            }
+            if (binding.Name == "get" && call.Arguments.Count == 2)
+            {
+                var map = RequireMap(Evaluate(call.Arguments[0], env), call.Arguments[0].Span);
+                var key = RequireStringKey(Evaluate(call.Arguments[1], env), call.Arguments[1].Span);
+                return map.Items.TryGetValue(key, out var value) ? value : MsfValue.Nil;
+            }
+
+            if (binding.Name == "set" && call.Arguments.Count == 3)
+            {
+                var map = RequireMap(Evaluate(call.Arguments[0], env), call.Arguments[0].Span);
+                var key = RequireStringKey(Evaluate(call.Arguments[1], env), call.Arguments[1].Span);
+                map.Items[key] = Evaluate(call.Arguments[2], env);
+                return MsfValue.Nil;
+            }
+
+            if (binding.Name == "has" && call.Arguments.Count == 2)
+            {
+                var map = RequireMap(Evaluate(call.Arguments[0], env), call.Arguments[0].Span);
+                var key = RequireStringKey(Evaluate(call.Arguments[1], env), call.Arguments[1].Span);
+                return MsfValue.FromBool(map.Items.ContainsKey(key));
+            }
+
+            if (binding.Name == "remove" && call.Arguments.Count == 2)
+            {
+                var map = RequireMap(Evaluate(call.Arguments[0], env), call.Arguments[0].Span);
+                var key = RequireStringKey(Evaluate(call.Arguments[1], env), call.Arguments[1].Span);
+                return map.Items.TryGetValue(key, out var value) && map.Items.Remove(key) ? value : MsfValue.Nil;
             }
         }
 
@@ -427,6 +469,18 @@ public sealed class Interpreter
         };
     }
 
+    private static MsfMap RequireMap(MsfValue value, TextSpan span)
+    {
+        if (value is MsfMap map) return map;
+        throw RuntimeError(DiagnosticCode.E4009, $"map builtin expects a map as its first argument, got {value.TypeName}", span);
+    }
+
+    private static string RequireStringKey(MsfValue value, TextSpan span)
+    {
+        if (value is MsfString s) return s.Value;
+        throw RuntimeError(DiagnosticCode.E4009, $"map key must be a string, got {value.TypeName}", span);
+    }
+
     private static int CountScalars(string text)
     {
         var i = 0;
@@ -451,6 +505,7 @@ public sealed class Interpreter
             (MsfBoolean x, MsfBoolean y) => x.Value == y.Value,
             (MsfNil, MsfNil) => true,
             (MsfList x, MsfList y) => ReferenceEquals(x, y),
+            (MsfMap x, MsfMap y) => ReferenceEquals(x, y),
             _ => false
         };
     }

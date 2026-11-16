@@ -14,6 +14,7 @@ public static class ValueFormatter
             MsfBoolean b => b.Value ? "true" : "false",
             MsfNil => "nil",
             MsfList list => FormatList(list),
+            MsfMap map => FormatMap(map),
             _ => throw new ArgumentOutOfRangeException(nameof(value), value.GetType(), "Unsupported value type")
         };
     }
@@ -42,6 +43,9 @@ public static class ValueFormatter
 
     private static string FormatList(MsfList list)
         => "[" + string.Join(", ", list.Items.Select(FormatElement)) + "]";
+
+    private static string FormatMap(MsfMap map)
+        => "{" + string.Join(", ", map.Items.Select(kv => FormatElement(new MsfString(kv.Key)) + ": " + FormatElement(kv.Value))) + "}";
 
     private static string FormatElement(MsfValue value) => value switch
     {

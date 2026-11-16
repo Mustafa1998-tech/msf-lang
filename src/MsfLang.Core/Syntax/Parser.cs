@@ -424,6 +424,28 @@ public sealed class Parser
             return new LiteralExpr(null, t, t.Span);
         }
 
+        if (Match(TokenKind.Map))
+        {
+            var keyword = Previous();
+            var open = Consume(TokenKind.LeftBrace, DiagnosticCode.E2004, "expected '{'");
+            EnterNesting(open);
+            var items = new List<MapEntry>();
+            if (!Check(TokenKind.RightBrace))
+            {
+                do
+                {
+                    var key = Consume(TokenKind.StringLiteral, DiagnosticCode.E2006, "expected map key string");
+                    Consume(TokenKind.Colon, DiagnosticCode.E2008, "expected ':'");
+                    var value = ParseExpression();
+                    items.Add(new MapEntry(key, value));
+                } while (Match(TokenKind.Comma));
+            }
+
+            var close = Consume(TokenKind.RightBrace, DiagnosticCode.E2005, "expected '}'");
+            ExitNesting();
+            return new MapLiteralExpr(items, Span(keyword.Span.Start, close.Span.End));
+        }
+
         if (Match(TokenKind.LeftBracket))
         {
             var open = Previous();

@@ -368,6 +368,21 @@ guidelines. English is normative if the two texts disagree; discrepancies must b
 
 ---
 
+## ADR-0019 — v0.2 practical draft: maps and map builtins
+
+**Context.** Practical scripts need string-keyed records; dynamic JSON-like data remains deferred.
+**Decision.** Add a reserved `map` literal `map { "k": expr, ... }` with string keys, a `map` runtime value with identity equality, and builtins `get/set/has/remove`. `len` accepts maps. Map value display quotes string keys/values for unambiguous output.
+**Consequences.**
+
+- Useful records/simple lookup tables become possible in MSF Lang programs.
+- Keys are strings only; arbitrary key types and JSON interop are deferred.
+- Map iteration order is intentionally unspecified; tests must not depend on print order.
+- `get` returns `nil` for missing keys; no exceptions for absence.
+- New diagnostic `E4009` for map builtin misuse and invalid keys.
+- JSON, user-defined records, file I/O, and stdlib collection APIs remain deferred.
+
+---
+
 ## Deferred features register
 
 Nothing in this table is part of v0.1. Adding any item requires a new ADR, a specification
