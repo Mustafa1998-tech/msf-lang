@@ -24,18 +24,23 @@ public sealed class ReplSession
     {
         var source = new SourceText("<repl>", sourceText);
         var envSnapshot = _globals.SnapshotShallow();
-        var committedModelSnapshot = _committedModel.Clone();
-        var resolverBefore = new ResolverSnapshot(CloneScope(_resolverSnapshot.Global), _resolverSnapshot.NextId, committedModelSnapshot);
+        var committedModelBefore = _committedModel.Clone();
+        var resolverBefore = new ResolverSnapshot(CloneScope(_resolverSnapshot.Global), _resolverSnapshot.NextId, committedModelBefore);
         try
         {
             var tokens = Lexer.Lex(source);
             var program = Parser.Parse(tokens);
             var (entryModel, afterSnapshot) = ResolveWithSnapshot(resolverBefore, program);
-            committedModelSnapshot.MergeFrom(entryModel);
-            var interpreter = new Interpreter(committedModelSnapshot, _stdout);
+
+            // Execute with a model that includes this entry's bindings, but keep a clean
+            // pre-entry model for rollback if runtime fails.
+            var executionModel = committedModelBefore.Clone();
+            executionModel.MergeFrom(entryModel);
+            var interpreter = new Interpreter(executionModel, _stdout);
             var displays = interpreter.ExecuteReplEntry(program, _globals);
-            _resolverSnapshot = new ResolverSnapshot(afterSnapshot.Global, afterSnapshot.NextId, committedModelSnapshot);
-            _committedModel = committedModelSnapshot;
+
+            _resolverSnapshot = new ResolverSnapshot(afterSnapshot.Global, afterSnapshot.NextId, executionModel);
+            _committedModel = executionModel;
             return ReplResult.Success(displays);
         }
         catch (LexException ex)
@@ -63,8 +68,8 @@ public sealed class ReplSession
     private void Restore(MsEnvironment envSnapshot, ResolverSnapshot resolverSnapshot)
     {
         ReplEnvRestore.Restore(_globals, envSnapshot);
-        _resolverSnapshot = resolverSnapshot;
-        _committedModel = resolverSnapshot.Model;
+        _resolverSnapshot = new ResolverSnapshot(CloneScope(resolverSnapshot.Global), resolverSnapshot.NextId, resolverSnapshot.Model.Clone());
+        _committedModel = _resolverSnapshot.Model;
     }
 
     private static (SemanticModel Model, ResolverSnapshot Snapshot) ResolveWithSnapshot(ResolverSnapshot before, ProgramNode program)
@@ -133,7 +138,15 @@ internal static class ResolverPublicExt
     public static void ResolveIntoPublic(this Resolver resolver, ProgramNode program)
     {
         // call private ResolveInto via reflection
-        typeof(Resolver).GetMethod("ResolveInto", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(resolver, new object[] { program, typeof(Resolver).GetField("_global", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.GetValue(resolver)! });
+        try
+        {
+            typeof(Resolver).GetMethod("ResolveInto", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
+                .Invoke(resolver, new object[] { program, typeof(Resolver).GetField("_global", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.GetValue(resolver)! });
+        }
+        catch (System.Reflection.TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+            throw;
+        }
     }
 }
