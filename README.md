@@ -33,7 +33,7 @@
 
 This repository contains the language specification, architecture decisions, grammar, implementation, tests, examples, benchmarks, and documentation.
 
-> **Current state:** v0.1 implementation is feature-complete for the current scope and under release hardening. The core pipeline, CLI (`run`/`help`/`version`/`repl`), and expanded test suites are green (**175 tests passing**, including **71 conformance cases** and **15 CLI process tests**). M9 release-candidate preparation (final spec cross-check/evidence and RC tag) is in progress.
+> **Current state:** v0.1 implementation is feature-complete for the current scope and under release hardening. A v0.2 practical draft now exists (`while`, `break`/`continue`, lists, `len`/`append`) with passing tests. The CLI (`run`/`help`/`version`/`repl`), and expanded test suites are green (**184+ tests passing**, including **81 conformance fixtures**). M9 release-candidate preparation remains in progress; v0.2 is not production-ready yet.
 
 ---
 
