@@ -118,7 +118,9 @@ A compiler/bytecode/VM/JIT effort is most valuable after syntax and semantics ar
 1. Complete M6 runtime/interpreter test coverage and edge-case fixes
 2. Implement M7 CLI/REPL behavior per spec and add process-level tests
 3. Build M8 conformance suite and harden toward M9 release candidate
-4. Start semantics-stabilization review for v0.2 proposals (with ADRs and compatibility analysis)
+4. Start semantics-stabilization review for v0.2 proposals (with ADRs and compatibility analysis), prioritizing features that unlock real problem-solving (loops, collections, core stdlib)
+
+See also: [Problem-Solving Direction](PROBLEM-SOLVING.md) for use-case-driven priorities.
 
 ---
 

@@ -188,6 +188,10 @@ Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.m
 - [Examples](docs/guide/examples.md)
 - [Benchmarks](docs/guide/benchmarks.md)
 
+### Vision & Direction
+- [Problem-Solving Direction](docs/PROBLEM-SOLVING.md)
+- [Roadmap](docs/ROADMAP.md)
+
 ### Reference & Project Docs
 - [Language Specification (EN)](docs/en/SPEC-v0.1.md)
 - [مواصفة اللغة (AR)](docs/ar/SPEC-v0.1.md)
