@@ -30,7 +30,11 @@ plan.
 | 2026-11-16 | M8 (expanded) | `dotnet test tests/MsfLang.Conformance.Tests/MsfLang.Conformance.Tests.csproj -c Release` | Exit 0. Passed: 64, Failed: 0, Skipped: 0. | Conformance expanded to **63** `.msf/.expected.json` cases (positive/negative across lexical/syntax/semantic/runtime) + orphan-file check |
 | 2026-11-16 | M7/M8 | `dotnet test tests/MsfLang.Cli.Tests/MsfLang.Cli.Tests.csproj -c Release` | Exit 0. Passed: 12, Failed: 0, Skipped: 0. | CLI process tests (help/version/usage/unknown, run success/error/io, repl piped) |
 | 2026-11-16 | All (current) | `dotnet test MSFLang.slnx -c Release` | Exit 0. Passed: 161, Failed: 0, Skipped: 0 (Core 85, Conformance 64, CLI 12). | Full solution green with expanded conformance and CLI tests |
-| — | M9 | — | In progress | Hardening, full spec-contract edge cases (REPL rollback/multiline/EOF details, complete C-* matrix, R-* edge cases), 10 manual acceptance scenarios, RC |
+| 2026-11-16 | M6/M7 | `dotnet test tests/MsfLang.Core.Tests/MsfLang.Core.Tests.csproj -c Release` / `dotnet test tests/MsfLang.Cli.Tests/MsfLang.Cli.Tests.csproj -c Release` | Exit 0. Core Passed: 88, Failed: 0, Skipped: 0. CLI Passed: 15, Failed: 0, Skipped: 0. | REPL rollback/state handling fixes, incomplete-input/runtime rollback tests, and additional CLI REPL process tests (EOF/multiline/unknown command) |
+| 2026-11-16 | M8 (expanded) | `dotnet test tests/MsfLang.Conformance.Tests/MsfLang.Conformance.Tests.csproj -c Release` | Exit 0. Passed: 72, Failed: 0, Skipped: 0. | Conformance expanded to **71** `.msf/.expected.json` cases + orphan-file check |
+| 2026-11-16 | All (current) | `dotnet test MSFLang.slnx -c Release` | Exit 0. Passed: 175, Failed: 0, Skipped: 0 (Core 88, Conformance 72, CLI 15). | Full solution green after M6/M7/M8 hardening and test expansion |
+| 2026-11-16 | M9 acceptance | Manual CLI/REPL scenarios (per implementation plan §6, scenarios 1-10) | Passed 10/10. | Verified hello/factorial, runtime/semantic diagnostics & exit codes, missing file I/O error, piped REPL auto-display/multiline/rollback, `--version`, path with spaces, UTF-8 Arabic+emoji output |
+| — | M9 | — | In progress | Final spec/implementation cross-check and RC/release tagging pending |
 
 ---
 

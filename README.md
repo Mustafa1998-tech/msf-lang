@@ -33,7 +33,7 @@
 
 This repository contains the language specification, architecture decisions, grammar, implementation, tests, examples, benchmarks, and documentation.
 
-> **Current state:** active development toward v0.1 launch. The core pipeline, CLI (`run`/`help`/`version`/basic `repl`), and a growing conformance/CLI test suite are implemented and green (**161 tests passing**, including **63 conformance cases**). Spec-contract edge cases and release hardening (M9) are still in progress.
+> **Current state:** v0.1 implementation is feature-complete for the current scope and under release hardening. The core pipeline, CLI (`run`/`help`/`version`/`repl`), and expanded test suites are green (**175 tests passing**, including **71 conformance cases** and **15 CLI process tests**). M9 release-candidate preparation (final spec cross-check/evidence and RC tag) is in progress.
 
 ---
 
@@ -159,10 +159,10 @@ Interpreter  -> execution/output  (E4xxx)
 | M3 | Lexer | ✅ Complete |
 | M4 | Parser & AST | ✅ Complete |
 | M5 | Resolver & semantic checks | ✅ Complete |
-| M6 | Interpreter & runtime | 🚧 Core implemented and tested; edge-case/spec-contract hardening ongoing |
-| M7 | CLI & REPL contract | 🚧 `run/help/version/repl` implemented; process-level tests added; full spec-contract edge cases ongoing |
-| M8 | Conformance suite & examples | 🚧 Harness + **63** conformance cases passing (60+ target reached; matrix/hardening ongoing) |
-| M9 | Hardening & release candidate | ⏳ In progress/planned (manual acceptance, spec cross-check, RC/tag) |
+| M6 | Interpreter & runtime | ✅ Core implemented and tested (edge-case coverage expanded; 175 total tests passing) |
+| M7 | CLI & REPL contract | ✅ `run/help/version/repl` implemented and tested (process-level CLI tests, piped/multiline REPL, rollback/incomplete-input fixes) |
+| M8 | Conformance suite & examples | ✅ Harness + **71** conformance cases passing (60+ target reached) |
+| M9 | Hardening & release candidate | 🚧 Full suite green (175/175), 10/10 manual acceptance scenarios verified, spec cross-check in progress, RC/tag pending |
 
 Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.md).
 
@@ -224,7 +224,7 @@ Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.m
 **MSF Lang** لغة برمجة صغيرة ودقيقة بامتداد `.msf`، طوّرتها **Mustafa Software Factory** مع تركيز على الوضوح، التشخيص الدقيق، والاختبارية.
 
 - المواصفة والخطة والقرارات متاحة بالعربية والإنجليزية داخل [`docs/`](docs/)
-- الحالة الحالية: تنفيذ نواة اللغة وخط المعالجة (المعجم، المحلل، الدلالات، المفسّر) وواجهة الأوامر (`msf run` و`msf repl` الأساسي) مع **161 اختبارًا ناجحًا** منها **63 حالة مطابقة**، والاستمرار في تقسية التوافق الكامل مع المواصفة وتجهيز الإطلاق (M9)
+- الحالة الحالية: اكتمال تنفيذ نطاق v0.1 الحالي مع تقسية للإطلاق؛ المحرك وواجهة الأوامر (`msf run`/`msf repl`) والاختبارات ناجحة (**175 اختبارًا** منها **71 حالة مطابقة** و**15 اختبار CLI**)، مع استمرار تجهيز مرشح الإطلاق (مراجعة تقاطع نهائية مع المواصفة/وسم RC)
 - الكلمات المحجوزة إنجليزية في v0.1، مع دعم كامل للنصوص والتعليقات والمخرجات العربية (UTF-8)
 
 للبدء سريعًا: راجع [دليل البدء](docs/guide/getting-started.md) و[المعمارية](docs/ARCHITECTURE.md) و[خارطة الطريق](docs/ROADMAP.md).

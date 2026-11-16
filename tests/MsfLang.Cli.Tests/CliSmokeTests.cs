@@ -110,6 +110,37 @@ public sealed class CliSmokeTests
     }
 
     [Fact]
+    public void Repl_Piped_EofExits0()
+    {
+        var input = "var x = 1;\nx;\n";
+        var (exit, stdout, stderr) = RunCliWithInput(input, "repl");
+        Assert.Equal(0, exit);
+        Assert.Equal("1\n", Normalize(stdout));
+        Assert.Equal("", Normalize(stderr));
+    }
+
+    [Fact]
+    public void Repl_Piped_MultilineFunction_Works()
+    {
+        var input = "fn add(a, b) {\n  return a + b;\n}\nadd(2, 3);\n";
+        var (exit, stdout, stderr) = RunCliWithInput(input, "repl");
+        Assert.Equal(0, exit);
+        Assert.Equal("5\n", Normalize(stdout));
+        Assert.Equal("", Normalize(stderr));
+    }
+
+    [Fact]
+    public void Repl_Piped_UnknownCommand_Continues()
+    {
+        var input = ":nope\n1;\n";
+        var (exit, stdout, stderr) = RunCliWithInput(input, "repl");
+        Assert.Equal(0, exit);
+        Assert.Equal("1\n", Normalize(stdout));
+        Assert.Contains("error[E5001]", Normalize(stderr));
+        Assert.Contains(":nope", Normalize(stderr));
+    }
+
+    [Fact]
     public void Repl_ExtraArgs_Exits3()
     {
         var (exit, _, stderr) = RunCli("repl", "x");

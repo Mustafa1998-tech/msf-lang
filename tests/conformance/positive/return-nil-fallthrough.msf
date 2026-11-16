@@ -1,0 +1,5 @@
+fn f(flag) {
+  if (flag) { return 1; }
+}
+print(f(true));
+print(f(false));
