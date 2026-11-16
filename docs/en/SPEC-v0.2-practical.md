@@ -75,6 +75,8 @@ print(total); // 45
 - Parser expects `(` after `while` → `E2007`.
 - Parser expects `)` after condition → `E2003`.
 - Parser expects `{` for body → `E2004`.
+- `break;` outside any `while` → `E3013` at the `break` keyword.
+- `continue;` outside any `while` → `E3014` at the `continue` keyword.
 
 ---
 

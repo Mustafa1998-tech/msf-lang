@@ -2,11 +2,14 @@
 
 | ID | Item | Evidence | Priority | Authorization | Status | Acceptance criteria |
 |---|---|---|---|---|---|---|
-| DTB-001 | Create DTB ledger (`docs/dtb/*`) and record baseline | User activated msf-dtb; no ledger existed | high | authorized | VERIFIED | STATE/BACKLOG/CHANGELOG exist; baseline 181/181 recorded |
-| DTB-002 | Improve `msf --help` to match spec intent (usage, commands, v0.1 scope summary, docs pointer) | SPEC §13.3; current help printed only usage; CLI test updated | high | authorized | VERIFIED | `msf --help` exits 0; includes usage/commands/v0.1 summary/docs URL; CLI tests pass |
-| DTB-003 | Add runnable example for v0.2 practical slice | `examples/practical-lists.msf` created and run manually; guide examples updated | high | authorized | VERIFIED | Example runs (`EC=0`, expected output); guide links it |
-| DTB-004 | Add Arabic v0.2 practical spec mirror | `docs/ar/SPEC-v0.2-practical.md` created | medium | authorized | VERIFIED | Arabic mirror exists and points to EN normative spec |
-| DTB-005 | Expand conformance with v0.2 `len`/`append` mismatch negative cases | Added `len-non-list` and `append-non-list` fixtures; full suite green | medium | authorized | VERIFIED | Conformance passes with new fixtures (80 total) |
-| DTB-006 | Add `MSF_DEBUG=1` internal-error stack trace support | SPEC §12.4 internal errors | low | authorized | PROPOSED | Only gate behind env var; CLI tests set/unset; internal diagnostics still not mixed with language errors |
-| DTB-007 | ADR for v0.2 practical slice | Added ADR-0018 to DECISIONS.md | high | authorized | VERIFIED | DECISIONS.md gains ADR-0018 documenting loops/lists/len/append, risks, and compatibility |
-| DTB-008 | v0.2 maps (`map` type, literals, get/set/has/remove/len) | Practical data-processing gap for user-facing scripts | high | authorized after spec review | PROPOSED | Needs approved ADR + spec text + tests; large scope expansion; do after smaller verified items |
+| DTB-001 | Create DTB ledger and record baseline | User activated msf-dtb; Bible documents require `docs/dtb` | high | authorized | VERIFIED | STATE/BACKLOG/CHANGELOG exist; baseline recorded |
+| DTB-002 | Improve `msf --help` to match spec intent | SPEC §13.3 help content; CLI test updated | high | authorized | VERIFIED | Help prints usage/commands/v0.1 scope/docs URL and exits 0; CLI suite green |
+| DTB-003 | Add runnable example for v0.2 practical slice | `examples/practical-lists.msf` documented and run | high | authorized | VERIFIED | Example runs with exit 0 and deterministic output |
+| DTB-004 | Add Arabic v0.2 practical spec mirror | `docs/ar/SPEC-v0.2-practical.md` | high | authorized | VERIFIED | Arabic mirror exists and defers to EN normative |
+| DTB-005 | Expand conformance with v0.2 E4008 cases | Added len/append mismatch fixtures | medium | authorized | VERIFIED | Conformance includes E4008 cases; suite green |
+| DTB-006 | Add `MSF_DEBUG=1` internal-error stack trace support | SPEC §12.4 internal-error handling | low | authorized | PROPOSED | Env-gated only; internal diagnostics never bypass language diagnostics; tests set/unset MSF_DEBUG |
+| DTB-007 | ADR for v0.2 practical slice | ADR-0018 in DECISIONS.md | high | authorized | VERIFIED | ADR documents loops/lists/len/append, compatibility, deferrals |
+| DTB-008 | v0.2 maps (`map`) | Practical data-processing gap; largest remaining gap for scripts | high | requires ADR/spec approval | PROPOSED | Needs approved ADR + spec + conformance before implementation |
+| DTB-009 | Complete negative `continue` outside-loop fixture | Added `continue-outside-loop.expected.json` (E3014) | medium | authorized | VERIFIED | `dotnet test` conformance shows E3014 case passing (81 total) |
+| DTB-010 | Sync v0.2 spec diagnostics across EN/AR mirrors | EN now documents E3013/E3014 and points to list diagnostics; AR lists them | medium | authorized | VERIFIED | Docs consistent for E3013/E3014/E4007/E4008 |
+| DTB-011 | Update README current-state note for v0.2 draft | README current-state paragraph now says implementation is v0.1 complete with v0.2 draft tests | medium | authorized | VERIFIED | README reflects v0.2 draft and does not claim production readiness |
