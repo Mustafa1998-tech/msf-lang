@@ -12,7 +12,7 @@
 
 *Deterministic semantics · clear diagnostics · implementation-first specification*
 
-[Specification](docs/en/SPEC-v0.1.md) · [Implementation Plan](docs/en/IMPLEMENTATION-PLAN.md) · [Decisions](docs/DECISIONS.md) · [العربية](#العربية)
+[User Guide](docs/guide/README.md) · [Specification](docs/en/SPEC-v0.1.md) · [Implementation Plan](docs/en/IMPLEMENTATION-PLAN.md) · [Decisions](docs/DECISIONS.md) · [العربية](#العربية)
 
 </div>
 
@@ -179,6 +179,15 @@ Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.m
 
 ## Documentation
 
+### User Guide (How to use MSF Lang)
+- [Guide Index](docs/guide/README.md)
+- [Getting Started](docs/guide/getting-started.md)
+- [Syntax & Language Basics](docs/guide/syntax.md)
+- [CLI Reference](docs/guide/cli.md)
+- [Diagnostics & Errors](docs/guide/diagnostics.md)
+- [Examples](docs/guide/examples.md)
+
+### Reference & Project Docs
 - [Language Specification (EN)](docs/en/SPEC-v0.1.md)
 - [مواصفة اللغة (AR)](docs/ar/SPEC-v0.1.md)
 - [Implementation & Test Plan (EN)](docs/en/IMPLEMENTATION-PLAN.md)
