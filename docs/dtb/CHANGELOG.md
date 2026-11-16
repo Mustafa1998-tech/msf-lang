@@ -11,3 +11,4 @@
 | 2026-11-16 | DTB-009 | Added negative `continue` outside-loop fixture (`E3014`) | `dotnet test MSFLang.slnx -c Release` | 184 passed / 0 failed |
 | 2026-11-16 | DTB-010 | Synced EN/AR v0.2 spec diagnostic tables/lists | docs-only | EN documents E3013/E3014; AR mirrors them |
 | 2026-11-16 | DTB-011 | Updated README current-state note for v0.2 draft | docs-only | README now says v0.1 complete, v0.2 draft tested |
+| 2026-11-16 | DTB-012 | Synced user-facing/v0.2 docs (help/CLI/getting-started/guide index/roadmap/test evidence) | `dotnet test MSFLang.slnx -c Release` | 184 passed / 0 failed / 0 skipped (Core 88, Conformance 81, CLI 15) |

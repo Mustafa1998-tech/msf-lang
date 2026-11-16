@@ -37,11 +37,16 @@ v0.1 is intentionally small and deterministic. v0.2 adds the minimum required to
 
 ```ebnf
 stmt = while-stmt
+     | break-stmt
+     | continue-stmt
      | if-stmt
      | return-stmt
      | block
      | assignment-stmt
      | expression-stmt ;
+
+break-stmt    = "break" , ";" ;
+continue-stmt = "continue" , ";" ;
 
 while-stmt = "while" , "(" , expression , ")" , block ;
 ```
@@ -180,7 +185,10 @@ Elements are evaluated left to right before the list value is created.
 ## 4. Grammar deltas (summary)
 
 ```ebnf
-stmt = while-stmt | if-stmt | return-stmt | block | assignment-stmt | expression-stmt ;
+stmt = while-stmt | break-stmt | continue-stmt | if-stmt | return-stmt | block | assignment-stmt | expression-stmt ;
+
+break-stmt = "break" , ";" ;
+continue-stmt = "continue" , ";" ;
 
 while-stmt = "while" , "(" , expression , ")" , block ;
 

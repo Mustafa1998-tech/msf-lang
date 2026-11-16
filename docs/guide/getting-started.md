@@ -57,7 +57,8 @@ dotnet run --project src/MsfLang.Cli -c Release -- run examples/factorial.msf
 ## Current Limitations
 
 - `msf repl` is implemented (interactive and piped modes), but some **spec-contract edge cases** (e.g. rollback/incomplete-input behaviors and full contract coverage) are still being hardened
-- v0.1 has **no loops**, arrays/maps, modules/imports, closures, or file/network I/O
-- Core behavior is substantially tested (**161 tests**, including **63 conformance cases**), but full conformance/contract matrix completion and release hardening are still in progress
+- **v0.1** has no loops/collections; a **v0.2 practical draft** adds `while`, `break`/`continue`, lists, `len`, and `append`
+- Maps, modules/imports, closures, file/network I/O, and a full stdlib are not available yet
+- Full conformance/contract matrix completion and release hardening are still in progress
 
 For the full, normative behavior, see the [specification](../en/SPEC-v0.1.md).

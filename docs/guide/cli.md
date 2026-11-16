@@ -22,7 +22,7 @@ dotnet run --project src/MsfLang.Cli -c Release -- run examples/hello.msf
 - The `.msf` extension is recommended but not required by the CLI
 
 ### `msf --help` / `msf -h`
-Prints usage information and exits `0`.
+Prints usage, the command list, a v0.1 scope summary, and a link to the normative specification, then exits `0`.
 
 ### `msf --version` / `msf -v`
 Prints the version string (e.g. `msf 0.1.0`) and exits `0`.
