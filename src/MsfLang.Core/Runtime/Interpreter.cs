@@ -404,6 +404,68 @@ public sealed class Interpreter
                 var key = RequireStringKey(Evaluate(call.Arguments[1], env), call.Arguments[1].Span);
                 return map.Items.TryGetValue(key, out var value) && map.Items.Remove(key) ? value : MsfValue.Nil;
             }
+            if (binding.Name is "abs" or "sqrt" or "floor" or "ceil" or "round")
+            {
+                var n = RequireNumberArg(Evaluate(call.Arguments[0], env), call.Arguments[0].Span);
+                return binding.Name switch
+                {
+                    "abs" => new MsfNumber(Math.Abs(n)),
+                    "sqrt" when n >= 0 => new MsfNumber(Math.Sqrt(n)),
+                    "sqrt" => throw RuntimeError(DiagnosticCode.E4009, "sqrt requires a non-negative number", call.Span),
+                    "floor" => new MsfNumber(Math.Floor(n)),
+                    "ceil" => new MsfNumber(Math.Ceiling(n)),
+                    "round" => new MsfNumber(Math.Round(n, MidpointRounding.AwayFromZero)),
+                    _ => throw new InternalErrorException("Unknown math builtin")
+                };
+            }
+
+            if (binding.Name is "upper" or "lower" or "trim")
+            {
+                var s = RequireStringArg(Evaluate(call.Arguments[0], env), call.Arguments[0].Span);
+                return binding.Name switch
+                {
+                    "upper" => new MsfString(s.ToUpperInvariant()),
+                    "lower" => new MsfString(s.ToLowerInvariant()),
+                    "trim" => new MsfString(s.Trim()),
+                    _ => throw new InternalErrorException("Unknown string builtin")
+                };
+            }
+
+            if (binding.Name is "contains" or "startsWith" or "endsWith")
+            {
+                var s = RequireStringArg(Evaluate(call.Arguments[0], env), call.Arguments[0].Span);
+                var sub = RequireStringArg(Evaluate(call.Arguments[1], env), call.Arguments[1].Span);
+                return MsfValue.FromBool(binding.Name switch
+                {
+                    "contains" => s.Contains(sub, StringComparison.Ordinal),
+                    "startsWith" => s.StartsWith(sub, StringComparison.Ordinal),
+                    "endsWith" => s.EndsWith(sub, StringComparison.Ordinal),
+                    _ => false
+                });
+            }
+
+            if (binding.Name == "split")
+            {
+                var s = RequireStringArg(Evaluate(call.Arguments[0], env), call.Arguments[0].Span);
+                var delimiter = RequireStringArg(Evaluate(call.Arguments[1], env), call.Arguments[1].Span);
+                if (delimiter.Length == 0) throw RuntimeError(DiagnosticCode.E4009, "split delimiter must not be empty", call.Arguments[1].Span);
+                return new MsfList(s.Split(delimiter, StringSplitOptions.None).Select(part => (MsfValue)new MsfString(part)).ToList());
+            }
+
+            if (binding.Name is "pow" or "min" or "max")
+            {
+                var a = RequireNumberArg(Evaluate(call.Arguments[0], env), call.Arguments[0].Span);
+                var b = RequireNumberArg(Evaluate(call.Arguments[1], env), call.Arguments[1].Span);
+                var value = binding.Name switch
+                {
+                    "pow" => Math.Pow(a, b),
+                    "min" => Math.Min(a, b),
+                    "max" => Math.Max(a, b),
+                    _ => throw new InternalErrorException("Unknown math builtin")
+                };
+                if (!double.IsFinite(value)) throw RuntimeError(DiagnosticCode.E4006, "numeric result is not finite", call.Span);
+                return new MsfNumber(value);
+            }
         }
 
         if (binding.Kind != BindingKind.Function)
@@ -467,6 +529,18 @@ public sealed class Interpreter
             string s => new MsfString(s),
             _ => throw new InvalidOperationException("Unknown literal type")
         };
+    }
+
+    private static string RequireStringArg(MsfValue value, TextSpan span)
+    {
+        if (value is MsfString s) return s.Value;
+        throw RuntimeError(DiagnosticCode.E4009, $"string builtin expects a string, got {value.TypeName}", span);
+    }
+
+    private static double RequireNumberArg(MsfValue value, TextSpan span)
+    {
+        if (value is MsfNumber n) return n.Value;
+        throw RuntimeError(DiagnosticCode.E4009, $"math builtin expects a number, got {value.TypeName}", span);
     }
 
     private static MsfMap RequireMap(MsfValue value, TextSpan span)

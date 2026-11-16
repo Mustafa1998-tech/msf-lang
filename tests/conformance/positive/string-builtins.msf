@@ -1,0 +1,7 @@
+print(upper("msf"));
+print(lower("MSF"));
+print(trim("  x  "));
+print(contains("hello msf", "msf"));
+print(startsWith("msf-lang", "msf"));
+print(endsWith("msf-lang", "lang"));
+print(split("a,b,c", ","));

@@ -28,7 +28,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   - Builtins: `len(list|string)`, `append(list, value)`
   - New diagnostics: `E4007` (list index/type failures), `E4008` (`len`/`append` argument mismatch), `E3013` (`break` outside loop), `E3014` (`continue` outside loop), `E4009` (map builtin/key mismatch)
   - Maps: string-keyed `map { "k": v }` literal, map runtime value, `get/set/has/remove` builtins, `len(map)`
-  - Specs: `docs/en/SPEC-v0.2-practical.md`, `docs/en/SPEC-v0.2-maps.md` (AR mirror: `docs/ar/SPEC-v0.2-practical.md`, `docs/ar/SPEC-v0.2-maps.md`)
+  - Math core builtins: `abs`, `sqrt`, `floor`, `ceil`, `round`, `pow`, `min`, `max`
+  - String core builtins: `upper`, `lower`, `trim`, `contains`, `startsWith`, `endsWith`, `split`
+  - Specs: `docs/en/SPEC-v0.2-math.md`, `docs/en/SPEC-v0.2-string.md`
+- v0.2 practical draft specifications are available in EN and AR (`SPEC-v0.2-practical`, `-maps`, `-math`, `-string`)
+  - Specs: `docs/en/SPEC-v0.2-practical.md`, `docs/en/SPEC-v0.2-maps.md`, `docs/en/SPEC-v0.2-math.md` (AR mirrors: `docs/ar/SPEC-v0.2-practical.md`, `docs/ar/SPEC-v0.2-maps.md`, `docs/ar/SPEC-v0.2-math.md`)
 
 ### Notes
 - Latest recorded full-suite result: **175 passed / 0 failed / 0 skipped** (Core 88, Conformance 72, CLI 15) with **71 conformance cases**.
