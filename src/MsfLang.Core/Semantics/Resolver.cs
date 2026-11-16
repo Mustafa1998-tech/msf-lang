@@ -110,6 +110,85 @@ public sealed class Resolver
         _global.TryDefine(new Binding
         {
             Id = _nextId++,
+            Name = "abs",
+            Kind = BindingKind.Builtin,
+            IsMutable = false,
+            Arity = 1,
+            DeclarationSpan = TextSpan.Empty
+        });
+        _global.TryDefine(new Binding
+        {
+            Id = _nextId++,
+            Name = "sqrt",
+            Kind = BindingKind.Builtin,
+            IsMutable = false,
+            Arity = 1,
+            DeclarationSpan = TextSpan.Empty
+        });
+        _global.TryDefine(new Binding
+        {
+            Id = _nextId++,
+            Name = "floor",
+            Kind = BindingKind.Builtin,
+            IsMutable = false,
+            Arity = 1,
+            DeclarationSpan = TextSpan.Empty
+        });
+        _global.TryDefine(new Binding
+        {
+            Id = _nextId++,
+            Name = "ceil",
+            Kind = BindingKind.Builtin,
+            IsMutable = false,
+            Arity = 1,
+            DeclarationSpan = TextSpan.Empty
+        });
+        _global.TryDefine(new Binding
+        {
+            Id = _nextId++,
+            Name = "round",
+            Kind = BindingKind.Builtin,
+            IsMutable = false,
+            Arity = 1,
+            DeclarationSpan = TextSpan.Empty
+        });
+        _global.TryDefine(new Binding
+        {
+            Id = _nextId++,
+            Name = "pow",
+            Kind = BindingKind.Builtin,
+            IsMutable = false,
+            Arity = 2,
+            DeclarationSpan = TextSpan.Empty
+        });
+        _global.TryDefine(new Binding
+        {
+            Id = _nextId++,
+            Name = "min",
+            Kind = BindingKind.Builtin,
+            IsMutable = false,
+            Arity = 2,
+            DeclarationSpan = TextSpan.Empty
+        });
+        _global.TryDefine(new Binding
+        {
+            Id = _nextId++,
+            Name = "max",
+            Kind = BindingKind.Builtin,
+            IsMutable = false,
+            Arity = 2,
+            DeclarationSpan = TextSpan.Empty
+        });
+        _global.TryDefine(new Binding { Id = _nextId++, Name = "upper", Kind = BindingKind.Builtin, IsMutable = false, Arity = 1, DeclarationSpan = TextSpan.Empty });
+        _global.TryDefine(new Binding { Id = _nextId++, Name = "lower", Kind = BindingKind.Builtin, IsMutable = false, Arity = 1, DeclarationSpan = TextSpan.Empty });
+        _global.TryDefine(new Binding { Id = _nextId++, Name = "trim", Kind = BindingKind.Builtin, IsMutable = false, Arity = 1, DeclarationSpan = TextSpan.Empty });
+        _global.TryDefine(new Binding { Id = _nextId++, Name = "contains", Kind = BindingKind.Builtin, IsMutable = false, Arity = 2, DeclarationSpan = TextSpan.Empty });
+        _global.TryDefine(new Binding { Id = _nextId++, Name = "startsWith", Kind = BindingKind.Builtin, IsMutable = false, Arity = 2, DeclarationSpan = TextSpan.Empty });
+        _global.TryDefine(new Binding { Id = _nextId++, Name = "endsWith", Kind = BindingKind.Builtin, IsMutable = false, Arity = 2, DeclarationSpan = TextSpan.Empty });
+        _global.TryDefine(new Binding { Id = _nextId++, Name = "split", Kind = BindingKind.Builtin, IsMutable = false, Arity = 2, DeclarationSpan = TextSpan.Empty });
+        _global.TryDefine(new Binding
+        {
+            Id = _nextId++,
             Name = "print",
             Kind = BindingKind.Builtin,
             IsMutable = false,

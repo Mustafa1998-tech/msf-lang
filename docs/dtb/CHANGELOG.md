@@ -14,3 +14,4 @@
 | 2026-11-16 | DTB-012 | Sync docs: CLI/getting-started/guide/roadmap/evidence | `dotnet test ...` | 184 passed |
 | 2026-11-16 | DTB-008 | Implemented maps draft: `map {}`, map type, `get/set/has/remove`, `len(map)`, ADR-0019, EN/AR map specs, conformance fixtures | `dotnet test MSFLang.slnx -c Release` | 188 passed (Core 88, Conformance 83, CLI 17) |
 | 2026-11-16 | DTB-013 | Implemented env-gated `MSF_DEBUG=1` raw stack trace path for internal errors; CLI tests assert normal language errors do not print stack traces | `dotnet test MSFLang.slnx -c Release` | 188 passed |
+| 2026-11-16 | DTB-014 | Implemented Math and String core builtins with conformance fixtures, ADR-0020, EN/AR drafts | `dotnet test MSFLang.slnx -c Release` | 190 passed (Core 88, Conformance 85, CLI 17) |

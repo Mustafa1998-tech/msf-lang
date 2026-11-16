@@ -383,6 +383,18 @@ guidelines. English is normative if the two texts disagree; discrepancies must b
 
 ---
 
+## ADR-0020 — v0.2 string core builtins
+
+**Context.** Practical text processing requires deterministic minimal string helpers before a full stdlib.
+**Decision.** Add `upper`, `lower`, `trim`, `contains`, `startsWith`, `endsWith`, and `split` as builtins (ordinal string comparisons). Empty `split` delimiter is rejected.
+**Consequences.**
+
+- Common text normalization and splitting problems become expressible.
+- Full regex, slicing/indexing conventions, and Unicode case-folding nuance remain deferred.
+- Display format for strings inside lists quotes them for unambiguity.
+
+---
+
 ## Deferred features register
 
 Nothing in this table is part of v0.1. Adding any item requires a new ADR, a specification
