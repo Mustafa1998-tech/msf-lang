@@ -1,5 +1,9 @@
 <div align="center">
 
+<img src="branding/logo/msf-lang-logo.png" alt="MSF Lang" width="360" />
+
+[Official brand guidelines](branding/BRAND-GUIDELINES.md)
+
 # MSF Lang
 
 **A small, precise, and testable programming language — designed and engineered by Mustafa Software Factory.**
