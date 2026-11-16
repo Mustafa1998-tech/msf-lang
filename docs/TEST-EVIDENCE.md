@@ -34,6 +34,7 @@ plan.
 | 2026-11-16 | M8 (expanded) | `dotnet test tests/MsfLang.Conformance.Tests/MsfLang.Conformance.Tests.csproj -c Release` | Exit 0. Passed: 72, Failed: 0, Skipped: 0. | Conformance expanded to **71** `.msf/.expected.json` cases + orphan-file check |
 | 2026-11-16 | All (current) | `dotnet test MSFLang.slnx -c Release` | Exit 0. Passed: 175, Failed: 0, Skipped: 0 (Core 88, Conformance 72, CLI 15). | Full solution green after M6/M7/M8 hardening and test expansion |
 | 2026-11-16 | M9 acceptance | Manual CLI/REPL scenarios (per implementation plan §6, scenarios 1-10) | Passed 10/10. | Verified hello/factorial, runtime/semantic diagnostics & exit codes, missing file I/O error, piped REPL auto-display/multiline/rollback, `--version`, path with spaces, UTF-8 Arabic+emoji output |
+| 2026-11-16 | All (current) | `dotnet test MSFLang.slnx -c Release` / DTB cycle after v0.2 loop-control additions | Exit 0. Passed: 184, Failed: 0, Skipped: 0 (Core 88, Conformance 81, CLI 15). | Full suite green after repeatability/fixes: E3014 fixture, spec sync, README/ROADMAP doc updates |
 | — | M9 | — | In progress | Final spec/implementation cross-check and RC/release tagging pending |
 
 ---

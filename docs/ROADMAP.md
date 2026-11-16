@@ -20,8 +20,8 @@ This roadmap describes the planned evolution of MSF Lang from a stable v0.1 lang
 ### Current progress (evidence-backed)
 - **M6 (Runtime hardening):** ✅ core interpreter/runtime implemented and tested with expanded coverage (full suite green)
 - **M7 (CLI & REPL):** ✅ `run/help/version/repl` implemented and tested; REPL rollback/incomplete-input handling improved and covered by tests (including piped/multiline/EOF cases)
-- **M8 (Conformance):** ✅ harness and **71** `.msf` + `.expected.json` conformance cases passing (60+ target reached)
-- **M9 (Release candidate):** 🚧 full suite green (**175/175**), **10/10 manual acceptance scenarios** verified; final spec/implementation cross-check and RC/tag pending
+- **M8 (Conformance):** ✅ harness and **81** `.msf` + `.expected.json` conformance cases passing (60+ target reached)
+- **M9 (Release candidate):** 🚧 full suite green (**184/184**), **10/10 manual acceptance scenarios** verified; final spec/implementation cross-check and RC/tag pending
 
 ### Exit criteria
 - Normative v0.1 behaviors implemented and verified

@@ -1,6 +1,6 @@
 # MSF Lang Guide
 
-Welcome to the MSF Lang user guide. This section explains how to build, run, and write programs in **MSF Lang v0.1 (draft)**.
+Welcome to the MSF Lang user guide. This section explains how to build, run, and write programs in **MSF Lang v0.1** and the additive **v0.2 practical draft** (`while`, `break`/`continue`, lists, `len`, `append`).
 
 > MSF Lang is under active development. This guide documents the currently implemented behavior and clearly notes features that are planned but not yet available.
 
