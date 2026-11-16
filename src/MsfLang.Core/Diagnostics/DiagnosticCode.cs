@@ -44,6 +44,8 @@ public static class DiagnosticCode
     public const string E4004 = "E4004";
     public const string E4005 = "E4005";
     public const string E4006 = "E4006";
+    public const string E4007 = "E4007";
+    public const string E4008 = "E4008";
 
     // CLI / IO
     public const string E5001 = "E5001";

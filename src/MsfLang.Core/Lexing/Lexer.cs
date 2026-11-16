@@ -14,6 +14,7 @@ public sealed class Lexer
         ["fn"] = TokenKind.Fn,
         ["if"] = TokenKind.If,
         ["else"] = TokenKind.Else,
+        ["while"] = TokenKind.While,
         ["return"] = TokenKind.Return,
         ["true"] = TokenKind.True,
         ["false"] = TokenKind.False,
@@ -69,6 +70,12 @@ public sealed class Lexer
                 return;
             case '}':
                 Add(TokenKind.RightBrace, start);
+                return;
+            case '[':
+                Add(TokenKind.LeftBracket, start);
+                return;
+            case ']':
+                Add(TokenKind.RightBracket, start);
                 return;
             case ',':
                 Add(TokenKind.Comma, start);

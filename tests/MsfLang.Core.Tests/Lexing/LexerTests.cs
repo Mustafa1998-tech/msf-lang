@@ -176,7 +176,7 @@ public sealed class LexerTests
     [Fact]
     public void L22_UnexpectedCharacters()
     {
-        foreach (var ch in new[] { '!', '?', '&', '|', '[' })
+        foreach (var ch in new[] { '!', '?', '&', '|' })
         {
             var ex = Assert.Throws<LexException>(() => Lex(ch.ToString()));
             Assert.Equal(DiagnosticCode.E1001, ex.Diagnostic.Code);

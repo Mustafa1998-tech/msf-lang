@@ -85,6 +85,11 @@ public sealed class Parser
             return ParseIfStmt(Previous());
         }
 
+        if (Match(TokenKind.While))
+        {
+            return ParseWhileStmt(Previous());
+        }
+
         if (Match(TokenKind.Return))
         {
             return ParseReturnStmt(Previous());
@@ -100,6 +105,11 @@ public sealed class Parser
             return ParseAssignStmt();
         }
 
+        if (Check(TokenKind.Identifier) && CheckNext(TokenKind.LeftBracket) && IsIndexAssignmentAhead())
+        {
+            return ParseAssignIndexStmt();
+        }
+
         // detect invalid assignment target like `x + 1 = 2;`
         var expr = ParseExpression();
         if (Match(TokenKind.Equal))
@@ -113,6 +123,56 @@ public sealed class Parser
 
         var semi = Consume(TokenKind.Semicolon, DiagnosticCode.E2002, "expected ';'");
         return new ExprStmt(expr, Span(expr.Span.Start, semi.Span.End));
+    }
+
+    private AssignIndexStmt ParseAssignIndexStmt()
+    {
+        var target = ParseCallOrPrimary(); // parses identifier and existing postfix ops (should not include list access before this point)
+        if (target is not IndexExpr index)
+        {
+            throw Error(Peek(), DiagnosticCode.E2011, "invalid assignment target");
+        }
+        if (!Match(TokenKind.Equal))
+        {
+            throw Error(Peek(), DiagnosticCode.E2008, "expected '='");
+        }
+        var value = ParseExpression();
+        var semi = Consume(TokenKind.Semicolon, DiagnosticCode.E2002, "expected ';'");
+        return new AssignIndexStmt(index.Target, index.Index, value, Span(target.Span.Start, semi.Span.End));
+    }
+
+    private WhileStmt ParseWhileStmt(Token whileToken)
+    {
+        Consume(TokenKind.LeftParen, DiagnosticCode.E2007, "expected '('");
+        EnterNesting(Peek());
+        var condition = ParseExpression();
+        ExitNesting();
+        Consume(TokenKind.RightParen, DiagnosticCode.E2003, "expected ')'");
+        if (!Check(TokenKind.LeftBrace))
+        {
+            throw Error(Peek(), DiagnosticCode.E2004, "expected '{'");
+        }
+
+        var body = ParseBlock();
+        return new WhileStmt(condition, body, Span(whileToken.Span.Start, body.Span.End));
+    }
+
+    private bool IsIndexAssignmentAhead()
+    {
+        // look for: Identifier [ expression ] =
+        var i = _current; // currently at identifier
+        if (i >= _tokens.Count || _tokens[i].Kind != TokenKind.Identifier) return false;
+        i++;
+        if (i >= _tokens.Count || _tokens[i].Kind != TokenKind.LeftBracket) return false;
+        var depth = 0;
+        for (; i < _tokens.Count; i++)
+        {
+            var k = _tokens[i].Kind;
+            if (k == TokenKind.LeftBracket) depth++;
+            else if (k == TokenKind.RightBracket) { depth--; if (depth == 0) { i++; break; } }
+        }
+        if (i >= _tokens.Count) return false;
+        return _tokens[i].Kind == TokenKind.Equal;
     }
 
     private IfStmt ParseIfStmt(Token ifToken)
@@ -289,10 +349,24 @@ public sealed class Parser
                 return FinishCall(name);
             }
 
-            return new NameExpr(name, name.Span);
+            var expr = (Expression)new NameExpr(name, name.Span);
+            return ParsePostfix(expr);
         }
 
-        return ParsePrimary();
+        var primary = ParsePrimary();
+        return ParsePostfix(primary);
+    }
+
+    private Expression ParsePostfix(Expression expr)
+    {
+        while (Match(TokenKind.LeftBracket))
+        {
+            var index = ParseExpression();
+            var close = Consume(TokenKind.RightBracket, DiagnosticCode.E2003, "expected ']'");
+            expr = new IndexExpr(expr, index, Span(expr.Span.Start, close.Span.End));
+        }
+
+        return expr;
     }
 
     private CallExpr FinishCall(Token callee)
@@ -334,6 +408,24 @@ public sealed class Parser
         {
             var t = Previous();
             return new LiteralExpr(null, t, t.Span);
+        }
+
+        if (Match(TokenKind.LeftBracket))
+        {
+            var open = Previous();
+            EnterNesting(open);
+            var items = new List<Expression>();
+            if (!Check(TokenKind.RightBracket))
+            {
+                do
+                {
+                    items.Add(ParseExpression());
+                } while (Match(TokenKind.Comma));
+            }
+
+            var close = Consume(TokenKind.RightBracket, DiagnosticCode.E2003, "expected ']'");
+            ExitNesting();
+            return new ListLiteralExpr(items, Span(open.Span.Start, close.Span.End));
         }
 
         if (Match(TokenKind.LeftParen))

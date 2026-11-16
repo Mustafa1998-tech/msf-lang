@@ -55,6 +55,24 @@ public sealed class Resolver
         _global.TryDefine(new Binding
         {
             Id = _nextId++,
+            Name = "len",
+            Kind = BindingKind.Builtin,
+            IsMutable = false,
+            Arity = 1,
+            DeclarationSpan = TextSpan.Empty
+        });
+        _global.TryDefine(new Binding
+        {
+            Id = _nextId++,
+            Name = "append",
+            Kind = BindingKind.Builtin,
+            IsMutable = false,
+            Arity = 2,
+            DeclarationSpan = TextSpan.Empty
+        });
+        _global.TryDefine(new Binding
+        {
+            Id = _nextId++,
             Name = "print",
             Kind = BindingKind.Builtin,
             IsMutable = false,
@@ -248,6 +266,15 @@ public sealed class Resolver
     {
         switch (stmt)
         {
+            case WhileStmt whileStmt:
+                ResolveExpression(whileStmt.Condition, scope);
+                ResolveStatement(whileStmt.Body, scope);
+                break;
+            case AssignIndexStmt assignIndex:
+                ResolveExpression(assignIndex.Target, scope);
+                ResolveExpression(assignIndex.Index, scope);
+                ResolveExpression(assignIndex.Value, scope);
+                break;
             case BlockStmt block:
                 ResolveBlockDeclarationsAndStatements(block, new Scope(scope), isFunctionBody: false);
                 break;
@@ -303,7 +330,17 @@ public sealed class Resolver
     {
         switch (expr)
         {
-            case LiteralExpr:
+            case ListLiteralExpr list:
+                foreach (var item in list.Items)
+                {
+                    ResolveExpression(item, scope);
+                }
+                break;
+            case IndexExpr index:
+                ResolveExpression(index.Target, scope);
+                ResolveExpression(index.Index, scope);
+                break;
+            case LiteralExpr:    
                 break;
             case GroupingExpr g:
                 ResolveExpression(g.Expression, scope);
