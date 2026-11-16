@@ -1,0 +1,5 @@
+fn inc(n) {
+    n = n + 1;
+    return n;
+}
+print(inc(1));

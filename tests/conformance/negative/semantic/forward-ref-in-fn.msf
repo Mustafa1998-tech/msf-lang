@@ -1,0 +1,6 @@
+fn later() {
+    return helper();
+}
+fn helper() {
+    return 1;
+}

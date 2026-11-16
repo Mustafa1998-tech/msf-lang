@@ -1,0 +1,5 @@
+let base = 10;
+fn addBase(n) {
+    return n + base;
+}
+print(addBase(5));

@@ -29,14 +29,10 @@ specification.
 | 2026-11-16 | M7 | `Get-Content %TEMP%\msf-repl-test.txt \| dotnet run --project src/MsfLang.Cli -c Release --no-build -- repl` | Exit 0. Output: `10`, `25` (no prompts/banner in piped mode). | Basic REPL CLI (piped) with persistence and auto-display of non-nil expression results |
 | 2026-11-16 | M8 | `dotnet test tests/MsfLang.Conformance.Tests/MsfLang.Conformance.Tests.csproj -c Release` | Exit 0. Passed: 21, Failed: 0, Skipped: 0. | Conformance harness + 20 `.msf/.expected.json` cases (positive/negative) + orphan-file check |
 | 2026-11-16 | M8+ | `dotnet test MSFLang.slnx -c Release` | Exit 0. Passed: 108, Failed: 0, Skipped: 0 (Conformance 21, Core 85, CLI 2). | Full solution green after adding initial conformance suite and CLI smoke tests |
-| — | M9 | — | Not started | — |
-| — | M3 | — | Not started | — |
-| — | M4 | — | Not started | — |
-| — | M5 | — | Not started | — |
-| — | M6 | — | Not started | — |
-| — | M7 | — | Not started | — |
-| — | M8 | — | Not started | — |
-| — | M9 | — | Not started | — |
+| 2026-11-16 | M8 (expanded) | `dotnet test tests/MsfLang.Conformance.Tests/MsfLang.Conformance.Tests.csproj -c Release` | Exit 0. Passed: 64, Failed: 0, Skipped: 0. | Conformance expanded to **63** `.msf/.expected.json` cases (positive/negative across lexical/syntax/semantic/runtime) + orphan-file check |
+| 2026-11-16 | M7/M8 | `dotnet test tests/MsfLang.Cli.Tests/MsfLang.Cli.Tests.csproj -c Release` | Exit 0. Passed: 12, Failed: 0, Skipped: 0. | CLI process tests (help/version/usage/unknown, run success/error/io, repl piped) |
+| 2026-11-16 | All (current) | `dotnet test MSFLang.slnx -c Release` | Exit 0. Passed: 161, Failed: 0, Skipped: 0 (Core 85, Conformance 64, CLI 12). | Full solution green with expanded conformance and CLI tests |
+| — | M9 | — | In progress | Hardening, full spec-contract edge cases (REPL rollback/multiline/EOF details, complete C-* matrix, R-* edge cases), 10 manual acceptance scenarios, RC |
 
 ---
 

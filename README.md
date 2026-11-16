@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 <img src="branding/logo/msf-lang-logo.png" alt="MSF Lang" width="360" />
 
@@ -6,7 +6,7 @@
 
 # MSF Lang
 
-**A small, precise, and testable programming language — designed and engineered by Mustafa Software Factory.**
+**A small, precise, and testable programming language â€” designed and engineered by Mustafa Software Factory.**
 
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![Language](https://img.shields.io/badge/language-C%23-239120?logo=csharp&logoColor=white)](src/)
@@ -14,9 +14,9 @@
 [![Status](https://img.shields.io/badge/status-in%20development-00D4FF)](#project-status)
 [![License: MIT](https://img.shields.io/badge/license-MIT-171334)](LICENSE)
 
-*Deterministic semantics · clear diagnostics · implementation-first specification*
+*Deterministic semantics Â· clear diagnostics Â· implementation-first specification*
 
-[User Guide](docs/guide/README.md) · [Specification](docs/en/SPEC-v0.1.md) · [Implementation Plan](docs/en/IMPLEMENTATION-PLAN.md) · [Decisions](docs/DECISIONS.md) · [العربية](#العربية)
+[User Guide](docs/guide/README.md) Â· [Specification](docs/en/SPEC-v0.1.md) Â· [Implementation Plan](docs/en/IMPLEMENTATION-PLAN.md) Â· [Decisions](docs/DECISIONS.md) Â· [Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©](#Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©)
 
 </div>
 
@@ -26,14 +26,14 @@
 
 **MSF Lang** (`.msf`) is a small, general-purpose, dynamically typed programming language built with a focus on:
 
-- **Clarity** — explicit syntax, no implicit conversions, no truthiness
-- **Precision** — stable diagnostic codes, 1-based Unicode-scalar locations, source excerpts
-- **Testability** — specification-driven development with traceable milestones and recorded evidence
-- **Craft** — a hand-written lexer, recursive-descent parser, semantic resolver, and tree-walk interpreter in C#/.NET
+- **Clarity** â€” explicit syntax, no implicit conversions, no truthiness
+- **Precision** â€” stable diagnostic codes, 1-based Unicode-scalar locations, source excerpts
+- **Testability** â€” specification-driven development with traceable milestones and recorded evidence
+- **Craft** â€” a hand-written lexer, recursive-descent parser, semantic resolver, and tree-walk interpreter in C#/.NET
 
 This repository contains the language specification, architecture decisions, grammar, branding concepts, and the evolving reference implementation.
 
-> **Current state:** active development. Core pipeline (source/diagnostics → lexer → parser → resolver → interpreter) is implemented for key v0.1 features, and `msf run` executes real `.msf` programs. The CLI/REPL contract, full conformance suite, and release hardening are in progress.
+> **Current state:** active development. Core pipeline (source/diagnostics â†’ lexer â†’ parser â†’ resolver â†’ interpreter) is implemented for key v0.1 features, and `msf run` executes real `.msf` programs. The CLI/REPL contract, full conformance suite, and release hardening are in progress.
 
 ---
 
@@ -108,10 +108,10 @@ More examples: [`examples/`](examples/)
 | Functions | Top-level named functions, exact arity, direct recursion |
 | Operators | Arithmetic, comparison, equality, short-circuit `and`/`or`, `not` |
 | Output | Built-in `print(...)` |
-| Diagnostics | Stable codes (`E1xxx`–`E5xxx`), line/column, excerpt, hint |
+| Diagnostics | Stable codes (`E1xxx`â€“`E5xxx`), line/column, excerpt, hint |
 | Out of scope (v0.1) | Loops, collections, closures, modules/imports, I/O beyond `print`, stdlib |
 
-See the normative specification: [English](docs/en/SPEC-v0.1.md) · [العربية](docs/ar/SPEC-v0.1.md)
+See the normative specification: [English](docs/en/SPEC-v0.1.md) Â· [Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©](docs/ar/SPEC-v0.1.md)
 
 ---
 
@@ -119,21 +119,21 @@ See the normative specification: [English](docs/en/SPEC-v0.1.md) · [العرب�
 
 ```text
 Source (.msf)
-   │
-   ▼
+   â”‚
+   â–¼
 SourceText / line map
-   │
-   ▼
-Lexer        → tokens            (E1xxx)
-   │
-   ▼
-Parser       → AST               (E2xxx)
-   │
-   ▼
-Resolver     → bindings/IDs      (E3xxx)
-   │
-   ▼
-Interpreter  → execution/output  (E4xxx)
+   â”‚
+   â–¼
+Lexer        â†’ tokens            (E1xxx)
+   â”‚
+   â–¼
+Parser       â†’ AST               (E2xxx)
+   â”‚
+   â–¼
+Resolver     â†’ bindings/IDs      (E3xxx)
+   â”‚
+   â–¼
+Interpreter  â†’ execution/output  (E4xxx)
 ```
 
 - **Core engine:** [`src/MsfLang.Core`](src/MsfLang.Core)
@@ -147,16 +147,16 @@ Interpreter  → execution/output  (E4xxx)
 
 | Milestone | Scope | Status |
 |---|---|---|
-| M0 | Specification, plan, decisions, grammar, brand concepts | ✅ Gate A approved |
-| M1 | Solution scaffold & build | ✅ Complete |
-| M2 | Source text & diagnostics | ✅ Complete |
-| M3 | Lexer | ✅ Complete |
-| M4 | Parser & AST | ✅ Complete |
-| M5 | Resolver & semantic checks | ✅ Complete |
-| M6 | Interpreter & runtime | 🚧 Core implemented, test coverage expanding |
-| M7 | CLI & REPL contract | 🚧 Basic REPL and CLI run implemented, contract/tests in progress |
-| M8 | Conformance suite & examples | 🚧 Harness + initial conformance cases added (20 passing) |
-| M9 | Hardening & release candidate | ⏳ Planned |
+| M0 | Specification, plan, decisions, grammar, brand concepts | âœ… Gate A approved |
+| M1 | Solution scaffold & build | âœ… Complete |
+| M2 | Source text & diagnostics | âœ… Complete |
+| M3 | Lexer | âœ… Complete |
+| M4 | Parser & AST | âœ… Complete |
+| M5 | Resolver & semantic checks | âœ… Complete |
+| M6 | Interpreter & runtime | 🚧 Core implemented (values, operators, control flow, functions/recursion, `print`, depth limit) + examples/tests green; edge-case hardening ongoing |
+| M7 | CLI & REPL contract | 🚧 `run/help/version/repl` implemented; process-level tests added; full spec-contract edge cases ongoing |
+| M8 | Conformance suite & examples | 🚧 Harness + **63** conformance cases passing (60+ target reached; matrix/hardening ongoing) |
+| M9 | Hardening & release candidate | â³ Planned |
 
 Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.md).
 
@@ -166,21 +166,21 @@ Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.m
 
 ```text
 .
-├── src/
-│   ├── MsfLang.Core/        # Language engine (source, diagnostics, lex/parse/resolve/runtime/repl)
-│   └── MsfLang.Cli/         # msf command-line interface
-├── tests/
-│   ├── conformance/         # .msf programs + .expected.json fixtures
-│   ├── MsfLang.*.Tests/     # Unit, CLI, and conformance test projects
-│   └── MsfLang.TestSupport/
-├── examples/                # Runnable .msf programs
-├── benchmarks/              # Benchmark programs, runner, and results
-├── docs/                    # Specs, plans, guides, roadmap, decisions, evidence (EN/AR)
-├── grammar/                 # Machine-readable EBNF
-├── branding/                # Brand concepts and review materials
-├── MSFLang.slnx
-├── Directory.Build.props
-└── global.json
+â”œâ”€â”€ src/
+â”‚   â”œâ”€â”€ MsfLang.Core/        # Language engine (source, diagnostics, lex/parse/resolve/runtime/repl)
+â”‚   â””â”€â”€ MsfLang.Cli/         # msf command-line interface
+â”œâ”€â”€ tests/
+â”‚   â”œâ”€â”€ conformance/         # .msf programs + .expected.json fixtures
+â”‚   â”œâ”€â”€ MsfLang.*.Tests/     # Unit, CLI, and conformance test projects
+â”‚   â””â”€â”€ MsfLang.TestSupport/
+â”œâ”€â”€ examples/                # Runnable .msf programs
+â”œâ”€â”€ benchmarks/              # Benchmark programs, runner, and results
+â”œâ”€â”€ docs/                    # Specs, plans, guides, roadmap, decisions, evidence (EN/AR)
+â”œâ”€â”€ grammar/                 # Machine-readable EBNF
+â”œâ”€â”€ branding/                # Brand concepts and review materials
+â”œâ”€â”€ MSFLang.slnx
+â”œâ”€â”€ Directory.Build.props
+â””â”€â”€ global.json
 ```
 
 ---
@@ -202,22 +202,22 @@ Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.m
 
 ### Reference & Project Docs
 - [Language Specification (EN)](docs/en/SPEC-v0.1.md)
-- [مواصفة اللغة (AR)](docs/ar/SPEC-v0.1.md)
+- [Ù…ÙˆØ§ØµÙØ© Ø§Ù„Ù„ØºØ© (AR)](docs/ar/SPEC-v0.1.md)
 - [Implementation & Test Plan (EN)](docs/en/IMPLEMENTATION-PLAN.md)
-- [خطة التنفيذ والاختبارات (AR)](docs/ar/IMPLEMENTATION-PLAN.md)
+- [Ø®Ø·Ø© Ø§Ù„ØªÙ†ÙÙŠØ° ÙˆØ§Ù„Ø§Ø®ØªØ¨Ø§Ø±Ø§Øª (AR)](docs/ar/IMPLEMENTATION-PLAN.md)
 - [Architecture Decisions](docs/DECISIONS.md)
 - [Test Evidence Log](docs/TEST-EVIDENCE.md)
 - [Brand Concepts](branding/CONCEPTS.md)
 
 ---
 
-## العربية
+## Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©
 
-**MSF Lang** لغة برمجة صغيرة ودقيقة بامتداد `.msf`، طورتها **Mustafa Software Factory** مع تركيز على الوضوح، التشخيص الدقيق، والاختبارية.
+**MSF Lang** Ù„ØºØ© Ø¨Ø±Ù…Ø¬Ø© ØµØºÙŠØ±Ø© ÙˆØ¯Ù‚ÙŠÙ‚Ø© Ø¨Ø§Ù…ØªØ¯Ø§Ø¯ `.msf`ØŒ Ø·ÙˆØ±ØªÙ‡Ø§ **Mustafa Software Factory** Ù…Ø¹ ØªØ±ÙƒÙŠØ² Ø¹Ù„Ù‰ Ø§Ù„ÙˆØ¶ÙˆØ­ØŒ Ø§Ù„ØªØ´Ø®ÙŠØµ Ø§Ù„Ø¯Ù‚ÙŠÙ‚ØŒ ÙˆØ§Ù„Ø§Ø®ØªØ¨Ø§Ø±ÙŠØ©.
 
-- المواصفة والخطة والقرارات متاحة بالعربية والإنجليزية داخل [`docs/`](docs/)
-- الحالة الحالية: تنفيذ نواة اللغة (المعجم، المحلل، الدلالات، المفسر) وتشغيل البرامج عبر `msf run` و`msf repl` (أساسي)، مع استمرار العمل على اكتمال العقد، وحزمة المطابقة، والتقسية
-- الكلمات المحجوزة إنجليزية في v0.1، مع دعم كامل للنصوص والتعليقات والمخرجات العربية
+- Ø§Ù„Ù…ÙˆØ§ØµÙØ© ÙˆØ§Ù„Ø®Ø·Ø© ÙˆØ§Ù„Ù‚Ø±Ø§Ø±Ø§Øª Ù…ØªØ§Ø­Ø© Ø¨Ø§Ù„Ø¹Ø±Ø¨ÙŠØ© ÙˆØ§Ù„Ø¥Ù†Ø¬Ù„ÙŠØ²ÙŠØ© Ø¯Ø§Ø®Ù„ [`docs/`](docs/)
+- Ø§Ù„Ø­Ø§Ù„Ø© Ø§Ù„Ø­Ø§Ù„ÙŠØ©: ØªÙ†ÙÙŠØ° Ù†ÙˆØ§Ø© Ø§Ù„Ù„ØºØ© (Ø§Ù„Ù…Ø¹Ø¬Ù…ØŒ Ø§Ù„Ù…Ø­Ù„Ù„ØŒ Ø§Ù„Ø¯Ù„Ø§Ù„Ø§ØªØŒ Ø§Ù„Ù…ÙØ³Ø±) ÙˆØªØ´ØºÙŠÙ„ Ø§Ù„Ø¨Ø±Ø§Ù…Ø¬ Ø¹Ø¨Ø± `msf run` Ùˆ`msf repl` (Ø£Ø³Ø§Ø³ÙŠ)ØŒ Ù…Ø¹ Ø§Ø³ØªÙ…Ø±Ø§Ø± Ø§Ù„Ø¹Ù…Ù„ Ø¹Ù„Ù‰ Ø§ÙƒØªÙ…Ø§Ù„ Ø§Ù„Ø¹Ù‚Ø¯ØŒ ÙˆØ­Ø²Ù…Ø© Ø§Ù„Ù…Ø·Ø§Ø¨Ù‚Ø©ØŒ ÙˆØ§Ù„ØªÙ‚Ø³ÙŠØ©
+- Ø§Ù„ÙƒÙ„Ù…Ø§Øª Ø§Ù„Ù…Ø­Ø¬ÙˆØ²Ø© Ø¥Ù†Ø¬Ù„ÙŠØ²ÙŠØ© ÙÙŠ v0.1ØŒ Ù…Ø¹ Ø¯Ø¹Ù… ÙƒØ§Ù…Ù„ Ù„Ù„Ù†ØµÙˆØµ ÙˆØ§Ù„ØªØ¹Ù„ÙŠÙ‚Ø§Øª ÙˆØ§Ù„Ù…Ø®Ø±Ø¬Ø§Øª Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©
 
 ---
 
@@ -233,6 +233,6 @@ Distributed under the [MIT License](LICENSE).
 
 <div align="center">
 
-**MSF Lang** · Built with precision by Mustafa Software Factory
+**MSF Lang** Â· Built with precision by Mustafa Software Factory
 
 </div>

@@ -1,0 +1,3 @@
+fn a() { return 1; }
+fn b() { return a(); }
+print(b());

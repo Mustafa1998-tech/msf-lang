@@ -1,0 +1,4 @@
+print(-5);
+print(--3);
+print(not true);
+print(not not false);

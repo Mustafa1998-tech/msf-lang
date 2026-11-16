@@ -1,0 +1,2 @@
+print(f());
+fn f() { return 1; }
