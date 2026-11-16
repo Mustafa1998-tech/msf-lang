@@ -1,6 +1,6 @@
 ﻿<div align="center">
 
-<img src="branding/logo/msf-lang-logo.png?v=2" alt="MSF Lang" width="360" />
+<img src="branding/logo/msf-lang-logo-approved.png" alt="MSF Lang" width="360" />
 
 [Official brand guidelines](branding/BRAND-GUIDELINES.md)
 
@@ -246,3 +246,4 @@ Distributed under the [MIT License](LICENSE).
 **MSF Lang** · Built with precision by Mustafa Software Factory
 
 </div>
+
