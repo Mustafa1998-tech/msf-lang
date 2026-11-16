@@ -1,0 +1,8 @@
+fn sumTo(n, acc) {
+    if (n == 0) {
+        return acc;
+    }
+    return sumTo(n - 1, acc + n);
+}
+
+print(sumTo(999, 0));

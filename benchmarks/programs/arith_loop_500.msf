@@ -1,0 +1,8 @@
+fn loop(n, acc) {
+    if (n == 0) {
+        return acc;
+    }
+    return loop(n - 1, acc + (n * 3 - n / 2));
+}
+
+print(loop(500, 0));

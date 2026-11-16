@@ -11,6 +11,7 @@ Welcome to the MSF Lang user guide. This section explains how to build, run, and
 - [CLI Reference](cli.md) — `msf run`, help/version, exit codes, and current limitations
 - [Diagnostics & Errors](diagnostics.md) — how to read errors and common error codes
 - [Examples](examples.md) — runnable sample programs
+- [Benchmarks](benchmarks.md) — performance benchmarks, methodology, and latest results
 
 ## Quick Example
 

@@ -186,6 +186,7 @@ Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.m
 - [CLI Reference](docs/guide/cli.md)
 - [Diagnostics & Errors](docs/guide/diagnostics.md)
 - [Examples](docs/guide/examples.md)
+- [Benchmarks](docs/guide/benchmarks.md)
 
 ### Reference & Project Docs
 - [Language Specification (EN)](docs/en/SPEC-v0.1.md)
