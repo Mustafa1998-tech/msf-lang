@@ -27,7 +27,10 @@ public sealed class CliSmokeTests
     {
         var (exit, stdout, _) = RunCli("--help");
         Assert.Equal(0, exit);
-        Assert.Contains("msf run <path>", Normalize(stdout));
+        var text = Normalize(stdout);
+        Assert.Contains("msf run <path>", text);
+        Assert.Contains("v0.1", text);
+        Assert.Contains("Specification", text);
     }
 
     [Fact]

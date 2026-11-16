@@ -1,0 +1,19 @@
+// MSF Lang v0.2 practical draft example: while, lists, len, append
+var numbers = [1, 2, 3, 4, 5];
+var doubled = [];
+var i = 0;
+
+while (i < len(numbers)) {
+    append(doubled, numbers[i] * 2);
+    i = i + 1;
+}
+
+var total = 0;
+i = 0;
+while (i < len(doubled)) {
+    total = total + doubled[i];
+    i = i + 1;
+}
+
+print("doubled:", doubled);
+print("total:", total);

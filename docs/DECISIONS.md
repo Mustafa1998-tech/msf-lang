@@ -29,7 +29,7 @@ append-only: a decision is superseded by a new record, never silently edited.
 | ADR-0014 | Conformance fixtures are `.msf` + `.expected.json` | Proposed |
 | ADR-0015 | C#/.NET 10 only; no third-party runtime dependencies | Proposed |
 | ADR-0016 | Brand concept approval before final assets; no registry writes without Gate D | Proposed |
-| ADR-0017 | Arabic + English documentation; English normative on conflict | Proposed |
+| ADR-0018 | v0.2 "Practical Programming" draft: loops, lists, len/append | Proposed (implemented as draft) |
 
 ---
 
@@ -349,6 +349,22 @@ guidelines. English is normative if the two texts disagree; discrepancies must b
 
 **Arabic.** تُصان وثائق عربية وإنجليزية كاملة، والإنجليزية مرجعية عند التعارض. الكود والكلمات
 المحجوزة إنجليزية في 0.1، والعربية مدعومة كاملة في النصوص والتعليقات والمخرجات والتوثيق.
+
+---
+
+## ADR-0018 — v0.2 "Practical Programming" draft: loops, lists, `len`, `append`
+
+**Context.** v0.1 is intentionally minimal; common scripts need iteration and dynamic collections. A full v0.2 feature set (maps, modules, stdlib) is too large for one stable increment.
+**Decision.** MSF Lang introduces an explicitly labeled **v0.2 draft** with `while`, `break`/`continue`, dynamic heterogeneous `list` literals/indexing/in-place element assignment, and builtins `len` (list or string) and `append` (mutating a list). List equality is identity reference equality. List display quotes nested strings for unambiguous `print`/REPL output.
+**Consequences.**
+
+- Everyday iteration no longer depends solely on recursion.
+- List operations are deterministic and avoid hidden conversions.
+- v0.2 reserves names (`while`, `break`, `continue`, `len`, `append`) that were legal identifiers in v0.1; this is a documented compatibility risk.
+- Indexing failures use new runtime diagnostics `E4007`; builtin argument mismatch uses `E4008`; `break`/`continue` outside loops uses `E3013`/`E3014`.
+- v0.2 maps, modules, stdlib APIs, and file I/O remain deferred; they require separate ADRs and conformance coverage.
+
+**Arabic.** تُقدّم لغة 0.2 مسودة عملية تتضمن `while` و`break/continue` وقوائم ديناميكية وفهرسة وإسناد العناصر و`len`/`append`. المساواة بين القوائم بمرجعها فقط. لا تُضاف خريطة/وحدات/مكتبة قياسية في هذه المسودة.
 
 ---
 

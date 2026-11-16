@@ -237,6 +237,17 @@ internal static class CommandLine
             "  msf run <path>\n" +
             "  msf repl\n" +
             "  msf --help | -h\n" +
-            "  msf --version | -v\n");
+            "  msf --version | -v\n" +
+            "\n" +
+            "Commands:\n" +
+            "  msf run <path>   Execute a .msf program\n" +
+            "  msf repl         Start an interactive or piped REPL\n" +
+            "  msf --help       Show this help\n" +
+            "  msf --version    Print version\n" +
+            "\n" +
+            "MSF Lang v0.1 scope: values (number/string/boolean/nil), let/var block scope,\n" +
+            "if/else-if/else, functions (top-level only, direct recursion), built-in print,\n" +
+            "strict boolean conditions, UTF-8 source, stable diagnostics (E1xxx-E5xxx).\n" +
+            "Specification: https://github.com/Mustafa1998-tech/msf-lang/blob/master/docs/en/SPEC-v0.1.md\n");
     }
 }

@@ -84,6 +84,37 @@ print(1 + "2"); // E4004
 print(10 / 0); // E4002
 ```
 
+## 7. Practical Lists and Loops (v0.2 draft)
+
+**File:** [`examples/practical-lists.msf`](../../examples/practical-lists.msf)
+
+```msf
+var numbers = [1, 2, 3, 4, 5];
+var doubled = [];
+var i = 0;
+
+while (i < len(numbers)) {
+    append(doubled, numbers[i] * 2);
+    i = i + 1;
+}
+
+var total = 0;
+i = 0;
+while (i < len(doubled)) {
+    total = total + doubled[i];
+    i = i + 1;
+}
+
+print("doubled:", doubled);
+print("total:", total);
+```
+
+Output:
+```text
+doubled: [2, 4, 6, 8, 10]
+total: 30
+```
+
 ## Next
 
 - Read [Syntax & Language Basics](syntax.md) for the full v0.1 language surface
