@@ -11,6 +11,7 @@ Thank you for your interest in contributing to MSF Lang. This project follows a 
 - [Roadmap](docs/ROADMAP.md)
 - [Problem-Solving Direction](docs/PROBLEM-SOLVING.md)
 - [Test Evidence Log](docs/TEST-EVIDENCE.md)
+- [Security](SECURITY.md) · [Security Guide](docs/guide/security.md)
 
 ## Ground rules
 

@@ -53,6 +53,8 @@ We will not pursue legal action against researchers who:
 - Do not commit secrets, certificates, or private keys.
 - Review registry/file-association changes (Windows integration) require explicit Gate D approval and a disposable test environment.
 - Keep dependencies and tooling pinned where practical (see `global.json`).
+- Runtime security controls (see [`docs/guide/security.md`](../docs/guide/security.md)): bounded user-call depth (1000), bounded parser nesting (256), strict UTF-8, no I/O capabilities in v0.1, dedicated 32 MiB interpreter stack in the CLI.
+- When changing external behavior, add/update tests and note the security implications in the PR description.
 
 ## Public disclosure
 
