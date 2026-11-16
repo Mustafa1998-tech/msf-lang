@@ -15,6 +15,9 @@ public sealed class Interpreter
         public MsfValue Value { get; }
     }
 
+    private sealed class BreakSignal : Exception { }
+    private sealed class ContinueSignal : Exception { }
+
     private readonly SemanticModel _model;
     private readonly TextWriter _stdout;
     private int _callDepth;
@@ -73,6 +76,10 @@ public sealed class Interpreter
     {
         switch (stmt)
         {
+            case BreakStmt:
+                throw new BreakSignal();
+            case ContinueStmt:
+                throw new ContinueSignal();
             case WhileStmt whileStmt:
                 ExecuteWhile(whileStmt, env);
                 break;
@@ -142,7 +149,18 @@ public sealed class Interpreter
             }
 
             if (!b.Value) break;
-            ExecuteBlock(stmt.Body, new MsEnvironment(env));
+            try
+            {
+                ExecuteBlock(stmt.Body, new MsEnvironment(env));
+            }
+            catch (BreakSignal)
+            {
+                break;
+            }
+            catch (ContinueSignal)
+            {
+                continue;
+            }
         }
     }
 

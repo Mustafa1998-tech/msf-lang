@@ -21,6 +21,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - License and community policy files: `LICENSE` (MIT), `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`
 - Benchmarks, performance measurement policy, and user documentation (guide, syntax, CLI, diagnostics, examples, security)
 - Project roadmap, problem-solving direction, and architecture documentation (`docs/ARCHITECTURE.md`)
+- v0.2 "Practical Programming" draft:
+  - `while (condition) { block }` (strict boolean condition)
+  - `break;` / `continue;` loop control
+  - `list` value: dynamic heterogeneous arrays, list literals, zero-based indexing, in-place element assignment
+  - Builtins: `len(list|string)`, `append(list, value)`
+  - New diagnostics: `E4007` (list index/type failures), `E4008` (`len`/`append` argument mismatch), `E3013` (`break` outside loop), `E3014` (`continue` outside loop)
+  - Draft spec: `docs/en/SPEC-v0.2-practical.md`
 
 ### Notes
 - Latest recorded full-suite result: **175 passed / 0 failed / 0 skipped** (Core 88, Conformance 72, CLI 15) with **71 conformance cases**.
