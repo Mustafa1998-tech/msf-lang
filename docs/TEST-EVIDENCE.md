@@ -1,10 +1,10 @@
-# MSF Lang — Test Evidence Log
+﻿# MSF Lang — Test Evidence Log
 
 **Rule:** a feature or milestone is not complete until this file contains the command that was
 actually run, the date, and the observed result. No test result may be inferred or copied from a
 plan.
 
-**Status:** Active implementation (post-Gate A). Evidence below records executed builds/tests/runs. Latest full solution run: `dotnet test MSFLang.slnx -c Release` → **Passed 161, Failed 0, Skipped 0** (Core 85, Conformance 64, CLI 12). Some M6/M7/M9 hardening and spec-contract edge cases remain in progress.
+**Status:** Active implementation (post-Gate A). Evidence below records executed builds/tests/runs. Latest full solution run: `dotnet test MSFLang.slnx -c Release` -> **Passed 161, Failed 0, Skipped 0** (Core 85, Conformance 64, CLI 12). Some M6/M7/M9 hardening and spec-contract edge cases remain in progress.
 
 ---
 
@@ -17,7 +17,7 @@ plan.
 | 2026-11-16 | M1 | `dotnet run --project src/MsfLang.Cli -c Release --` | Exit 3. Printed usage. | Smoke: no args => usage error (E5002 path not yet wired, but exit 3 as required) |
 | 2026-11-16 | M2 | `dotnet test tests/MsfLang.Core.Tests/MsfLang.Core.Tests.csproj -c Release --filter "FullyQualifiedName~Source\|FullyQualifiedName~Diagnostic"` | Exit 0. Passed: 10, Failed: 0, Skipped: 0. | SourceText (BOM, LF/CRLF/CR, Unicode scalar columns, tabs, EOF, line text) and DiagnosticFormatter (excerpt/caret/hint/tabs/Unicode/gutter) |
 | 2026-11-16 | M3 | `dotnet test tests/MsfLang.Core.Tests/MsfLang.Core.Tests.csproj -c Release --filter "FullyQualifiedName~Lexer"` | Exit 0. Passed: 31, Failed: 0, Skipped: 0. | Lexer tokens/keywords/identifiers/numbers/strings/escapes/comments, EOF spans, E1001/E1003/E1004/E1005 cases, CRLF/Unicode string handling (subset covering key L-* cases) |
-| 2026-11-16 | M4 | `dotnet test tests/MsfLang.Core.Tests/MsfLang.Core.Tests.csproj -c Release --filter "FullyQualifiedName~Parser"` | Exit 0. Passed: 23, Failed: 0, Skipped: 0. | AST/recursive-descent parser: decls/stmts/exprs/calls, precedence/associativity, if/else-if/dangling else, spans, E2002-E2013 and EOF→E2010, nesting limit 256/257 (key P-* cases) |
+| 2026-11-16 | M4 | `dotnet test tests/MsfLang.Core.Tests/MsfLang.Core.Tests.csproj -c Release --filter "FullyQualifiedName~Parser"` | Exit 0. Passed: 23, Failed: 0, Skipped: 0. | AST/recursive-descent parser: decls/stmts/exprs/calls, precedence/associativity, if/else-if/dangling else, spans, E2002-E2013 and EOF->E2010, nesting limit 256/257 (key P-* cases) |
 | 2026-11-16 | M5 | `dotnet test tests/MsfLang.Core.Tests/MsfLang.Core.Tests.csproj -c Release --filter "FullyQualifiedName~Resolver"` | Exit 0. Passed: 20, Failed: 0, Skipped: 0. | Bindings/IDs, lexical scoping, textual-order top-level visibility, direct recursion, E3001-E3011 checks (key S-* cases) |
 | 2026-11-16 | M6 | `dotnet test tests/MsfLang.Core.Tests/MsfLang.Core.Tests.csproj -c Release` | Exit 0. Passed: 84, Failed: 0, Skipped: 0. | All existing Core tests pass after interpreter/runtime integration (Source/Diagnostics/Lexer/Parser/Resolver suites) |
 | 2026-11-16 | M6 | `dotnet run --project src/MsfLang.Cli -c Release --no-build -- run examples/hello.msf` | Exit 0. Output: `Hello, MSF!` | Basic run pipeline works |

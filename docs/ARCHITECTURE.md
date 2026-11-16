@@ -1,4 +1,4 @@
-# MSF Lang Architecture
+﻿# MSF Lang Architecture
 
 This document describes the current architecture and implementation structure of the MSF Lang reference implementation (v0.1, in active development).
 
@@ -16,23 +16,23 @@ This document describes the current architecture and implementation structure of
 
 ```text
 .msf source (UTF-8)
-   │
-   ▼
+   |
+   v
 SourceText (line map, BOM handling, Unicode-scalar positions)
-   │
-   ▼
+   |
+   v
 Lexer (tokens, E1xxx)
-   │
-   ▼
+   |
+   v
 Parser / AST (recursive descent, E2xxx)
-   │
-   ▼
+   |
+   v
 Resolver / SemanticModel (scopes, bindings, static checks, E3xxx)
-   │
-   ▼
+   |
+   v
 Interpreter (tree-walk execution, runtime checks, E4xxx)
-   │
-   ▼
+   |
+   v
 stdout / stderr diagnostics / exit code
 ```
 
@@ -73,7 +73,7 @@ stdout / stderr diagnostics / exit code
 
 ### 4.5 Semantic Analysis (`Semantics/`)
 - `Resolver` performs lexical scope resolution and static checks in textual order.
-- Assigns numeric binding IDs and records mappings in `SemanticModel` (AST node → binding; parameter bindings for functions).
+- Assigns numeric binding IDs and records mappings in `SemanticModel` (AST node -> binding; parameter bindings for functions).
 - Enforces v0.1 rules such as declaration/assignment validity, top-level function restrictions, direct-call arity checks, `return` placement, and value-position restrictions for callables.
 - Builtin `print` is predeclared/reserved in the global scope.
 

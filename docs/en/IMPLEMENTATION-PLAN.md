@@ -1,4 +1,4 @@
-# MSF Lang v0.1 — Implementation and Test Plan
+﻿# MSF Lang v0.1 — Implementation and Test Plan
 
 **Spec:** [`SPEC-v0.1.md`](SPEC-v0.1.md), version `0.1.0-draft.1`  
 **Status:** Gate A approved; implementation in progress. Core/CLI/tests are implemented with recorded evidence (latest full suite: 161 passed / 0 failed / 0 skipped; 63 conformance cases). This document remains the milestone/test-plan reference and may lag implementation details in places; see [`../TEST-EVIDENCE.md`](../TEST-EVIDENCE.md) and [`../ARCHITECTURE.md`](../ARCHITECTURE.md) for current state.  
@@ -27,26 +27,26 @@ The plan is written so that every claim can be checked by a command and an obser
 
 ```text
  file bytes
-    │
-    ▼
-[ strict UTF-8 reader ] ── E5005 / exit 4
-    │
-    ▼
+    |
+    v
+[ strict UTF-8 reader ] -- E5005 / exit 4
+    |
+    v
 [ SourceText + line map ]
-    │
-    ▼
-[ Lexer ] ── E1xxx / exit 1
-    │  tokens
-    ▼
-[ Parser ] ── E2xxx / exit 1
-    │  AST with spans
-    ▼
-[ Resolver ] ── E3xxx / exit 1
-    │  annotated AST + bindings
-    ▼
-[ Tree-walk Interpreter ] ── E4xxx / exit 2
-    │
-    ▼
+    |
+    v
+[ Lexer ] -- E1xxx / exit 1
+    |  tokens
+    v
+[ Parser ] -- E2xxx / exit 1
+    |  AST with spans
+    v
+[ Resolver ] -- E3xxx / exit 1
+    |  annotated AST + bindings
+    v
+[ Tree-walk Interpreter ] -- E4xxx / exit 2
+    |
+    v
  stdout / stderr / exit code
 ```
 
@@ -76,64 +76,64 @@ test SDK.
 
 ```text
 MSF Lang/
-├── MSFLang.sln
-├── Directory.Build.props
-├── global.json
-├── src/
-│   ├── MsfLang.Core/
-│   │   ├── MsfLang.Core.csproj
-│   │   ├── MsfEngine.cs                 # public facade
-│   │   ├── Source/
-│   │   │   ├── SourceText.cs
-│   │   │   ├── TextSpan.cs
-│   │   │   └── SourcePosition.cs
-│   │   ├── Diagnostics/
-│   │   │   ├── Diagnostic.cs
-│   │   │   ├── DiagnosticCode.cs
-│   │   │   ├── DiagnosticPhase.cs
-│   │   │   ├── DiagnosticFormatter.cs
-│   │   │   └── LanguageException.cs
-│   │   ├── Lexing/
-│   │   │   ├── TokenKind.cs
-│   │   │   ├── Token.cs
-│   │   │   └── Lexer.cs
-│   │   ├── Syntax/
-│   │   │   ├── Ast.cs
-│   │   │   ├── Parser.cs
-│   │   │   └── AstPrinter.cs           # debug-only, not a CLI feature
-│   │   ├── Semantics/
-│   │   │   ├── Binding.cs
-│   │   │   ├── BindingKind.cs
-│   │   │   ├── Resolver.cs
-│   │   │   └── SemanticModel.cs
-│   │   ├── Runtime/
-│   │   │   ├── MsfValue.cs
-│   │   │   ├── Environment.cs
-│   │   │   ├── Interpreter.cs
-│   │   │   ├── Builtins.cs
-│   │   │   └── ValueFormatter.cs
-│   │   └── Repl/
-│   │       └── ReplSession.cs
-│   └── MsfLang.Cli/
-│       ├── MsfLang.Cli.csproj
-│       ├── Program.cs
-│       ├── CommandLine.cs
-│       ├── ExitCode.cs
-│       ├── RunCommand.cs
-│       └── ReplCommand.cs
-├── tests/
-│   ├── MsfLang.Core.Tests/
-│   ├── MsfLang.Cli.Tests/
-│   ├── MsfLang.Conformance.Tests/
-│   ├── MsfLang.TestSupport/
-│   └── conformance/
-│       ├── positive/
-│       ├── negative/
-│       └── repl/
-├── examples/
-├── docs/
-├── grammar/
-└── branding/
+|-- MSFLang.sln
+|-- Directory.Build.props
+|-- global.json
+|-- src/
+|   |-- MsfLang.Core/
+|   |   |-- MsfLang.Core.csproj
+|   |   |-- MsfEngine.cs                 # public facade
+|   |   |-- Source/
+|   |   |   |-- SourceText.cs
+|   |   |   |-- TextSpan.cs
+|   |   |   `-- SourcePosition.cs
+|   |   |-- Diagnostics/
+|   |   |   |-- Diagnostic.cs
+|   |   |   |-- DiagnosticCode.cs
+|   |   |   |-- DiagnosticPhase.cs
+|   |   |   |-- DiagnosticFormatter.cs
+|   |   |   `-- LanguageException.cs
+|   |   |-- Lexing/
+|   |   |   |-- TokenKind.cs
+|   |   |   |-- Token.cs
+|   |   |   `-- Lexer.cs
+|   |   |-- Syntax/
+|   |   |   |-- Ast.cs
+|   |   |   |-- Parser.cs
+|   |   |   `-- AstPrinter.cs           # debug-only, not a CLI feature
+|   |   |-- Semantics/
+|   |   |   |-- Binding.cs
+|   |   |   |-- BindingKind.cs
+|   |   |   |-- Resolver.cs
+|   |   |   `-- SemanticModel.cs
+|   |   |-- Runtime/
+|   |   |   |-- MsfValue.cs
+|   |   |   |-- Environment.cs
+|   |   |   |-- Interpreter.cs
+|   |   |   |-- Builtins.cs
+|   |   |   `-- ValueFormatter.cs
+|   |   `-- Repl/
+|   |       `-- ReplSession.cs
+|   `-- MsfLang.Cli/
+|       |-- MsfLang.Cli.csproj
+|       |-- Program.cs
+|       |-- CommandLine.cs
+|       |-- ExitCode.cs
+|       |-- RunCommand.cs
+|       `-- ReplCommand.cs
+|-- tests/
+|   |-- MsfLang.Core.Tests/
+|   |-- MsfLang.Cli.Tests/
+|   |-- MsfLang.Conformance.Tests/
+|   |-- MsfLang.TestSupport/
+|   `-- conformance/
+|       |-- positive/
+|       |-- negative/
+|       `-- repl/
+|-- examples/
+|-- docs/
+|-- grammar/
+`-- branding/
 ```
 
 ### 2.4 Project settings
@@ -274,7 +274,7 @@ Declaration    TextSpan
 
 Scopes:
 
-- A `Scope` maps name → binding and has a parent.
+- A `Scope` maps name -> binding and has a parent.
 - The global scope starts with `print` (Builtin, variadic).
 - A function body's scope contains parameters and body-top-level locals. It is not an extra child
   of the parameter scope.
@@ -492,28 +492,28 @@ These are minimum test counts, not claims of completed work:
 
 #### Lexer (`L-*`)
 
-- `L-01` empty file → only EOF
+- `L-01` empty file -> only EOF
 - `L-02` BOM at start is ignored
-- `L-03` BOM not at start → E1001
+- `L-03` BOM not at start -> E1001
 - `L-04` spaces, tabs, LF, CRLF, CR
 - `L-05` line comment at start, middle, EOF
 - `L-06` block comment, including newlines
 - `L-07` nested block comment ends at first `*/`
-- `L-08` unterminated block comment → E1005 at opening
+- `L-08` unterminated block comment -> E1005 at opening
 - `L-09` every keyword token
 - `L-10` keyword prefixes (`lets`, `iffy`) are identifiers
 - `L-11` identifier with underscore/digits
 - `L-12` integer literals, zero, multi-digit
 - `L-13` fractional literals
 - `L-14` `1.` / `.5` do not form a number
-- `L-15` non-finite literal → E1002
+- `L-15` non-finite literal -> E1002
 - `L-16` string with Arabic and emoji
 - `L-17` each escape: `\n \t \r \\ \"`
-- `L-18` unknown escape → E1004
-- `L-19` raw newline in string → E1003
-- `L-20` unterminated string at EOF → E1003
+- `L-18` unknown escape -> E1004
+- `L-19` raw newline in string -> E1003
+- `L-20` unterminated string at EOF -> E1003
 - `L-21` two-character operators
-- `L-22` lone `!`, `?`, `&`, `|`, `[` → E1001
+- `L-22` lone `!`, `?`, `&`, `|`, `[` -> E1001
 - `L-23` columns count scalar values for Arabic
 - `L-24` columns count scalar values for emoji
 - `L-25` tab counts as one column
@@ -546,53 +546,53 @@ These are minimum test counts, not claims of completed work:
 - `P-14` arithmetic precedence
 - `P-15` comparison/equality/logical precedence
 - `P-16` left associativity of `-`, `/`, `and`
-- `P-17` missing `;` → E2002
-- `P-18` missing `;` at EOF → E2010
-- `P-19` missing `)` → E2003
-- `P-20` missing `{` → E2004
-- `P-21` missing `}` at EOF → E2010
-- `P-22` missing identifier → E2006
-- `P-23` missing `(` after `if`/`fn` → E2007
-- `P-24` missing `=` in declaration → E2008
-- `P-25` lone `;` → E2009
+- `P-17` missing `;` -> E2002
+- `P-18` missing `;` at EOF -> E2010
+- `P-19` missing `)` -> E2003
+- `P-20` missing `{` -> E2004
+- `P-21` missing `}` at EOF -> E2010
+- `P-22` missing identifier -> E2006
+- `P-23` missing `(` after `if`/`fn` -> E2007
+- `P-24` missing `=` in declaration -> E2008
+- `P-25` lone `;` -> E2009
 - `P-26` `(f)(1)` rejected
 - `P-27` `f()()` rejected
-- `P-28` `x + 1 = 2;` → E2011 at `=`
+- `P-28` `x + 1 = 2;` -> E2011 at `=`
 - `P-29` trailing comma rejected
 - `P-30` `else` without `if` rejected
 - `P-31` `return` in a value position rejected
 - `P-32` 256 nested parentheses accepted
-- `P-33` 257 nested parentheses → E2013
+- `P-33` 257 nested parentheses -> E2013
 - `P-34` spans start/end on the correct tokens
 - `P-35` keywords cannot be parameter names
 
 #### Resolver (`S-*`)
 
 - `S-01` valid forward use of a global declared before a function
-- `S-02` later global inside a function → E3001
-- `S-03` call before function declaration → E3001
+- `S-02` later global inside a function -> E3001
+- `S-03` call before function declaration -> E3001
 - `S-04` direct recursion resolves
 - `S-05` mutual recursion fails at the forward call
-- `S-06` undefined variable/function → E3001
-- `S-07` duplicate variable in same scope → E3002
+- `S-06` undefined variable/function -> E3001
+- `S-07` duplicate variable in same scope -> E3002
 - `S-08` shadowing in a child block is allowed
-- `S-09` duplicate parameter → E3003
-- `S-10` parameter and body local same name → E3002
-- `S-11` `let print = 1;` → E3004 in any scope
-- `S-12` assignment to `let` → E3005
-- `S-13` assignment to function → E3006
-- `S-14` assignment to `print` → E3006
-- `S-15` nested function → E3007
-- `S-16` wrong arity (too few/too many) → E3008
-- `S-17` calling a variable → E3009
-- `S-18` function used as value → E3010
-- `S-19` builtin used as value → E3010
-- `S-20` `return` at top level → E3011
+- `S-09` duplicate parameter -> E3003
+- `S-10` parameter and body local same name -> E3002
+- `S-11` `let print = 1;` -> E3004 in any scope
+- `S-12` assignment to `let` -> E3005
+- `S-13` assignment to function -> E3006
+- `S-14` assignment to `print` -> E3006
+- `S-15` nested function -> E3007
+- `S-16` wrong arity (too few/too many) -> E3008
+- `S-17` calling a variable -> E3009
+- `S-18` function used as value -> E3010
+- `S-19` builtin used as value -> E3010
+- `S-20` `return` at top level -> E3011
 - `S-21` `return` in a nested block inside a function is allowed
 - `S-22` initializer sees outer binding, not the new one
-- `S-23` initializer without outer binding → E3001
+- `S-23` initializer without outer binding -> E3001
 - `S-24` local variable shadows a global function
-- `S-25` top-level variable/function name collision → E3002
+- `S-25` top-level variable/function name collision -> E3002
 - `S-26` parameter assignment is allowed
 - `S-27` `var` can change value type
 - `S-28` function body cannot see caller locals (only globals) — scoping test
@@ -605,23 +605,23 @@ These are minimum test counts, not claims of completed work:
 - `R-02` string literal and display
 - `R-03` boolean and nil display
 - `R-04` `+ - * / %` numeric
-- `R-05` division by zero → E4002
-- `R-06` modulo by zero → E4003
+- `R-05` division by zero -> E4002
+- `R-06` modulo by zero -> E4003
 - `R-07` `%` sign behavior
 - `R-08` string concatenation
-- `R-09` mixed `+` → E4004
-- `R-10` numeric operator on string/bool → E4004
+- `R-09` mixed `+` -> E4004
+- `R-10` numeric operator on string/bool -> E4004
 - `R-11` comparison numbers
-- `R-12` comparison wrong types → E4004
+- `R-12` comparison wrong types -> E4004
 - `R-13` equality same type
-- `R-14` equality different types → false/true, no error
+- `R-14` equality different types -> false/true, no error
 - `R-15` nil equality
 - `R-16` `and` true/false
 - `R-17` `or` true/false
 - `R-18` `not`
 - `R-19` short-circuit avoids division by zero
-- `R-20` logical non-boolean → E4004
-- `R-21` condition non-boolean → E4001
+- `R-20` logical non-boolean -> E4004
+- `R-21` condition non-boolean -> E4001
 - `R-22` if/else-if/else branch selection
 - `R-23` block scoping and shadowing
 - `R-24` let/var assignment behavior
@@ -633,7 +633,7 @@ These are minimum test counts, not claims of completed work:
 - `R-30` recursion factorial
 - `R-31` recursion fibonacci
 - `R-32` 1000 active calls succeed
-- `R-33` 1001 active calls → E4005
+- `R-33` 1001 active calls -> E4005
 - `R-34` `print()` newline
 - `R-35` print separators and multiple values
 - `R-36` print strings unquoted
@@ -642,9 +642,9 @@ These are minimum test counts, not claims of completed work:
 - `R-39` output before runtime error remains
 - `R-40` empty program
 - `R-41` expression values discarded in run mode
-- `R-42` finite overflow → E4006
+- `R-42` finite overflow -> E4006
 - `R-43` very large but finite literal accepted
-- `R-44` unary minus on non-number → E4004
+- `R-44` unary minus on non-number -> E4004
 - `R-45` nested function calls and argument order
 - `R-46` if condition evaluated once
 - `R-47` function values not reachable at runtime (resolver gate)
@@ -680,7 +680,7 @@ These are minimum test counts, not claims of completed work:
 - `C-19` REPL piped: compile error, state unchanged
 - `C-20` REPL piped: runtime error rollback, state restored
 - `C-21` REPL piped: multiline function definition
-- `C-22` REPL piped: EOF while incomplete → one E2010
+- `C-22` REPL piped: EOF while incomplete -> one E2010
 - `C-23` `:quit` and `:help`
 - `C-24` runtime output before error preserved in stdout
 
@@ -901,11 +901,11 @@ Only then is v0.1.0 tagged.
 
 These are the scenarios a reviewer can run manually after M8:
 
-1. `msf run examples/hello.msf` → `Hello, MSF!` and exit 0.
-2. `msf run examples/factorial.msf` → `3628800` then `55` and exit 0.
-3. A runtime type error → exit 2, diagnostic with E4004, correct line/column, no stack trace.
-4. An immutable assignment → exit 1, E3005, and no output from the program.
-5. A missing file → exit 4, E5003, no crash.
+1. `msf run examples/hello.msf` -> `Hello, MSF!` and exit 0.
+2. `msf run examples/factorial.msf` -> `3628800` then `55` and exit 0.
+3. A runtime type error -> exit 2, diagnostic with E4004, correct line/column, no stack trace.
+4. An immutable assignment -> exit 1, E3005, and no output from the program.
+5. A missing file -> exit 4, E5003, no crash.
 6. Piped REPL:
    ```text
    let x = 5;
@@ -913,10 +913,10 @@ These are the scenarios a reviewer can run manually after M8:
    fn square(n) { return n * n; }
    square(x);
    ```
-   → `10` and `25`, exit 0, no prompts.
+   -> `10` and `25`, exit 0, no prompts.
 7. REPL rollback: declare `var x = 1;`, then an entry that assigns `x = 2;` and divides by zero;
    after the error, `x;` still displays `1`.
-8. `msf --version` → exactly `msf 0.1.0`.
+8. `msf --version` -> exactly `msf 0.1.0`.
 9. Path with spaces works.
 10. Arabic string output is UTF-8 and not mojibake.
 
@@ -972,7 +972,7 @@ This track does not block the engine, and the engine does not block it. It has i
 | B4 | `BRAND_GUIDELINES.md`, asset manifest, integration test notes | Final review |
 
 VS Code icon-theme activation is explicit: a contributed icon theme is not automatically shown.
-The extension will document selecting **File Icon Theme → MSF Lang**, and may offer a command that
+The extension will document selecting **File Icon Theme -> MSF Lang**, and may offer a command that
 updates `workbench.iconTheme` only after the user invokes it. The extension is declarative for
 highlighting and launches the real `msf` executable for execution; it never interprets MSF Lang
 in JavaScript or TypeScript.
