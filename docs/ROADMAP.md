@@ -17,11 +17,11 @@ This roadmap describes the planned evolution of MSF Lang from a stable v0.1 lang
 
 **Goal:** deliver a conforming, well-tested reference implementation of MSF Lang v0.1.
 
-### In progress / planned
-- **M6 (Runtime hardening):** complete interpreter/runtime edge cases and unit coverage (R-* matrix)
-- **M7 (CLI & REPL):** full CLI contract, REPL persistence/multiline/auto-display/runtime-error rollback, process-level tests
-- **M8 (Conformance):** `.msf` + `.expected.json` conformance suite (60+ programs), examples, traceability
-- **M9 (Release candidate):** full green suite, manual acceptance scenarios, cross-check spec vs implementation, RC tagging
+### Current progress (evidence-backed)
+- **M6 (Runtime hardening):** core interpreter/runtime implemented and substantially tested; remaining R-* edge cases and spec-contract details in progress
+- **M7 (CLI & REPL):** `run/help/version/repl` implemented with process-level tests added (12 CLI tests); full spec-contract edge cases (REPL rollback/incomplete/EOF details, complete C-* matrix) in progress
+- **M8 (Conformance):** harness and **63** `.msf` + `.expected.json` conformance cases passing (60+ target reached); continued matrix expansion and traceability hardening in progress
+- **M9 (Release candidate):** planned/in progress — full green suite maintained, manual acceptance scenarios, spec/implementation cross-check, RC/tagging
 
 ### Exit criteria
 - Normative v0.1 behaviors implemented and verified
@@ -115,10 +115,11 @@ A compiler/bytecode/VM/JIT effort is most valuable after syntax and semantics ar
 
 ## Near-Term Next Steps
 
-1. Complete M6 runtime/interpreter test coverage and edge-case fixes
-2. Implement M7 CLI/REPL behavior per spec and add process-level tests
-3. Build M8 conformance suite and harden toward M9 release candidate
-4. Start semantics-stabilization review for v0.2 proposals (with ADRs and compatibility analysis), prioritizing features that unlock real problem-solving (loops, collections, core stdlib)
+1. Complete M6 runtime/interpreter edge-case coverage and R-* spec-contract verification
+2. Complete M7 CLI/REPL spec-contract behavior and process-level C-* coverage (including REPL rollback/incomplete-input edge cases)
+3. Continue expanding/hardening M8 conformance coverage and traceability toward full matrix confidence
+4. Execute M9 hardening: manual acceptance scenarios, spec/implementation cross-check, final evidence, and RC/release preparation
+5. Start semantics-stabilization review for v0.2 proposals (with ADRs and compatibility analysis), prioritizing features that unlock real problem-solving (loops, collections, core stdlib)
 
 See also: [Problem-Solving Direction](PROBLEM-SOLVING.md) for use-case-driven priorities.
 

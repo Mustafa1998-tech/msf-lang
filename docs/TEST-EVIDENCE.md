@@ -4,9 +4,7 @@
 actually run, the date, and the observed result. No test result may be inferred or copied from a
 plan.
 
-**Status:** Phase 1. No engine, test project, or runnable CLI exists. **Zero tests have been
-executed.** This is intentional: implementation starts only after Gate A approves the
-specification.
+**Status:** Active implementation (post-Gate A). Evidence below records executed builds/tests/runs. Latest full solution run: `dotnet test MSFLang.slnx -c Release` → **Passed 161, Failed 0, Skipped 0** (Core 85, Conformance 64, CLI 12). Some M6/M7/M9 hardening and spec-contract edge cases remain in progress.
 
 ---
 
@@ -74,7 +72,4 @@ Before tagging v0.1.0:
 - [ ] The specification and implementation have been cross-checked.
 - [ ] This log contains the commands and results.
 
-**Arabic — سجل أدلة الاختبار.** لا تُعد أي ميزة أو مرحلة مكتملة حتى يُسجَّل هنا الأمر
-المنفَّذ والتاريخ والنتيجة الملاحظة. لا توجد اختبارات منفذة في المرحلة الأولى لأن المحرك لم
-يُبنَ بعد. لا تُعد الاختبارات المكتوبة أو المتخطاة أو المتوقعة دليلًا. قبل وسم الإصدار يجب
-نجاح كل الاختبارات بلا تخطٍ، وبناء بلا تحذيرات، وسيناريوهات القبول العشرة، وتحديث هذا السجل.
+**Arabic — سجل أدلة الاختبار.** لا تُعد أي ميزة أو مرحلة مكتملة حتى يُسجَّل هنا الأمر المنفَّذ والتاريخ والنتيجة الملاحظة. السجل أدناه يحتوي نتائج فعلية منفذة (أحدثها: 161 اختبارًا ناجحًا بلا إخفاقات أو تخطٍ). لا تُعد الاختبارات المكتوبة أو المتخطاة أو المتوقعة دليلًا. قبل وسم الإصدار يجب نجاح كل الاختبارات بلا تخطٍ، وبناء بلا تحذيرات، وسيناريوهات القبول العشرة، وتحديث هذا السجل.

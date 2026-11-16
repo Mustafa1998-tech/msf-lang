@@ -32,7 +32,7 @@ Starts a REPL session.
 
 - **Interactive mode:** shows a banner and prompts (`msf>`, `...>`), supports multiline input and commands `:help`, `:quit`
 - **Piped/non-interactive mode:** no banner/prompts; reads input from stdin and prints auto-displayed expression results
-- Persists declarations/state across entries (basic implementation; spec-level rollback/edge-case behavior continues to be refined)
+- Persists declarations/state across entries (spec-contract edge cases such as rollback and incomplete-input details continue to be hardened)
 
 ## Exit Codes
 
@@ -54,4 +54,4 @@ Starts a REPL session.
 ## Current Limitations
 
 - Script arguments, `--` separator, and additional subcommands are not available in v0.1
-- REPL implementation is in progress: core behavior works, but full spec compliance (all rollback/edge cases and contract tests) is not complete yet
+- REPL is usable, but full spec-contract compliance (all rollback/incomplete-input edge cases and complete contract test coverage) is still in progress

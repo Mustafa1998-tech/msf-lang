@@ -3,7 +3,7 @@
 **Codename:** Seed
 **Spec version:** `0.1.0-draft.1`
 **Date:** 2026-11-16
-**Status:** Draft for approval. The engine is not implemented.
+**Status:** Draft for approval (Gate A approved); reference implementation in progress with recorded evidence (see [`../TEST-EVIDENCE.md`](../TEST-EVIDENCE.md)). This document remains the normative language contract for v0.1.
 **Normative:** This document defines MSF Lang v0.1. The Arabic translation is kept in sync; if the
 two disagree, this English document is normative until the discrepancy is corrected in both.
 

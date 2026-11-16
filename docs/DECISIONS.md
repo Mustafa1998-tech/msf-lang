@@ -1,7 +1,6 @@
 # MSF Lang — Architecture Decisions & Deferred Features
 
-**Status:** Proposed. These records become binding when Gate A (language specification) is
-approved. Branding decisions become binding at Gate B; Windows integration at Gate D.
+**Status:** Gate A approved (implementation in progress). These records are treated as binding for v0.1 implementation unless superseded by a new ADR. Branding decisions become binding at Gate B; Windows integration at Gate D.
 **Date:** 2026-11-16
 **Spec:** [`docs/en/SPEC-v0.1.md`](en/SPEC-v0.1.md) / [`docs/ar/SPEC-v0.1.md`](ar/SPEC-v0.1.md)
 

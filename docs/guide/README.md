@@ -34,5 +34,6 @@ dotnet run --project src/MsfLang.Cli -c Release -- run examples/hello.msf
 
 - [Language Specification (EN)](../en/SPEC-v0.1.md)
 - [مواصفة اللغة (AR)](../ar/SPEC-v0.1.md)
+- [Architecture](../ARCHITECTURE.md)
 - [Implementation Plan](../en/IMPLEMENTATION-PLAN.md)
 - [Test Evidence](../TEST-EVIDENCE.md)

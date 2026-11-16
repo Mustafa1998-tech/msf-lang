@@ -1,7 +1,7 @@
 # MSF Lang v0.1 — Implementation and Test Plan
 
-**Spec:** [`SPEC-v0.1.md`](SPEC-v0.1.md), version `0.1.0-draft.1`
-**Status:** Draft for approval. **No engine code has been written and no tests have been run.**
+**Spec:** [`SPEC-v0.1.md`](SPEC-v0.1.md), version `0.1.0-draft.1`  
+**Status:** Gate A approved; implementation in progress. Core/CLI/tests are implemented with recorded evidence (latest full suite: 161 passed / 0 failed / 0 skipped; 63 conformance cases). This document remains the milestone/test-plan reference and may lag implementation details in places; see [`../TEST-EVIDENCE.md`](../TEST-EVIDENCE.md) and [`../ARCHITECTURE.md`](../ARCHITECTURE.md) for current state.  
 **Target runtime:** C# 14 / .NET 10 (`net10.0`), Windows first, portable design.
 
 ---
