@@ -1,0 +1,54 @@
+namespace MsfLang.Core.Diagnostics;
+
+public static class DiagnosticCode
+{
+    // Lexical
+    public const string E1001 = "E1001";
+    public const string E1002 = "E1002";
+    public const string E1003 = "E1003";
+    public const string E1004 = "E1004";
+    public const string E1005 = "E1005";
+
+    // Syntax
+    public const string E2001 = "E2001";
+    public const string E2002 = "E2002";
+    public const string E2003 = "E2003";
+    public const string E2004 = "E2004";
+    public const string E2005 = "E2005";
+    public const string E2006 = "E2006";
+    public const string E2007 = "E2007";
+    public const string E2008 = "E2008";
+    public const string E2009 = "E2009";
+    public const string E2010 = "E2010";
+    public const string E2011 = "E2011";
+    public const string E2012 = "E2012";
+    public const string E2013 = "E2013";
+
+    // Semantic
+    public const string E3001 = "E3001";
+    public const string E3002 = "E3002";
+    public const string E3003 = "E3003";
+    public const string E3004 = "E3004";
+    public const string E3005 = "E3005";
+    public const string E3006 = "E3006";
+    public const string E3007 = "E3007";
+    public const string E3008 = "E3008";
+    public const string E3009 = "E3009";
+    public const string E3010 = "E3010";
+    public const string E3011 = "E3011";
+
+    // Runtime
+    public const string E4001 = "E4001";
+    public const string E4002 = "E4002";
+    public const string E4003 = "E4003";
+    public const string E4004 = "E4004";
+    public const string E4005 = "E4005";
+    public const string E4006 = "E4006";
+
+    // CLI / IO
+    public const string E5001 = "E5001";
+    public const string E5002 = "E5002";
+    public const string E5003 = "E5003";
+    public const string E5004 = "E5004";
+    public const string E5005 = "E5005";
+}

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="msfFacetTitle msfFacetDesc">
+  <title id="msfFacetTitle">MSF Lang — Facet concept</title>
+  <desc id="msfFacetDesc">A bold M built from four angular purple facets, with a cyan bevel and execution node.</desc>
+  <defs>
+    <clipPath id="msfFacetClip">
+      <path d="M 40 200
+               L 40 56
+               L 76 56
+               L 128 136
+               L 180 56
+               L 216 56
+               L 216 200
+               L 180 200
+               L 180 128
+               L 128 192
+               L 76 128
+               L 76 200
+               Z"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#msfFacetClip)">
+    <!-- Base field -->
+    <rect x="28" y="44" width="200" height="172" fill="#7C3AED"/>
+
+    <!-- Faceted planes -->
+    <polygon points="28,44 96,44 184,216 116,216" fill="#4C1D95"/>
+    <polygon points="88,44 156,44 244,216 176,216" fill="#6D28D9"/>
+    <polygon points="148,44 224,44 224,216 196,216" fill="#8B35F5"/>
+    <polygon points="180,56 216,56 216,100" fill="#C4B5FD"/>
+
+    <!-- Cyan bevel along the top-right shoulder -->
+    <path d="M 180 56 L 216 96" fill="none" stroke="#00D4FF" stroke-width="4" stroke-linecap="round"/>
+
+    <!-- Execution node in the lower valley -->
+    <circle cx="128" cy="177" r="7.5" fill="#00D4FF"/>
+  </g>
+
+  <!-- Silhouette definition for dark surfaces -->
+  <path d="M 40 200
+           L 40 56
+           L 76 56
+           L 128 136
+           L 180 56
+           L 216 56
+           L 216 200
+           L 180 200
+           L 180 128
+           L 128 192
+           L 76 128
+           L 76 200
+           Z"
+        fill="none" stroke="#D8CCFF" stroke-opacity="0.32" stroke-width="2" stroke-linejoin="round"/>
+</svg>

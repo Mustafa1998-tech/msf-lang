@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MsfLang.Cli/MsfLang.Cli.csproj" />
+    <Project Path="src/MsfLang.Core/MsfLang.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MsfLang.Cli.Tests/MsfLang.Cli.Tests.csproj" />
+    <Project Path="tests/MsfLang.Conformance.Tests/MsfLang.Conformance.Tests.csproj" />
+    <Project Path="tests/MsfLang.Core.Tests/MsfLang.Core.Tests.csproj" />
+    <Project Path="tests/MsfLang.TestSupport/MsfLang.TestSupport.csproj" />
+  </Folder>
+</Solution>

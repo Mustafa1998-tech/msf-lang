@@ -1,0 +1,104 @@
+(*
+  MSF Lang v0.1 — Machine-readable grammar
+  Spec version: 0.1.0-draft.1
+  Status: draft for approval; not implemented.
+
+  Notation: ISO/IEC 14977-style EBNF.
+    { x }  = zero or more repetitions of x
+    [ x ]  = optional x
+    ( x )  = grouping
+    "x"    = terminal
+    (* *)  = comment
+
+  Terminals are produced by the lexer. Whitespace and comments are ignored
+  between tokens. The identifier, number, and string terminals are defined by
+  the lexical rules at the end of this file.
+*)
+
+program         = { declaration } , EOF ;
+
+declaration     = function-decl
+                | variable-decl
+                | statement ;
+
+function-decl   = "fn" , identifier , "(" , [ parameters ] , ")" , block ;
+
+parameters      = identifier , { "," , identifier } ;
+
+variable-decl   = ( "let" | "var" ) , identifier , "=" , expression , ";" ;
+
+statement       = if-stmt
+                | return-stmt
+                | block
+                | assignment-stmt
+                | expression-stmt ;
+
+if-stmt         = "if" , "(" , expression , ")" , block ,
+                  [ "else" , ( if-stmt | block ) ] ;
+
+return-stmt     = "return" , [ expression ] , ";" ;
+
+block           = "{" , { declaration } , "}" ;
+
+assignment-stmt = identifier , "=" , expression , ";" ;
+
+expression-stmt = expression , ";" ;
+
+expression      = logic-or ;
+
+logic-or        = logic-and , { "or" , logic-and } ;
+
+logic-and       = equality , { "and" , equality } ;
+
+equality        = comparison , { ( "==" | "!=" ) , comparison } ;
+
+comparison      = term , { ( "<" | "<=" | ">" | ">=" ) , term } ;
+
+term            = factor , { ( "+" | "-" ) , factor } ;
+
+factor          = unary , { ( "*" | "/" | "%" ) , unary } ;
+
+unary           = ( "-" | "not" ) , unary
+                | call-or-primary ;
+
+call-or-primary = identifier , [ "(" , [ arguments ] , ")" ]
+                | primary ;
+
+arguments       = expression , { "," , expression } ;
+
+primary         = number
+                | string
+                | "true"
+                | "false"
+                | "nil"
+                | identifier
+                | "(" , expression , ")" ;
+
+(*
+  Lexical rules
+  -------------
+
+  identifier  = identifier-start , { identifier-part } ;
+  identifier-start = "A".."Z" | "a".."z" | "_" ;
+  identifier-part  = identifier-start | "0".."9" ;
+
+  number      = digit , { digit } , [ "." , digit , { digit } ] ;
+  digit       = "0".."9" ;
+
+  string      = '"' , { string-char | escape } , '"' ;
+  escape      = "\\" , ( "n" | "t" | "r" | "\\" | '"' ) ;
+  string-char = any Unicode scalar value except '"' , "\\" , LF , CR ;
+
+  Keywords (reserved, lowercase):
+    let var fn if else return true false nil and or not
+
+  "print" is a reserved builtin name, not a keyword.
+
+  Comments:
+    line-comment  = "//" , { any character except LF or CR } ;
+    block-comment = "/*" , { any character except the sequence "*/" } , "*/" ;
+    Block comments do not nest.
+
+  Whitespace:
+    " " | HT | LF | CR
+*)

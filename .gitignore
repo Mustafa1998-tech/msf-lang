@@ -1,0 +1,30 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+artifacts/
+
+# IDE / tooling
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+
+# Test / coverage
+TestResults/
+coverage*/
+*.coverage
+*.coveragexml
+
+# OS / misc
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+
+# Local env
+.env
+.env.*
