@@ -151,7 +151,7 @@ Interpreter  → execution/output  (E4xxx)
 | M5 | Resolver & semantic checks | ✅ Complete |
 | M6 | Interpreter & runtime | 🚧 Core implemented, test coverage expanding |
 | M7 | CLI & REPL contract | 🚧 Basic REPL and CLI run implemented, contract/tests in progress |
-| M8 | Conformance suite & examples | ⏳ Planned |
+| M8 | Conformance suite & examples | 🚧 Harness + initial conformance cases added (20 passing) |
 | M9 | Hardening & release candidate | ⏳ Planned |
 
 Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.md).
@@ -163,11 +163,15 @@ Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.m
 ```text
 .
 ├── src/
-│   ├── MsfLang.Core/        # Language engine (source, diagnostics, lex/parse/resolve/runtime)
+│   ├── MsfLang.Core/        # Language engine (source, diagnostics, lex/parse/resolve/runtime/repl)
 │   └── MsfLang.Cli/         # msf command-line interface
-├── tests/                   # Unit, CLI, conformance, and support test projects
+├── tests/
+│   ├── conformance/         # .msf programs + .expected.json fixtures
+│   ├── MsfLang.*.Tests/     # Unit, CLI, and conformance test projects
+│   └── MsfLang.TestSupport/
 ├── examples/                # Runnable .msf programs
-├── docs/                    # Specs, plans, decisions, test evidence (EN/AR)
+├── benchmarks/              # Benchmark programs, runner, and results
+├── docs/                    # Specs, plans, guides, roadmap, decisions, evidence (EN/AR)
 ├── grammar/                 # Machine-readable EBNF
 ├── branding/                # Brand concepts and review materials
 ├── MSFLang.slnx

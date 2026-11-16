@@ -1,0 +1,5 @@
+{
+  "exitCode": 0,
+  "stdout": "line1\nline2\ntab:\tend\nquote: \"hi\"\nbackslash: \\\nمرحبا 😀\n",
+  "diagnostic": null
+}

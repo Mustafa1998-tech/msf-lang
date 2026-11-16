@@ -1,0 +1,14 @@
+let x = 1;
+{
+    let x = x + 1;
+    print(x);
+}
+print(x);
+
+var y = 5;
+{
+    var y = 10;
+    y = y + 1;
+    print(y);
+}
+print(y);

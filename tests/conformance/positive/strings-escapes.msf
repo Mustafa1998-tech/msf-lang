@@ -1,0 +1,5 @@
+print("line1\nline2");
+print("tab:\tend");
+print("quote: \"hi\"");
+print("backslash: \\");
+print("مرحبا 😀");
