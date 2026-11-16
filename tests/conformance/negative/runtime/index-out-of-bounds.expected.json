@@ -1,0 +1,10 @@
+{
+  "exitCode": 2,
+  "stdout": "",
+  "diagnostic": {
+    "code": "E4007",
+    "line": 2,
+    "column": 10,
+    "phase": "runtime"
+  }
+}

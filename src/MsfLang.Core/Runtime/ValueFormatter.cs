@@ -13,6 +13,7 @@ public static class ValueFormatter
             MsfString s => s.Value,
             MsfBoolean b => b.Value ? "true" : "false",
             MsfNil => "nil",
+            MsfList list => FormatList(list),
             _ => throw new ArgumentOutOfRangeException(nameof(value), value.GetType(), "Unsupported value type")
         };
     }
@@ -38,4 +39,14 @@ public static class ValueFormatter
 
         return text;
     }
+
+    private static string FormatList(MsfList list)
+        => "[" + string.Join(", ", list.Items.Select(FormatElement)) + "]";
+
+    private static string FormatElement(MsfValue value) => value switch
+    {
+        MsfString s => "\"" + s.Value.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\r", "\\r") + "\"",
+        MsfList list => FormatList(list),
+        _ => Format(value)
+    };
 }

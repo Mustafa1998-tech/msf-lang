@@ -73,6 +73,12 @@ public sealed class Interpreter
     {
         switch (stmt)
         {
+            case WhileStmt whileStmt:
+                ExecuteWhile(whileStmt, env);
+                break;
+            case AssignIndexStmt assignIndex:
+                ExecuteAssignIndex(assignIndex, env);
+                break;
             case BlockStmt block:
                 ExecuteBlock(block, new MsEnvironment(env));
                 break;
@@ -125,10 +131,45 @@ public sealed class Interpreter
         }
     }
 
+    private void ExecuteWhile(WhileStmt stmt, MsEnvironment env)
+    {
+        while (true)
+        {
+            var cond = Evaluate(stmt.Condition, env);
+            if (cond is not MsfBoolean b)
+            {
+                throw RuntimeError(DiagnosticCode.E4001, $"condition must be a boolean, got {cond.TypeName}", stmt.Condition.Span);
+            }
+
+            if (!b.Value) break;
+            ExecuteBlock(stmt.Body, new MsEnvironment(env));
+        }
+    }
+
+    private void ExecuteAssignIndex(AssignIndexStmt stmt, MsEnvironment env)
+    {
+        var target = Evaluate(stmt.Target, env);
+        var index = Evaluate(stmt.Index, env);
+        var value = Evaluate(stmt.Value, env);
+
+        if (target is not MsfList list)
+            throw RuntimeError(DiagnosticCode.E4007, $"cannot index type {target.TypeName}", stmt.Target.Span);
+        if (index is not MsfNumber n)
+            throw RuntimeError(DiagnosticCode.E4007, $"list index must be an integer, got {index.TypeName}", stmt.Index.Span);
+
+        var i = (int)n.Value;
+        if (Math.Floor(n.Value) != n.Value || i < 0 || i >= list.Items.Count)
+            throw RuntimeError(DiagnosticCode.E4007, $"list index out of bounds: {n.Value} (len={list.Items.Count})", stmt.Index.Span);
+
+        list.Items[i] = value;
+    }
+
     private MsfValue Evaluate(Expression expr, MsEnvironment env)
     {
         return expr switch
         {
+            ListLiteralExpr list => EvaluateList(list, env),
+            IndexExpr index => EvaluateIndex(index, env),
             LiteralExpr lit => LiteralToValue(lit),
             GroupingExpr g => Evaluate(g.Expression, env),
             UnaryExpr u => EvaluateUnary(u, env),
@@ -137,6 +178,34 @@ public sealed class Interpreter
             CallExpr c => EvaluateCall(c, env),
             _ => throw new InvalidOperationException($"Unknown expression {expr.GetType().Name}")
         };
+    }
+
+    private MsfList EvaluateList(ListLiteralExpr expr, MsEnvironment env)
+    {
+        var items = new List<MsfValue>(expr.Items.Count);
+        foreach (var item in expr.Items)
+        {
+            items.Add(Evaluate(item, env));
+        }
+
+        return new MsfList(items);
+    }
+
+    private MsfValue EvaluateIndex(IndexExpr expr, MsEnvironment env)
+    {
+        var target = Evaluate(expr.Target, env);
+        var index = Evaluate(expr.Index, env);
+
+        if (target is not MsfList list)
+            throw RuntimeError(DiagnosticCode.E4007, $"cannot index type {target.TypeName}", expr.Target.Span);
+        if (index is not MsfNumber n)
+            throw RuntimeError(DiagnosticCode.E4007, $"list index must be an integer, got {index.TypeName}", expr.Index.Span);
+
+        var i = (int)n.Value;
+        if (Math.Floor(n.Value) != n.Value || i < 0 || i >= list.Items.Count)
+            throw RuntimeError(DiagnosticCode.E4007, $"list index out of bounds: {n.Value} (len={list.Items.Count})", expr.Index.Span);
+
+        return list.Items[i];
     }
 
     private MsfValue EvaluateName(NameExpr name, MsEnvironment env)
@@ -242,18 +311,39 @@ public sealed class Interpreter
     private MsfValue EvaluateCall(CallExpr call, MsEnvironment env)
     {
         var binding = _model.Get(call);
-        if (binding.Kind == BindingKind.Builtin && binding.Name == "print")
+        if (binding.Kind == BindingKind.Builtin)
         {
-            var args = new MsfValue[call.Arguments.Count];
-            for (var i = 0; i < call.Arguments.Count; i++)
+            if (binding.Name == "print")
             {
-                args[i] = Evaluate(call.Arguments[i], env);
+                var args = new MsfValue[call.Arguments.Count];
+                for (var i = 0; i < call.Arguments.Count; i++)
+                {
+                    args[i] = Evaluate(call.Arguments[i], env);
+                }
+
+                _stdout.Write(string.Join(" ", args.Select(ValueFormatter.Format)));
+                _stdout.Write('\n');
+                _stdout.Flush();
+                return MsfValue.Nil;
             }
 
-            _stdout.Write(string.Join(" ", args.Select(ValueFormatter.Format)));
-            _stdout.Write('\n');
-            _stdout.Flush();
-            return MsfValue.Nil;
+            if (binding.Name == "len" && call.Arguments.Count == 1)
+            {
+                var arg = Evaluate(call.Arguments[0], env);
+                if (arg is MsfList list) return new MsfNumber(list.Items.Count);
+                if (arg is MsfString s) return new MsfNumber(CountScalars(s.Value));
+                throw RuntimeError(DiagnosticCode.E4008, $"len expects a list or string, got {arg.TypeName}", call.Span);
+            }
+
+            if (binding.Name == "append" && call.Arguments.Count == 2)
+            {
+                var listArg = Evaluate(call.Arguments[0], env);
+                var valueArg = Evaluate(call.Arguments[1], env);
+                if (listArg is not MsfList list)
+                    throw RuntimeError(DiagnosticCode.E4008, $"append expects a list as its first argument, got {listArg.TypeName}", call.Span);
+                list.Items.Add(valueArg);
+                return MsfValue.Nil;
+            }
         }
 
         if (binding.Kind != BindingKind.Function)
@@ -319,6 +409,20 @@ public sealed class Interpreter
         };
     }
 
+    private static int CountScalars(string text)
+    {
+        var i = 0;
+        var count = 0;
+        while (i < text.Length)
+        {
+            System.Text.Rune.DecodeFromUtf16(text.AsSpan(i), out _, out var consumed);
+            i += consumed;
+            count++;
+        }
+
+        return count;
+    }
+
     private static bool IsEqual(MsfValue a, MsfValue b)
     {
         if (a.TypeName != b.TypeName) return false;
@@ -328,6 +432,7 @@ public sealed class Interpreter
             (MsfString x, MsfString y) => string.Equals(x.Value, y.Value, StringComparison.Ordinal),
             (MsfBoolean x, MsfBoolean y) => x.Value == y.Value,
             (MsfNil, MsfNil) => true,
+            (MsfList x, MsfList y) => ReferenceEquals(x, y),
             _ => false
         };
     }

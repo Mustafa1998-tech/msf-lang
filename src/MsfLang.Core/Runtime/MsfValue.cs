@@ -1,5 +1,7 @@
 using System.Globalization;
 
+using System.Collections.Generic;
+
 namespace MsfLang.Core.Runtime;
 
 public abstract record MsfValue
@@ -26,6 +28,17 @@ public sealed record MsfString(string Value) : MsfValue
 public sealed record MsfBoolean(bool Value) : MsfValue
 {
     public override string TypeName => "boolean";
+}
+
+public sealed record MsfList : MsfValue
+{
+    public MsfList(IReadOnlyList<MsfValue>? initial = null)
+    {
+        Items = initial is null ? new List<MsfValue>() : new List<MsfValue>(initial);
+    }
+
+    public List<MsfValue> Items { get; }
+    public override string TypeName => "list";
 }
 
 public sealed record MsfNil : MsfValue
