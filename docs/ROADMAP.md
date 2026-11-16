@@ -108,7 +108,7 @@ A compiler/bytecode/VM/JIT effort is most valuable after syntax and semantics ar
 
 - **Documentation:** user guides, tutorials, language reference, migration notes (EN/AR where appropriate)
 - **Branding & distribution:** final identity assets, VS Code integration, Windows integration (gated approvals)
-- **Quality:** fuzzing/property tests, regression benchmarks, CI automation
+- **Quality & performance:** fuzzing/property tests, regression benchmarks, CI automation. **Performance policy:** measure before making any claim of superiority; comparisons must be fair, reproducible, and documented.
 - **Community & governance:** contribution workflow, RFC/ADR process, release/versioning policy
 
 ---

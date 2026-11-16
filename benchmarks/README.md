@@ -40,5 +40,6 @@ The script:
 - **Not a pure interpreter micro-benchmark:** results are useful for tracking overall CLI/runtime trends, but they do **not** isolate lexer/parser/resolver/interpreter time alone
 - **Environment-dependent:** CPU, OS, .NET SDK/runtime, thermal state, and background load affect numbers
 - **Correctness-first implementation:** MSF Lang is in active development (v0.1 draft, tree-walk interpreter); benchmark results should be compared against future versions of the same project, not treated as cross-language leaderboard numbers
+- **No superiority claims without evidence:** we measure performance before making any claim of superiority. Any comparison with other languages/engines must be fair, reproducible, and clearly documented.
 
 See also: [`docs/guide/benchmarks.md`](../docs/guide/benchmarks.md) and [`benchmarks/results/latest.md`](results/latest.md).

@@ -6,6 +6,8 @@ This page explains how benchmarks are run for MSF Lang and how to interpret the 
 
 The benchmark suite provides a **repeatable baseline** for the current reference implementation (spec-driven v0.1, tree-walk interpreter) so future changes can be compared objectively.
 
+**Policy:** we measure performance before making any claim of superiority. Benchmark results are evidence for understanding and improvement, not marketing claims.
+
 ## What Is Measured
 
 Current benchmarks measure **end-to-end CLI execution time**:
@@ -22,6 +24,9 @@ Each timing sample includes:
 Because of that, these numbers are **not pure interpreter micro-benchmarks**. They are best used for:
 - regression tracking across commits/versions on similar environments
 - sanity-checking performance impact of implementation changes
+- establishing baselines before optimization work
+
+We do **not** claim superiority over other languages or implementations without rigorous, fair, like-for-like comparisons (same workloads, environment controls, methodology, and documented limitations).
 
 ## Benchmark Programs
 
