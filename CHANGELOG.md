@@ -15,7 +15,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - Unit tests for source/diagnostics, lexer, parser, resolver, and REPL session behavior (including rollback/incomplete-input cases)
 - Conformance test harness and **71** `.msf`/`.expected.json` cases (positive/negative, lexical/syntax/semantic/runtime)
 - CLI process-level smoke/contract tests (usage, help/version, run success/errors/I-O, repl piped/EOF/multiline/command handling)
-- Benchmarks, performance measurement policy, and user documentation (guide, syntax, CLI, diagnostics, examples)
+- Runtime limits enforced by implementation: 1,000 user-call depth (`E4005`), 256 parser nesting limit (`E2013`), strict UTF-8 (`E5005`)
+- CLI runs engine logic on a dedicated 32 MiB interpreter stack (ADR-0013) for deterministic recursion-limit behavior
+- Security guide/page documenting v0.1 security properties, threat model, and repository policy (`docs/guide/security.md`, `SECURITY.md`)
+- License and community policy files: `LICENSE` (MIT), `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`
+- Benchmarks, performance measurement policy, and user documentation (guide, syntax, CLI, diagnostics, examples, security)
 - Project roadmap, problem-solving direction, and architecture documentation (`docs/ARCHITECTURE.md`)
 
 ### Notes

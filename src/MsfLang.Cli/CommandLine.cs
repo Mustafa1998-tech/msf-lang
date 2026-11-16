@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using MsfLang.Core;
 using MsfLang.Core.Diagnostics;
 using MsfLang.Core.Source;
@@ -39,6 +40,29 @@ internal static class CommandLine
         }
     }
 
+    private sealed class StackResult<T>
+    {
+        public T? Value { get; set; }
+        public Exception? Error { get; set; }
+    }
+
+    private static T RunOnDedicatedStack<T>(Func<T> action)
+    {
+        var box = new StackResult<T>();
+        var thread = new Thread(() =>
+        {
+            try { box.Value = action(); }
+            catch (Exception ex) { box.Error = ex; }
+        }, 32 * 1024 * 1024);
+        thread.Start();
+        thread.Join();
+        if (box.Error is not null)
+        {
+            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(box.Error).Throw();
+        }
+        return box.Value!;
+    }
+
     private static int RunCommand(string[] args)
     {
         if (args.Length != 2)
@@ -75,7 +99,7 @@ internal static class CommandLine
         }
 
         var source = new SourceText(path, text);
-        var result = MsfEngine.Run(source, Console.Out);
+        var result = RunOnDedicatedStack(() => MsfEngine.Run(source, Console.Out));
         if (result.Diagnostic is not null)
         {
             Console.Error.Write(DiagnosticFormatter.Format(result.Diagnostic, source));
@@ -116,7 +140,7 @@ internal static class CommandLine
                 if (continuing && buffer.Length > 0)
                 {
                     // EOF while incomplete -> evaluate to get incomplete diagnostic
-                    var result = session.Evaluate(buffer.ToString());
+                    var result = RunOnDedicatedStack(() => session.Evaluate(buffer.ToString()));
                     if (!result.Ok && result.Diagnostic is not null)
                     {
                         var src = new SourceText("<repl>", buffer.ToString());
@@ -150,7 +174,7 @@ internal static class CommandLine
                 var pending = buffer.ToString();
                 buffer.Clear();
                 continuing = false;
-                var result = session.Evaluate(pending);
+                var result = RunOnDedicatedStack(() => session.Evaluate(pending));
                 if (!result.Ok && result.Diagnostic is not null)
                 {
                     var src = new SourceText("<repl>", pending);
@@ -159,7 +183,7 @@ internal static class CommandLine
                 continue;
             }
 
-            var eval = session.Evaluate(buffer.ToString());
+            var eval = RunOnDedicatedStack(() => session.Evaluate(buffer.ToString()));
             if (!eval.Ok && eval.IsIncomplete)
             {
                 continuing = true;

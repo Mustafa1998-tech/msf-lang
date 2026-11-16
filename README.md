@@ -201,6 +201,7 @@ Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.m
 - [Diagnostics & Errors](docs/guide/diagnostics.md)
 - [Examples](docs/guide/examples.md)
 - [Benchmarks](docs/guide/benchmarks.md)
+- [Security](docs/guide/security.md)
 
 ### Architecture, Vision & Direction
 - [Architecture](docs/ARCHITECTURE.md)
