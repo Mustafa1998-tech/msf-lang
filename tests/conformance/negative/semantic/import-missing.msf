@@ -1,0 +1,2 @@
+import "./missing.msf";
+print(1);

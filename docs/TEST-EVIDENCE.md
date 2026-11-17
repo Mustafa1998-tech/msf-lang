@@ -4,7 +4,7 @@
 actually run, the date, and the observed result. No test result may be inferred or copied from a
 plan.
 
-**Status:** Active implementation (post-Gate A). Evidence below records executed builds/tests/runs. Latest full solution run: `dotnet test MSFLang.slnx -c Release` -> **Passed 161, Failed 0, Skipped 0** (Core 85, Conformance 64, CLI 12). Some M6/M7/M9 hardening and spec-contract edge cases remain in progress.
+**Status:** Active implementation (post-Gate A). Evidence below records executed builds/tests/runs. Latest full solution run: `dotnet test MSFLang.slnx -c Release` -> **Passed 216, Failed 0, Skipped 0** (Core 110, Conformance 87, CLI 19) — after v0.3 local file modules implementation (2026-11-17).
 
 ---
 
@@ -35,7 +35,12 @@ plan.
 | 2026-11-16 | All (current) | `dotnet test MSFLang.slnx -c Release` | Exit 0. Passed: 175, Failed: 0, Skipped: 0 (Core 88, Conformance 72, CLI 15). | Full solution green after M6/M7/M8 hardening and test expansion |
 | 2026-11-16 | M9 acceptance | Manual CLI/REPL scenarios (per implementation plan §6, scenarios 1-10) | Passed 10/10. | Verified hello/factorial, runtime/semantic diagnostics & exit codes, missing file I/O error, piped REPL auto-display/multiline/rollback, `--version`, path with spaces, UTF-8 Arabic+emoji output |
 | 2026-11-16 | All (current) | `dotnet test MSFLang.slnx -c Release` / DTB cycle after v0.2 loop-control additions | Exit 0. Passed: 184, Failed: 0, Skipped: 0 (Core 88, Conformance 81, CLI 15). | Full suite green after repeatability/fixes: E3014 fixture, spec sync, README/ROADMAP doc updates |
-| — | M9 | — | In progress | Final spec/implementation cross-check and RC/release tagging pending |
+| 2026-11-17 | All (v0.2 maps/MSF_DEBUG) | `dotnet test MSFLang.slnx -c Release` | Exit 0. Passed: 188, Failed: 0, Skipped: 0 (Core 88, Conformance 83, CLI 17). | v0.2 maps (`map {}`, `get/set/has/remove`, `len(map)`), ADR-0019, EN/AR map specs, `MSF_DEBUG=1` internal-error stack trace gating |
+| 2026-11-17 | All (v0.2 math/string builtins) | `dotnet test MSFLang.slnx -c Release` | Exit 0. Passed: 190, Failed: 0, Skipped: 0 (Core 88, Conformance 85, CLI 17). | `abs/sqrt/floor/ceil/round/pow/min/max`, `upper/lower/trim/contains/startsWith/endsWith/split`, ADR-0020, EN/AR drafts |
+| 2026-11-17 | v0.3 modules build | `dotnet build MSFLang.slnx -c Release -warnaserror` | Exit 0. 0 Error(s). | After v0.3 local file modules implementation (import/export, qualified access, module runtime isolation) |
+| 2026-11-17 | v0.3 manual run | `dotnet run --project src/MsfLang.Cli -c Release --no-build -- run examples/modules/main.msf` | Exit 0. Output: `81`, `3.5`, `14`. | Multi-file program with qualified module access works |
+| 2026-11-17 | v0.3 full suite | `dotnet test MSFLang.slnx -c Release` | Exit 0. Passed: 216, Failed: 0, Skipped: 0 (Core 110, Conformance 87, CLI 19). | Local file modules: `import`/`export`, qualified access (`math.square(9)`), module-executes-once across importers, import-cycle detection `E4014`, missing module `E4010` (exit 4), REPL module persistence across entries; ADR-0021 accepted |
+| — | M9 | — | In progress | RC/release tagging pending approval; manual acceptance scenarios must be re-verified for v0.3 before any v0.3.0-rc.1 tag is claimed cross-checked |
 
 ---
 
@@ -77,4 +82,4 @@ Before tagging v0.1.0:
 - [ ] The specification and implementation have been cross-checked.
 - [ ] This log contains the commands and results.
 
-**Arabic — سجل أدلة الاختبار.** لا تُعد أي ميزة أو مرحلة مكتملة حتى يُسجَّل هنا الأمر المنفَّذ والتاريخ والنتيجة الملاحظة. السجل أدناه يحتوي نتائج فعلية منفذة (أحدثها: 161 اختبارًا ناجحًا بلا إخفاقات أو تخطٍ). لا تُعد الاختبارات المكتوبة أو المتخطاة أو المتوقعة دليلًا. قبل وسم الإصدار يجب نجاح كل الاختبارات بلا تخطٍ، وبناء بلا تحذيرات، وسيناريوهات القبول العشرة، وتحديث هذا السجل.
+**Arabic — سجل أدلة الاختبار.** لا تُعد أي ميزة أو مرحلة مكتملة حتى يُسجَّل هنا الأمر المنفَّذ والتاريخ والنتيجة الملاحظة. السجل أدناه يحتوي نتائج فعلية منفذة (أحدثها: 216 اختبارًا ناجحًا بلا إخفاقات أو تخطٍ: Core 110، Conformance 87، CLI 19). لا تُعد الاختبارات المكتوبة أو المتخطاة أو المتوقعة دليلًا. قبل وسم أي مرشح إطلاق يجب نجاح كل الاختبارات بلا تخطٍ، وبناء بلا تحذيرات، وسيناريوهات القبول العشرة مُعادة التحقق من v0.3، وتحديث هذا السجل.

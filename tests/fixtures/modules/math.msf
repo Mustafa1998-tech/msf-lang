@@ -1,0 +1,11 @@
+export fn square(n) {
+  return n * n;
+}
+
+export var PI = 3.5;
+
+var secret = 42;
+
+export fn area(radius) {
+  return PI * square(radius);
+}

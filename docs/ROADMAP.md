@@ -18,10 +18,10 @@ This roadmap describes the planned evolution of MSF Lang from a stable v0.1 lang
 **Goal:** deliver a conforming, well-tested reference implementation of MSF Lang v0.1.
 
 ### Current progress (evidence-backed)
-- **M6 (Runtime hardening):** ✅ core interpreter/runtime implemented and tested with expanded coverage (full suite green)
+- **M6 (Runtime hardening):** ✅ core interpreter/runtime implemented and tested (while, break/continue, lists, maps)
 - **M7 (CLI & REPL):** ✅ `run/help/version/repl` implemented and tested; REPL rollback/incomplete-input handling improved and covered by tests (including piped/multiline/EOF cases)
-- **M8 (Conformance):** ✅ harness and **81** `.msf` + `.expected.json` conformance cases passing (60+ target reached)
-- **M9 (Release candidate):** 🚧 full suite green (**184/184**), **10/10 manual acceptance scenarios** verified; final spec/implementation cross-check and RC/tag pending
+- **M8 (Conformance):** ✅ harness and **87** `.msf` + `.expected.json` conformance cases passing (60+ target reached)
+- **M9 (v0.2 practical + v0.3 local modules):** 🚧 full suite green (**216/216**): v0.2 loops/lists/maps/math/string builtins and v0.3 local file modules (`import`/`export`, qualified access, module-executes-once, cycle detection) implemented with docs and tests; remaining: RC/tag/release, package ecosystem, stdlib, sandbox
 
 ### Exit criteria
 - Normative v0.1 behaviors implemented and verified
@@ -115,9 +115,10 @@ A compiler/bytecode/VM/JIT effort is most valuable after syntax and semantics ar
 
 ## Near-Term Next Steps
 
-1. Complete M9 release preparation: final spec/implementation cross-check, finalize evidence/changelog, and create RC/release tag
-2. Continue expanding conformance/contract coverage where useful (additional R-* / C-* / REPL edge cases and traceability)
-3. Start semantics-stabilization review for v0.2 proposals (with ADRs and compatibility analysis), prioritizing features that unlock real problem-solving (loops, collections, core stdlib)
+1. RC hardening and tag: final spec/implementation cross-check, release notes, RC tag/signing (approval-gated), 10/10 manual acceptance scenarios re-verified
+2. Expand conformance/contract coverage for v0.3 modules (more positive fixtures, multi-file examples, traceability)
+3. Begin stdlib v0.1 core (deterministic math/string/map/list utilities, `args`), then packaging manifests and runtime quotas/sandbox per ADRs
+4. Semantics-stabilization review for closures/first-class functions and collections (with ADRs and compatibility analysis)
 
 See also: [Problem-Solving Direction](PROBLEM-SOLVING.md) for use-case-driven priorities.
 

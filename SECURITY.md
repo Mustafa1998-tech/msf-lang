@@ -5,8 +5,9 @@
 | Version | Supported |
 |---|---|
 | `master` / latest development | Yes |
+| `v0.3.0-rc*` (when published) | Yes |
 | `v0.1.0-rc*` (when published) | Yes |
-| `v0.1.0` (when published) | Yes |
+| `v0.1.0` / `v0.3.0` (when published) | Yes |
 | Older tags/branches | Best effort only |
 
 ## Reporting a vulnerability
@@ -53,7 +54,7 @@ We will not pursue legal action against researchers who:
 - Do not commit secrets, certificates, or private keys.
 - Review registry/file-association changes (Windows integration) require explicit Gate D approval and a disposable test environment.
 - Keep dependencies and tooling pinned where practical (see `global.json`).
-- Runtime security controls (see [`docs/guide/security.md`](../docs/guide/security.md)): bounded user-call depth (1000), bounded parser nesting (256), strict UTF-8, no I/O capabilities in v0.1, dedicated 32 MiB interpreter stack in the CLI.
+- Runtime security controls (see [`docs/guide/security.md`](../docs/guide/security.md)): bounded user-call depth (1000), bounded parser nesting (256), strict UTF-8, no implicit I/O capabilities (v0.3 `import` reads local `.msf` modules at load time), dedicated 32 MiB interpreter stack in the CLI.
 - When changing external behavior, add/update tests and note the security implications in the PR description.
 
 ## Public disclosure

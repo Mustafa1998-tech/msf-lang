@@ -1,0 +1,5 @@
+import "../../fixtures/modules/math.msf";
+
+print(math.square(9));
+print(math.PI);
+print(math.area(2));

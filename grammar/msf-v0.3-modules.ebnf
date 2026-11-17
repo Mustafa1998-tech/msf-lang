@@ -1,0 +1,16 @@
+(* MSF Lang v0.3 — Modules grammar addendum (accepted) *)
+
+program      = { program-decl } ;
+program-decl = import-decl
+             | export-decl
+             | declaration ;
+
+import-decl  = "import" , string , ";" ;
+export-decl  = "export" , ( function-decl | var-decl ) ;
+
+qualified-name      = identifier , "." , identifier ;
+member-expr         = qualified-name ;
+qualified-call-expr = identifier , "." , identifier , "(" , [ argument-list ] , ")" ;
+
+(* Dot is a new token kind (TokenKind.Dot). "import" and "export" are reserved keywords. *)
+(* member-expr / qualified-call-expr parse as primary expressions followed by postfix operators (index access allowed). *)

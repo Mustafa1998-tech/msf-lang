@@ -117,14 +117,17 @@ public sealed class LexerTests
     [Fact]
     public void L14_DotForms_NotNumbers()
     {
-        // ".5" -> unexpected '.' at start
-        var ex1 = Assert.Throws<LexException>(() => Lex(".5"));
-        Assert.Equal(DiagnosticCode.E1001, ex1.Diagnostic.Code);
+        // ".5" -> Dot then Number (never a fractional number)
+        var t1 = Lex(".5");
+        Assert.Equal(TokenKind.Dot, t1[0].Kind);
+        Assert.Equal(TokenKind.Number, t1[1].Kind);
+        Assert.Equal(5d, t1[1].Literal);
 
-        // "5." lexes as number "5" then unexpected '.'? spec says "5." fail lexically/syntactically;
-        // lexer will see '5' then '.' not followed by digit so number ends at '5', '.' becomes unexpected char.
-        var ex2 = Assert.Throws<LexException>(() => Lex("5."));
-        Assert.Equal(DiagnosticCode.E1001, ex2.Diagnostic.Code);
+        // "5." -> Number then Dot, never a single number token
+        var t2 = Lex("5.");
+        Assert.Equal(TokenKind.Number, t2[0].Kind);
+        Assert.Equal(5d, t2[0].Literal);
+        Assert.Equal(TokenKind.Dot, t2[1].Kind);
     }
 
     [Fact]

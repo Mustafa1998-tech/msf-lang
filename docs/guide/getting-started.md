@@ -57,8 +57,11 @@ dotnet run --project src/MsfLang.Cli -c Release -- run examples/factorial.msf
 ## Current Limitations
 
 - `msf repl` is implemented (interactive and piped modes), but some **spec-contract edge cases** (e.g. rollback/incomplete-input behaviors and full contract coverage) are still being hardened
-- **v0.1** has no loops/collections; a **v0.2 practical draft** adds `while`, `break`/`continue`, lists, `len`, and `append`
-- Maps, modules/imports, closures, file/network I/O, and a full stdlib are not available yet
-- Full conformance/contract matrix completion and release hardening are still in progress
+- **v0.2** draft adds `while`, `break`/`continue`, lists, `len`/`append`, maps (`map { "k": v }`, `get`/`set`/`has`/`remove`), math and string builtins
+- **v0.3** adds local file modules: `import "./math.msf";` + `export`, qualified access (`math.square(9)`), module-executes-once, cycle diagnostics
+- Closures/inline functions as values, packages/registries, file/network I/O, and a full stdlib are not available yet
+- MSF Lang is not production-ready: there is no sandbox, no runtime quotas, and no package manager
 
-For the full, normative behavior, see the [specification](../en/SPEC-v0.1.md).
+See also [v0.3 modules spec](../en/SPEC-v0.3-modules.md).
+
+For the full, normative behavior, see the [v0.1 specification](../en/SPEC-v0.1.md).

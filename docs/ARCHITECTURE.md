@@ -1,12 +1,12 @@
 ﻿# MSF Lang Architecture
 
-This document describes the current architecture and implementation structure of the MSF Lang reference implementation (v0.1, in active development).
+This document describes the current architecture and implementation structure of the MSF Lang reference implementation (v0.3, release-candidate stage).
 
-> Status: implementation documentation for the current codebase. Normative language behavior is defined in [`docs/en/SPEC-v0.1.md`](en/SPEC-v0.1.md).
+> Status: implementation documentation for the current codebase. Normative language behavior is defined in [`docs/en/SPEC-v0.1.md`](en/SPEC-v0.1.md) (v0.1), the v0.2 practical specs, and [`docs/en/SPEC-v0.3-modules.md`](en/SPEC-v0.3-modules.md) (v0.3 modules).
 
 ## 1. Goals and Design Principles
 
-- **Spec-driven implementation:** behavior follows the v0.1 specification and ADRs.
+- **Spec-driven implementation:** behavior follows the v0.1 specification, ADRs, and numbered addendum specs (v0.2/v0.3).
 - **Small, inspectable pipeline:** hand-written front-end stages and a tree-walk interpreter.
 - **Precise diagnostics:** stable codes, phases, spans, and formatted source excerpts.
 - **Deterministic core:** no clock/random/input/network/environment access in v0.1 runtime semantics.
@@ -57,9 +57,9 @@ stdout / stderr diagnostics / exit code
 - Supports LF/CRLF/CR line breaks and line-text extraction for diagnostics.
 
 ### 4.2 Diagnostics (`Diagnostics/`)
-- `Diagnostic` carries `Code`, `Phase`, `Message`, `Span`, optional `Hint`.
-- Phase-specific exception types (`LexException`, `SyntaxException`, `SemanticException`, `RuntimeException`) are used to stop at the first failing phase.
-- `DiagnosticFormatter` renders the spec-style excerpt with caret alignment (including tab preservation in the caret prefix).
+- `Diagnostic` carries `Code`, `Phase`, `Message`, `Span`, optional `Hint` and optional `SourcePath`.
+- Phase-specific exception types (`LexException`, `SyntaxException`, `SemanticException`, `RuntimeException`, plus `ModuleLoadException`) are used to stop at the first failing phase.
+- `DiagnosticFormatter` renders the spec-style excerpt with caret alignment (including tab preservation in the caret prefix). Multi-file diagnostics are formatted against the owning file via `DiagnosticSource.Resolve`.
 
 ### 4.3 Lexer (`Lexing/`)
 - Hand-written scanner producing tokens with spans and literal values.
@@ -67,26 +67,33 @@ stdout / stderr diagnostics / exit code
 - Emits lexical diagnostics (e.g. unexpected character, invalid escape, unterminated string/comment, non-finite numeric literal cases as implemented).
 
 ### 4.4 Parser and AST (`Syntax/`)
-- Recursive-descent parser following v0.1 grammar/precedence with span-preserving immutable AST records.
-- Produces declarations/statements/expressions and enforces syntax-level constraints.
+- Recursive-descent parser following the v0.1 grammar plus v0.2/v0.3 constructs with span-preserving immutable AST records.
+- Produces declarations/statements/expressions (including `import`, `export`, qualified member/call expressions) and enforces syntax-level constraints.
 - Enforces parser nesting safety limit (256) and reports syntax diagnostics (`E2xxx`).
 
 ### 4.5 Semantic Analysis (`Semantics/`)
 - `Resolver` performs lexical scope resolution and static checks in textual order.
 - Assigns numeric binding IDs and records mappings in `SemanticModel` (AST node -> binding; parameter bindings for functions).
 - Enforces v0.1 rules such as declaration/assignment validity, top-level function restrictions, direct-call arity checks, `return` placement, and value-position restrictions for callables.
+- Resolves module imports: loads and resolves the module in an isolated scope, caches resolution per path, detects cycles, validates exports, and binds the module as a `BindingKind.Module` entry in the importing scope.
 - Builtin `print` is predeclared/reserved in the global scope.
 
 ### 4.6 Runtime (`Runtime/`)
 - Tree-walk `Interpreter` evaluates the resolved AST using ID-keyed environments (`MsEnvironment`).
-- Value model: `number` (finite `double`), `string`, `boolean`, `nil` (plus internal callable values).
+- Value model: `number` (finite `double`), `string`, `boolean`, `nil`, `list`, `map` (plus internal callable values).
 - Implements operator semantics, strict boolean conditions, short-circuit logic, function calls/returns, recursion depth limit (1000 user calls), and builtin `print`.
+- Module runtime environments (`ModuleRuntimeState`) guarantee execute-once per process/REPL session; function values capture their defining environment and model.
 - `ValueFormatter` provides display formatting for program output/REPL auto-display.
 
 ### 4.7 REPL (`Repl/`)
 - `ReplSession` maintains persistent global runtime/semantic state across entries.
 - Evaluates entries as program fragments, returns display values for top-level non-`nil` expression statements, and attempts transactional rollback on compile/runtime failures.
 - CLI owns terminal/piped I/O behavior (prompts/banner, `:help/:quit`, continuation handling).
+
+### 4.8 Modules (`Modules/`)
+- `ModuleLoadContext` holds the load cache (read/parse/resolve-once per path) and allocator for module IDs; its base directory is the importing file's directory (or the working directory for the REPL).
+- `ModuleUnit` carries the module's `SourceText`, AST, isolated `SemanticModel`, and source path for multi-file diagnostics.
+- `ModuleRuntimeState` keeps per-module runtime environments so a module executes before the importing file in dependency order and only once per session.
 
 ## 5. CLI Architecture (`src/MsfLang.Cli/`)
 
@@ -105,9 +112,10 @@ stdout / stderr diagnostics / exit code
 
 ## 7. Known Implementation Notes (Current)
 
-- **REPL internals:** current session integration uses reflection/internal access patterns to bridge resolver/runtime snapshots; this is functional but a maintainability risk and a candidate for refactoring behind explicit APIs.
-- **Spec-contract hardening:** core behavior is implemented and substantially tested, but full M7/M9 contract edge cases (especially REPL rollback/incomplete-input details and complete C-*/R-* matrices) remain in progress.
-- **Nesting/diagnostic precision:** parser nesting accounting and exact diagnostic text/placement for all catalog cases should continue to be validated against the normative spec as coverage expands.
+- **REPL internals:** session integration uses reflection/internal access patterns to bridge resolver/runtime snapshots; this is functional but a maintainability risk and a candidate for refactoring behind explicit APIs.
+- **Module loading (v0.3):** modules are loaded relative to the importing file with `.msf` extension only; cycle detection and path validation are enforced; no packages, manifests, or sandboxes. REPL sessions re-resolve each import; re-importing the same path is a duplicate declaration (`E3002`).
+- **Module cycle reporting:** cycle paths are reported textually (load order); no topological ordering guarantees beyond dependency-first execution.
+- **Diagnostics precision:** line/column/excerpt is validated for catalog cases; module-aware formatting goes through `DiagnosticSource`.
 
 ## 8. Evolution Guidance
 

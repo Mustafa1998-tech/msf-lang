@@ -115,8 +115,51 @@ doubled: [2, 4, 6, 8, 10]
 total: 30
 ```
 
+## 8. Local Modules (v0.3)
+
+**Files:** [`examples/modules/math.msf`](../../examples/modules/math.msf) + [`examples/modules/main.msf`](../../examples/modules/main.msf)
+
+```msf
+// math.msf
+export fn square(n) { return n * n; }
+export var PI = 3.5;
+var secret = 42; // module-private
+
+export fn circleArea(radius) {
+    return PI * square(radius);
+}
+
+// main.msf (run from the examples/modules directory)
+import "./math.msf";
+
+print(math.square(9));     // 81
+print(math.circleArea(2)); // 14
+```
+
+Run:
+
+```powershell
+dotnet run --project src/MsfLang.Cli -c Release -- run examples/modules/main.msf
+```
+
+Output:
+
+```text
+81
+3.5
+14
+```
+
+Rules worth knowing:
+
+- Only `export`ed names are visible; access is always qualified (`math.square(9)`).
+- A module executes once per process, in dependency order.
+- Circular imports and unexported access are hard errors (`E4014`, `E4013`); unqualified use is `E3001`.
+
+See the [v0.3 modules spec](../en/SPEC-v0.3-modules.md) for the complete rules.
+
 ## Next
 
 - Read [Syntax & Language Basics](syntax.md) for the full v0.1 language surface
 - Read [Diagnostics & Errors](diagnostics.md) to understand error messages
-- Check the [specification](../en/SPEC-v0.1.md) for normative behavior and edge cases
+- Check the [specifications](../en/SPEC-v0.1.md) and [v0.3 modules spec](../en/SPEC-v0.3-modules.md) for normative behavior and edge cases

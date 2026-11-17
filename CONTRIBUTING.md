@@ -1,10 +1,10 @@
 # Contributing to MSF Lang
 
-Thank you for your interest in contributing to MSF Lang. This project follows a specification-first, evidence-driven approach: changes must align with the v0.1 specification, architecture decisions, and implementation plan, and must be verified by tests with recorded evidence.
+Thank you for your interest in contributing to MSF Lang. This project follows a specification-first, evidence-driven approach: changes must align with the v0.1 specification (and its v0.2/v0.3 addendums), architecture decisions, and implementation plan, and must be verified by tests with recorded evidence.
 
 ## Quick links
 
-- [Language Specification (EN)](docs/en/SPEC-v0.1.md)
+- [Language Specification (EN)](docs/en/SPEC-v0.1.md) · [v0.3 modules](docs/en/SPEC-v0.3-modules.md)
 - [Implementation & Test Plan (EN)](docs/en/IMPLEMENTATION-PLAN.md)
 - [Architecture Decisions](docs/DECISIONS.md)
 - [Architecture](docs/ARCHITECTURE.md)
@@ -39,7 +39,7 @@ See [`global.json`](global.json) for the pinned SDK.
 ### 2. Find something to work on
 
 - Check open issues and discussions.
-- Consult the [Roadmap](docs/ROADMAP.md) for priority work (v0.1 hardening, v0.2 practicality).
+- Consult the [Roadmap](docs/ROADMAP.md) for priority work (v0.3 RC hardening, stdlib, packages).
 - Review known gaps in the [Test Evidence](docs/TEST-EVIDENCE.md) and implementation plan.
 
 ### 3. Make focused changes

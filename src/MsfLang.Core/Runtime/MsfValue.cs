@@ -1,6 +1,6 @@
 using System.Globalization;
-
 using System.Collections.Generic;
+using MsfLang.Core.Semantics;
 
 namespace MsfLang.Core.Runtime;
 
@@ -56,7 +56,11 @@ public sealed record MsfNil : MsfValue
 
 internal abstract record CallableValue : MsfValue;
 
-internal sealed record UserFunction(Syntax.FunctionDecl Declaration) : CallableValue
+internal sealed record UserFunction(
+    Syntax.FunctionDecl Declaration,
+    MsEnvironment Home,
+    SemanticModel Model,
+    string? SourcePath) : CallableValue
 {
     public override string TypeName => "function";
 }
