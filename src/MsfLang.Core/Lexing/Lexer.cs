@@ -18,6 +18,8 @@ public sealed class Lexer
         ["break"] = TokenKind.Break,
         ["continue"] = TokenKind.Continue,
         ["map"] = TokenKind.Map,
+        ["import"] = TokenKind.Import,
+        ["export"] = TokenKind.Export,
         ["return"] = TokenKind.Return,
         ["true"] = TokenKind.True,
         ["false"] = TokenKind.False,
@@ -117,6 +119,9 @@ public sealed class Lexer
                 return;
             case ':':
                 Add(TokenKind.Colon, start);
+                return;
+            case '.':
+                Add(TokenKind.Dot, start);
                 return;
             case '/':
                 if (Match('/'))

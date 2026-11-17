@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using MsfLang.Core;
+using MsfLang.Core.Modules;
 using MsfLang.Core.Source;
 using Xunit;
 
@@ -38,7 +39,8 @@ public sealed class ConformanceTests
         var text = File.ReadAllText(msfPath, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true));
         var source = new SourceText(Path.GetRelativePath(FindRepoRoot(), msfPath).Replace('\\', '/'), text);
         var stdout = new StringWriter { NewLine = "\n" };
-        var result = MsfEngine.Run(source, stdout);
+        var modules = new ModuleLoadContext(Path.GetDirectoryName(msfPath));
+        var result = MsfEngine.Run(source, stdout, modules);
 
         Assert.Equal(expected.ExitCode, result.ExitCode);
         Assert.Equal(Normalize(expected.Stdout), Normalize(stdout.ToString()));

@@ -37,7 +37,7 @@ Located in [`benchmarks/programs/`](../../benchmarks/programs/):
 - `arith_loop_500.msf` — recursive iteration-style arithmetic workload
 - `fib20.msf` — exponential recursion (`fib(20)`) stressing call/expression overhead
 
-> MSF Lang v0.1 has no loops; recursion is used to model repeated work.
+> Benchmarks use recursion for repeated work; MSF Lang v0.2 added `while` but the benchmark set predates it and remains part of the v0.1 baseline.
 
 ## How to Run
 

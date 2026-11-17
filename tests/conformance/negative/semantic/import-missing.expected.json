@@ -1,0 +1,10 @@
+{
+  "exitCode": 4,
+  "stdout": "",
+  "diagnostic": {
+    "code": "E4010",
+    "line": 1,
+    "column": 8,
+    "phase": "semantic"
+  }
+}

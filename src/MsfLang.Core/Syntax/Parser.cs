@@ -33,20 +33,45 @@ public sealed class Parser
 
     private Declaration ParseDeclaration()
     {
+        if (Match(TokenKind.Import))
+        {
+            return ParseImportDecl(Previous());
+        }
+
+        var isExported = Match(TokenKind.Export);
+        if (isExported && !Check(TokenKind.Fn) && !Check(TokenKind.Let) && !Check(TokenKind.Var))
+        {
+            throw Error(Peek(), DiagnosticCode.E2015, "expected 'fn', 'var', or 'let' after 'export'");
+        }
+
         if (Match(TokenKind.Fn))
         {
-            return ParseFunctionDecl(Previous());
+            var fnToken = Previous();
+            return ParseFunctionDecl(fnToken, isExported);
         }
 
         if (Match(TokenKind.Let, TokenKind.Var))
         {
-            return ParseVarDecl(Previous());
+            var varToken = Previous();
+            return ParseVarDecl(varToken, isExported);
         }
 
         return ParseStatement();
     }
 
-    private FunctionDecl ParseFunctionDecl(Token fnToken)
+    private ImportDecl ParseImportDecl(Token keyword)
+    {
+        if (!Check(TokenKind.StringLiteral))
+        {
+            throw Error(Peek(), DiagnosticCode.E2014, "expected import path string");
+        }
+
+        var path = Advance();
+        var semi = Consume(TokenKind.Semicolon, DiagnosticCode.E2002, "expected ';'");
+        return new ImportDecl(keyword, path, Span(keyword.Span.Start, semi.Span.End));
+    }
+
+    private FunctionDecl ParseFunctionDecl(Token fnToken, bool isExported)
     {
         var name = ConsumeIdentifier("expected identifier");
         Consume(TokenKind.LeftParen, DiagnosticCode.E2007, "expected '('");
@@ -66,16 +91,16 @@ public sealed class Parser
         }
 
         var body = ParseBlock();
-        return new FunctionDecl(name, parameters, body, Span(fnToken.Span.Start, body.Span.End));
+        return new FunctionDecl(name, parameters, body, isExported, Span(fnToken.Span.Start, body.Span.End));
     }
 
-    private VarDecl ParseVarDecl(Token keyword)
+    private VarDecl ParseVarDecl(Token keyword, bool isExported)
     {
         var name = ConsumeIdentifier("expected identifier");
         Consume(TokenKind.Equal, DiagnosticCode.E2008, "expected '='");
         var initializer = ParseExpression();
         var semi = Consume(TokenKind.Semicolon, DiagnosticCode.E2002, "expected ';'");
-        return new VarDecl(keyword.Kind == TokenKind.Var, name, initializer, Span(keyword.Span.Start, semi.Span.End));
+        return new VarDecl(keyword.Kind == TokenKind.Var, name, initializer, isExported, Span(keyword.Span.Start, semi.Span.End));
     }
 
     private Statement ParseStatement()
@@ -358,6 +383,17 @@ public sealed class Parser
         if (Check(TokenKind.Identifier))
         {
             var name = Advance();
+            if (Match(TokenKind.Dot))
+            {
+                var member = ConsumeIdentifier("expected member name after '.'");
+                if (Match(TokenKind.LeftParen))
+                {
+                    return FinishQualifiedCall(name, member);
+                }
+
+                return ParsePostfix(new MemberExpr(name, member, Span(name.Span.Start, member.Span.End)));
+            }
+
             if (Match(TokenKind.LeftParen))
             {
                 return FinishCall(name);
@@ -396,6 +432,21 @@ public sealed class Parser
 
         var close = Consume(TokenKind.RightParen, DiagnosticCode.E2003, "expected ')'");
         return new CallExpr(callee, args, Span(callee.Span.Start, close.Span.End));
+    }
+
+    private QualifiedCallExpr FinishQualifiedCall(Token qualifier, Token member)
+    {
+        var args = new List<Expression>();
+        if (!Check(TokenKind.RightParen))
+        {
+            do
+            {
+                args.Add(ParseExpression());
+            } while (Match(TokenKind.Comma));
+        }
+
+        var close = Consume(TokenKind.RightParen, DiagnosticCode.E2003, "expected ')'");
+        return new QualifiedCallExpr(qualifier, member, args, Span(qualifier.Span.Start, close.Span.End));
     }
 
     private Expression ParsePrimary()

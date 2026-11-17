@@ -33,8 +33,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   - Specs: `docs/en/SPEC-v0.2-math.md`, `docs/en/SPEC-v0.2-string.md`
 - v0.2 practical draft specifications are available in EN and AR (`SPEC-v0.2-practical`, `-maps`, `-math`, `-string`)
   - Specs: `docs/en/SPEC-v0.2-practical.md`, `docs/en/SPEC-v0.2-maps.md`, `docs/en/SPEC-v0.2-math.md` (AR mirrors: `docs/ar/SPEC-v0.2-practical.md`, `docs/ar/SPEC-v0.2-maps.md`, `docs/ar/SPEC-v0.2-math.md`)
+- v0.3 "Local Modules":
+  - `import "./file.msf";` local file imports (relative paths, `.msf` extension only)
+  - `export fn` / `export var` / `export let` top-level exports; everything else module-private
+  - Qualified access only: `math.square(9)`, `math.PI`; unqualified names are not imported (`E3001`)
+  - Modules are loaded and executed at most once per process/REPL session; dependency modules execute first
+  - Import cycle detection (`E4014`), missing module (`E4010`, exit 4), invalid path/extension/stem (`E4012`), unexported access (`E4013`), module used as value (`E3017`), `import`/`export` outside top level (`E3015`/`E3016`), new syntax diagnostics (`E2014`, `E2015`)
+  - Multi-file diagnostics carry the module's source path (CLI renders the correct file)
+  - Specs: `docs/en/SPEC-v0.3-modules.md` (AR mirror), grammar `grammar/msf-v0.3-modules.ebnf`, ADR-0021
+  - 216 tests green (Core 110, Conformance 87, CLI 19)
 
 ### Notes
-- Latest recorded full-suite result: **175 passed / 0 failed / 0 skipped** (Core 88, Conformance 72, CLI 15) with **71 conformance cases**.
-- Manual acceptance scenarios (10/10) from the implementation plan were verified (run/repl/diagnostics/exit codes/UTF-8/paths).
-- M9 release-candidate preparation is in progress (final spec/implementation cross-check and RC tag). Performance is measured for baselines/regression tracking; no superiority claims are made without fair, reproducible comparisons.
+- Latest recorded full-suite result: **216 passed / 0 failed / 0 skipped** (Core 110, Conformance 87, CLI 19).
+- Manual acceptance scenarios (10/10) from the implementation plan were verified for v0.1; v0.3 module behavior covered by module unit tests, conformance fixtures, and CLI tests.
+- M9 release-candidate preparation is in progress (RC tag/signing pending approval). Performance is measured for baselines/regression tracking; no superiority claims are made without fair, reproducible comparisons.

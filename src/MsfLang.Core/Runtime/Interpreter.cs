@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Linq;
 using MsfLang.Core.Diagnostics;
+using MsfLang.Core.Modules;
 using MsfLang.Core.Semantics;
 using MsfLang.Core.Source;
 using MsfLang.Core.Syntax;
@@ -18,19 +19,24 @@ public sealed class Interpreter
     private sealed class BreakSignal : Exception { }
     private sealed class ContinueSignal : Exception { }
 
-    private readonly SemanticModel _model;
+    private SemanticModel _model;
     private readonly TextWriter _stdout;
+    private readonly ModuleRuntimeState _moduleState;
+    private string? _currentSourcePath;
     private int _callDepth;
     private const int MaxCallDepth = 1000;
 
-    public Interpreter(SemanticModel model, TextWriter stdout)
+    public Interpreter(SemanticModel model, TextWriter stdout, string? sourcePath = null, ModuleRuntimeState? moduleState = null)
     {
         _model = model ?? throw new ArgumentNullException(nameof(model));
         _stdout = stdout ?? throw new ArgumentNullException(nameof(stdout));
+        _currentSourcePath = sourcePath;
+        _moduleState = moduleState ?? new ModuleRuntimeState();
     }
 
     public void Execute(ProgramNode program)
     {
+        ExecuteModules();
         var globals = new MsEnvironment();
         ExecuteBlockLike(program.Declarations, globals, isGlobal: true, replAutoDisplay: false, displays: null);
     }
@@ -38,9 +44,41 @@ public sealed class Interpreter
     public IReadOnlyList<MsfValue> ExecuteReplEntry(ProgramNode program, MsEnvironment globals)
     {
         ArgumentNullException.ThrowIfNull(globals);
+        ExecuteModules();
         var displays = new List<MsfValue>();
         ExecuteBlockLike(program.Declarations, globals, isGlobal: true, replAutoDisplay: true, displays: displays);
         return displays;
+    }
+
+    private void ExecuteModules()
+    {
+        foreach (var unit in _model.Modules)
+        {
+            ExecuteModule(unit);
+        }
+    }
+
+    private void ExecuteModule(ModuleUnit unit)
+    {
+        if (_moduleState.Environments.ContainsKey(unit.Symbol.Id))
+        {
+            return;
+        }
+
+        var env = _moduleState.GetOrCreate(unit.Symbol.Id);
+        var previousModel = _model;
+        var previousSource = _currentSourcePath;
+        _model = unit.Model;
+        _currentSourcePath = unit.Source.Path;
+        try
+        {
+            ExecuteBlockLike(unit.Program.Declarations, env, isGlobal: true, replAutoDisplay: false, displays: null);
+        }
+        finally
+        {
+            _model = previousModel;
+            _currentSourcePath = previousSource;
+        }
     }
 
     private void ExecuteBlockLike(IReadOnlyList<Declaration> declarations, MsEnvironment env, bool isGlobal, bool replAutoDisplay, List<MsfValue>? displays)
@@ -55,9 +93,12 @@ public sealed class Interpreter
     {
         switch (decl)
         {
+            case ImportDecl:
+                // Imports are resolved statically; modules execute before the program body.
+                break;
             case FunctionDecl fn:
                 var fb = _model.Get(fn);
-                env.Define(fb.Id, new UserFunction(fn));
+                env.Define(fb.Id, new UserFunction(fn, env, _model, _currentSourcePath));
                 break;
             case VarDecl v:
                 var value = Evaluate(v.Initializer, env);
@@ -98,7 +139,7 @@ public sealed class Interpreter
             case AssignStmt assign:
                 var ab = _model.Get(assign);
                 var rhs = Evaluate(assign.Value, env);
-                env.Assign(ab.Id, rhs);
+                OwnerEnvironment(ab, env).Assign(ab.Id, rhs);
                 break;
             case ExprStmt exprStmt:
                 var result = Evaluate(exprStmt.Expression, env);
@@ -194,9 +235,27 @@ public sealed class Interpreter
             UnaryExpr u => EvaluateUnary(u, env),
             BinaryExpr b => EvaluateBinary(b, env),
             NameExpr n => EvaluateName(n, env),
+            MemberExpr m => EvaluateMember(m),
+            QualifiedCallExpr q => EvaluateQualifiedCall(q, env),
             CallExpr c => EvaluateCall(c, env),
             _ => throw new InvalidOperationException($"Unknown expression {expr.GetType().Name}")
         };
+    }
+
+    private MsfValue EvaluateMember(MemberExpr expr)
+    {
+        var binding = _model.Get(expr);
+        return OwnerEnvironment(binding, null).Get(binding.Id);
+    }
+
+    private MsEnvironment OwnerEnvironment(Binding binding, MsEnvironment? fallback)
+    {
+        if (binding.ModuleId >= 0)
+        {
+            return _moduleState.GetOrCreate(binding.ModuleId);
+        }
+
+        return fallback ?? throw new InternalErrorException($"Binding '{binding.Name}' has no environment.");
     }
 
     private MsfMap EvaluateMap(MapLiteralExpr expr, MsEnvironment env)
@@ -248,7 +307,7 @@ public sealed class Interpreter
             return new PrintBuiltin();
         }
 
-        return env.Get(binding.Id);
+        return OwnerEnvironment(binding, env).Get(binding.Id);
     }
 
     private MsfValue EvaluateUnary(UnaryExpr expr, MsEnvironment env)
@@ -337,6 +396,13 @@ public sealed class Interpreter
             default:
                 throw new InvalidOperationException($"Unknown binary operator {op}");
         }
+    }
+
+    private MsfValue EvaluateQualifiedCall(QualifiedCallExpr call, MsEnvironment env)
+    {
+        var binding = _model.Get(call);
+        var fnValue = OwnerEnvironment(binding, env).Get(binding.Id);
+        return InvokeFunction(binding, fnValue, call.Arguments, call.Span, env);
     }
 
     private MsfValue EvaluateCall(CallExpr call, MsEnvironment env)
@@ -473,26 +539,41 @@ public sealed class Interpreter
             throw RuntimeError(DiagnosticCode.E3009, $"cannot call '{binding.Name}'", call.Span);
         }
 
+        var fnValue = OwnerEnvironment(binding, env).Get(binding.Id);
+        return InvokeFunction(binding, fnValue, call.Arguments, call.Span, env);
+    }
+
+    private MsfValue InvokeFunction(
+        Binding binding,
+        MsfValue fnValueRaw,
+        IReadOnlyList<Expression> arguments,
+        TextSpan callSpan,
+        MsEnvironment callerEnv)
+    {
         if (_callDepth >= MaxCallDepth)
         {
-            throw RuntimeError(DiagnosticCode.E4005, $"maximum call depth (1000) exceeded in '{binding.Name}'", call.Span);
+            throw RuntimeError(DiagnosticCode.E4005, $"maximum call depth (1000) exceeded in '{binding.Name}'", callSpan);
         }
 
-        if (env.Get(binding.Id) is not UserFunction fnValue)
+        if (fnValueRaw is not UserFunction fnValue)
         {
             throw new InternalErrorException($"Function '{binding.Name}' not found at runtime.");
         }
 
-        var argValues = new MsfValue[call.Arguments.Count];
-        for (var i = 0; i < call.Arguments.Count; i++)
+        var argValues = new MsfValue[arguments.Count];
+        for (var i = 0; i < arguments.Count; i++)
         {
-            argValues[i] = Evaluate(call.Arguments[i], env);
+            argValues[i] = Evaluate(arguments[i], callerEnv);
         }
 
         _callDepth++;
+        var previousModel = _model;
+        var previousSource = _currentSourcePath;
+        _model = fnValue.Model;
+        _currentSourcePath = fnValue.SourcePath;
         try
         {
-            var callEnv = new MsEnvironment(env.Global);
+            var callEnv = new MsEnvironment(fnValue.Home);
             var decl = fnValue.Declaration;
             var paramBindings = _model.GetParameters(decl);
             for (var i = 0; i < paramBindings.Count; i++)
@@ -513,6 +594,8 @@ public sealed class Interpreter
         }
         finally
         {
+            _model = previousModel;
+            _currentSourcePath = previousSource;
             _callDepth--;
         }
     }
@@ -531,25 +614,25 @@ public sealed class Interpreter
         };
     }
 
-    private static string RequireStringArg(MsfValue value, TextSpan span)
+    private string RequireStringArg(MsfValue value, TextSpan span)
     {
         if (value is MsfString s) return s.Value;
         throw RuntimeError(DiagnosticCode.E4009, $"string builtin expects a string, got {value.TypeName}", span);
     }
 
-    private static double RequireNumberArg(MsfValue value, TextSpan span)
+    private double RequireNumberArg(MsfValue value, TextSpan span)
     {
         if (value is MsfNumber n) return n.Value;
         throw RuntimeError(DiagnosticCode.E4009, $"math builtin expects a number, got {value.TypeName}", span);
     }
 
-    private static MsfMap RequireMap(MsfValue value, TextSpan span)
+    private MsfMap RequireMap(MsfValue value, TextSpan span)
     {
         if (value is MsfMap map) return map;
         throw RuntimeError(DiagnosticCode.E4009, $"map builtin expects a map as its first argument, got {value.TypeName}", span);
     }
 
-    private static string RequireStringKey(MsfValue value, TextSpan span)
+    private string RequireStringKey(MsfValue value, TextSpan span)
     {
         if (value is MsfString s) return s.Value;
         throw RuntimeError(DiagnosticCode.E4009, $"map key must be a string, got {value.TypeName}", span);
@@ -584,7 +667,7 @@ public sealed class Interpreter
         };
     }
 
-    private static void RequireNumbers(MsfValue l, MsfValue r, string op, TextSpan span, out double a, out double b)
+    private void RequireNumbers(MsfValue l, MsfValue r, string op, TextSpan span, out double a, out double b)
     {
         if (l is MsfNumber ln && r is MsfNumber rn)
         {
@@ -593,7 +676,7 @@ public sealed class Interpreter
         throw RuntimeError(DiagnosticCode.E4004, $"invalid operand types for '{op}': {l.TypeName} and {r.TypeName}", span);
     }
 
-    private static MsfNumber CheckFinite(double value, TextSpan span)
+    private MsfNumber CheckFinite(double value, TextSpan span)
     {
         if (!double.IsFinite(value))
         {
@@ -602,6 +685,12 @@ public sealed class Interpreter
         return new MsfNumber(value);
     }
 
-    private static RuntimeException RuntimeError(string code, string message, TextSpan span)
-        => new(new Diagnostic(code, DiagnosticPhase.Runtime, message, span));
+    private RuntimeException RuntimeError(string code, string message, TextSpan span)
+        => new(new Diagnostic(
+            code,
+            DiagnosticPhase.Runtime,
+            message,
+            span,
+            Hint: null,
+            SourcePath: _currentSourcePath));
 }

@@ -6,7 +6,8 @@ public enum BindingKind
 {
     Variable,
     Function,
-    Builtin
+    Builtin,
+    Module
 }
 
 public sealed class Binding
@@ -17,4 +18,6 @@ public sealed class Binding
     public required bool IsMutable { get; init; }
     public int? Arity { get; init; }
     public TextSpan DeclarationSpan { get; init; }
+    /// <summary>Owning module id, or -1 when the binding belongs to the entry program.</summary>
+    public int ModuleId { get; init; } = -1;
 }

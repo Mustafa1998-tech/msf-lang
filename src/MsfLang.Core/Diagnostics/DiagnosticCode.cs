@@ -23,6 +23,8 @@ public static class DiagnosticCode
     public const string E2011 = "E2011";
     public const string E2012 = "E2012";
     public const string E2013 = "E2013";
+    public const string E2014 = "E2014";
+    public const string E2015 = "E2015";
 
     // Semantic
     public const string E3001 = "E3001";
@@ -39,6 +41,9 @@ public static class DiagnosticCode
     public const string E3012 = "E3012";
     public const string E3013 = "E3013";
     public const string E3014 = "E3014";
+    public const string E3015 = "E3015";
+    public const string E3016 = "E3016";
+    public const string E3017 = "E3017";
 
     // Runtime
     public const string E4001 = "E4001";
@@ -50,6 +55,13 @@ public static class DiagnosticCode
     public const string E4007 = "E4007";
     public const string E4008 = "E4008";
     public const string E4009 = "E4009";
+
+    // Modules
+    public const string E4010 = "E4010";
+    public const string E4011 = "E4011";
+    public const string E4012 = "E4012";
+    public const string E4013 = "E4013";
+    public const string E4014 = "E4014";
 
     // CLI / IO
     public const string E5001 = "E5001";

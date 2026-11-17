@@ -10,7 +10,7 @@
 
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![Language](https://img.shields.io/badge/language-C%23-239120?logo=csharp&logoColor=white)](src/)
-[![Spec](https://img.shields.io/badge/spec-v0.1%20draft-8B35F5)](docs/en/SPEC-v0.1.md)
+[![Spec](https://img.shields.io/badge/spec-v0.3%20modules%20RC-8B35F5)](docs/en/SPEC-v0.3-modules.md)
 [![Status](https://img.shields.io/badge/status-in%20development-00D4FF)](#project-status)
 [![License: MIT](https://img.shields.io/badge/license-MIT-171334)](LICENSE)
 
@@ -33,7 +33,7 @@
 
 This repository contains the language specification, architecture decisions, grammar, implementation, tests, examples, benchmarks, and documentation.
 
-> **Current state:** v0.1 implementation is feature-complete for the current scope and under release hardening. A v0.2 practical draft now exists (`while`, `break`/`continue`, lists, `len`/`append`) with passing tests. The CLI (`run`/`help`/`version`/`repl`), and expanded test suites are green (**184+ tests passing**, including **81 conformance fixtures**). M9 release-candidate preparation remains in progress; v0.2 is not production-ready yet.
+> **Current state:** v0.3 is implemented with passing tests (**216 tests**, including **87 conformance fixtures**): v0.1 core plus v0.2 practical features (`while`, `break`/`continue`, lists/maps, math and string builtins) and v0.3 local file modules (`import`/`export`, qualified access such as `math.square(9)`, module-executes-once, import-cycle diagnostics). The CLI (`run`/`help`/`version`/`repl`) works. This is still a **release candidate, not a production-general language** — full stdlib, package ecosystem, sandbox, and formal RC hardening are not complete, so MSF Lang is not production-ready yet.
 
 ---
 
@@ -103,20 +103,22 @@ More examples: [`examples/`](examples/)
 
 ---
 
-## Language at a Glance (v0.1)
+## Language at a Glance
 
-| Area | v0.1 Design |
+| Area | v0.3 Design |
 |---|---|
-| Values | `number` (finite IEEE-754 double), `string`, `boolean`, `nil` |
+| Values | `number` (finite IEEE-754 double), `string`, `boolean`, `nil`, `list`, `map` |
 | Bindings | `let` (immutable), `var` (mutable), block scope |
-| Control flow | `if` / `else if` / `else` |
+| Control flow | `if` / `else if` / `else`, `while`, `break`, `continue` |
 | Functions | Top-level named functions, exact arity, direct recursion |
+| Modules | Local `.msf` files: `import "./x.msf";` + `export`, qualified access (`m.square(9)`), run-once, dependency order, cycle detection (`E4014`) |
+| Builtins | `print`, `len`, `append`, `get`, `set`, `has`, `remove`, math (`abs`, `sqrt`, `floor`, `ceil`, `round`, `pow`, `min`, `max`), string helpers (`upper`, `lower`, `trim`, `contains`, `startsWith`, `endsWith`, `split`) |
 | Operators | Arithmetic, comparison, equality, short-circuit `and`/`or`, `not` |
 | Output | Built-in `print(...)` |
 | Diagnostics | Stable codes (`E1xxx`–`E5xxx`), line/column, excerpt, hint |
-| Out of scope (v0.1) | Loops, collections, closures, modules/imports, I/O beyond `print`, stdlib |
+| Out of scope (v0.3) | Closures/inline functions as values, packages/registries, stdlib, I/O beyond `print`, sandbox |
 
-See the normative specification: [English](docs/en/SPEC-v0.1.md) · [العربية](docs/ar/SPEC-v0.1.md)
+See the normative specification: [English](docs/en/SPEC-v0.3-modules.md) · [العربية](docs/ar/SPEC-v0.3-modules.md)
 
 ---
 
@@ -143,7 +145,7 @@ Interpreter  -> execution/output  (E4xxx)
 
 - **Core engine:** [`src/MsfLang.Core`](src/MsfLang.Core)
 - **CLI:** [`src/MsfLang.Cli`](src/MsfLang.Cli)
-- **Grammar:** [`grammar/msf-v0.1.ebnf`](grammar/msf-v0.1.ebnf)
+- **Grammar:** [`grammar/msf-v0.1.ebnf`](grammar/msf-v0.1.ebnf) · [`grammar/msf-v0.2-practical.ebnf`](grammar/msf-v0.2-practical.ebnf) · [`grammar/msf-v0.3-modules.ebnf`](grammar/msf-v0.3-modules.ebnf)
 - **Tests:** [`tests/`](tests/)
 - **Architecture details:** [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 
@@ -159,10 +161,10 @@ Interpreter  -> execution/output  (E4xxx)
 | M3 | Lexer | ✅ Complete |
 | M4 | Parser & AST | ✅ Complete |
 | M5 | Resolver & semantic checks | ✅ Complete |
-| M6 | Interpreter & runtime | ✅ Core implemented and tested (edge-case coverage expanded; 175 total tests passing) |
+| M6 | Interpreter & runtime | ✅ Core implemented and tested (loops, break/continue, lists, maps) |
 | M7 | CLI & REPL contract | ✅ `run/help/version/repl` implemented and tested (process-level CLI tests, piped/multiline REPL, rollback/incomplete-input fixes) |
-| M8 | Conformance suite & examples | ✅ Harness + **71** conformance cases passing (60+ target reached) |
-| M9 | Hardening & release candidate | 🚧 Full suite green (175/175), 10/10 manual acceptance scenarios verified, spec cross-check in progress, RC/tag pending |
+| M8 | Conformance suite & examples | ✅ Harness + **87** conformance fixtures passing |
+| M9 | v0.2 Practical & v0.3 Modules (local file modules) | 🚧 Full suite green (**216/216**), module diagnostics and CLI/REPL behavior tested; remaining: RC tagging/signing, package ecosystem, sandbox |
 
 Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.md).
 
@@ -209,11 +211,11 @@ Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.m
 - [Roadmap](docs/ROADMAP.md)
 
 ### Reference & Project Docs
-- [Language Specification (EN)](docs/en/SPEC-v0.1.md)
-- [مواصفة اللغة (AR)](docs/ar/SPEC-v0.1.md)
+- [Language Specification (EN)](docs/en/SPEC-v0.1.md) · [v0.2 practical draft](docs/en/SPEC-v0.2-practical.md) · [v0.3 modules](docs/en/SPEC-v0.3-modules.md)
+- [مواصفة اللغة (AR)](docs/ar/SPEC-v0.1.md) · [v0.2 العملي](docs/ar/SPEC-v0.2-practical.md) · [v0.3 الوحدات](docs/ar/SPEC-v0.3-modules.md)
 - [Implementation & Test Plan (EN)](docs/en/IMPLEMENTATION-PLAN.md)
 - [خطة التنفيذ والاختبارات (AR)](docs/ar/IMPLEMENTATION-PLAN.md)
-- [Architecture Decisions](docs/DECISIONS.md)
+- [Architecture Decisions](docs/DECISIONS.md) · [ADR-0021 v0.3 Modules](docs/DECISIONS-v0.3-modules.md)
 - [Test Evidence Log](docs/TEST-EVIDENCE.md)
 - [Brand Concepts](branding/CONCEPTS.md)
 - [Changelog](CHANGELOG.md)
@@ -231,7 +233,7 @@ Execution evidence is recorded in [`docs/TEST-EVIDENCE.md`](docs/TEST-EVIDENCE.m
 **MSF Lang** لغة برمجة صغيرة ودقيقة بامتداد `.msf`، طوّرتها **Mustafa Software Factory** مع تركيز على الوضوح، التشخيص الدقيق، والاختبارية.
 
 - المواصفة والخطة والقرارات متاحة بالعربية والإنجليزية داخل [`docs/`](docs/)
-- الحالة الحالية: اكتمال تنفيذ نطاق v0.1 الحالي مع تقسية للإطلاق؛ المحرك وواجهة الأوامر (`msf run`/`msf repl`) والاختبارات ناجحة (**175 اختبارًا** منها **71 حالة مطابقة** و**15 اختبار CLI**)، مع استمرار تجهيز مرشح الإطلاق (مراجعة تقاطع نهائية مع المواصفة/وسم RC)
+- الحالة الحالية: v0.3 مُنفّذة باختبارات ناجحة (**216 اختبارًا** منها **87 حالة مطابقة** و**19 اختبار CLI**) ووحدات ملفات محلية (`import`/`export` مع وصول مؤهّل)، مع بقاء مرشح الإطلاق غير معلن نهائيًا (لا توجد حزم/بيئات تشغيل معزولة بعد)
 - الكلمات المحجوزة إنجليزية في v0.1، مع دعم كامل للنصوص والتعليقات والمخرجات العربية (UTF-8)
 
 للبدء سريعًا: راجع [دليل البدء](docs/guide/getting-started.md) و[المعمارية](docs/ARCHITECTURE.md) و[خارطة الطريق](docs/ROADMAP.md).

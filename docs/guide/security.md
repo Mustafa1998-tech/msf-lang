@@ -7,13 +7,13 @@ This page describes the security posture of the reference implementation (`msf` 
 - **Repository security policy exists:** [`SECURITY.md`](../../SECURITY.md) (responsible reporting, supported versions, safe harbor).
 - **License is present and usable:** [`LICENSE`](../../LICENSE) (MIT) and linked from the README.
 - **Runtime security controls are implemented in the engine/CLI where applicable** (see below).
-- **The language itself is intentionally narrow:** v0.1 has no file/network/input/environment access, which removes large classes of attacks.
+- **The language itself is intentionally narrow:** v0.3 has no file/network/input/environment access, which removes large classes of attacks. **Local `.msf` modules** (v0.3) can read and execute other local `.msf` files at import time, and top-level module code runs as part of the program — see section 6.
 
 ## 1. Language-level safety properties (v0.1, by design)
 
 | Control | Status | Notes |
 |---|---|---|
-| No file I/O | ✅ | Programs cannot read/write files |
+| No implicit file I/O | ✅ | Programs cannot read/write files; v0.3 `import` reads local `.msf` modules (relative, load-time, read-only) |
 | No network I/O | ✅ | No sockets/HTTP/etc. in v0.1 |
 | No input | ✅ | No stdin-based user input in programs |
 | No environment/clock/randomness | ✅ | Deterministic execution; no `env`/time/RNG |
@@ -61,7 +61,8 @@ See [`SECURITY.md`](../../SECURITY.md). Do not open public issues for vulnerabil
 
 ## 6. Known limitations and planned hardening
 
-- **`MSF_DEBUG=1` stack traces:** the spec permits an internal-error stack trace under this environment variable; current CLI reports `internal error` without a stack trace. This is intentional to avoid leaking internals by default.
+- **Local module loading (v0.3):** `import` reads and executes a local `.msf` file relative to the importing file. Capabilities exposed here: reading paths under the working tree, and executing any code in that file with full interpreter authority (which is the same as untrusted source code). Imports are restricted to relative `.msf` paths, resolved before execution, and cycles are rejected; this is not isolation, and a malicious library remains as powerful as a malicious main program. Only import modules you trust, as you would any source file.
+- **`MSF_DEBUG=1` stack traces:** the spec permits an internal-error stack trace under this environment variable; language diagnostics never include a stack trace.
 - **No time/memory quotas:** resource exhaustion is bounded only by recursion/nesting limits and host resources.
 - **Windows file association/installer (Gate D):** not enabled by default; no registry writes during development.
 

@@ -138,13 +138,14 @@ print(1, true, nil);    // 1 true nil
 
 ## Not Available in v0.1
 
-The following are **not** part of v0.1:
-- `while` / `for` loops
-- Arrays, maps, objects/classes
+The following are **not** part of v0.1 (some landed in v0.2/v0.3 addendums):
+
+- `while` / `for` loops — `while` added in v0.2
+- Arrays/lists — `list` added in v0.2; maps added in v0.2
 - Closures, lambdas, first-class functions
-- Modules/imports/packages
+- Modules/imports/packages — local `.msf` modules added in v0.3
 - Exceptions (`try/catch`)
 - User input, file/network I/O
-- Standard library beyond `print`
+- Standard library beyond `print` (v0.2 adds small math/string/map helper builtins; a full stdlib is planned)
 
-See [Architecture Decisions](../DECISIONS.md) for deferred features.
+See [Architecture Decisions](../DECISIONS.md) for deferred features and the [v0.2 practical](../en/SPEC-v0.2-practical.md) and [v0.3 modules](../en/SPEC-v0.3-modules.md) specs for what is available now.

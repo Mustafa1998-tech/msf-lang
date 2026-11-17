@@ -19,7 +19,7 @@ public sealed class CliSmokeTests
     {
         var (exit, stdout, _) = RunCli("--version");
         Assert.Equal(0, exit);
-        Assert.Equal("msf 0.1.0\n", Normalize(stdout));
+        Assert.Equal("msf 0.3.0-rc.1\n", Normalize(stdout));
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public sealed class CliSmokeTests
         Assert.Equal(0, exit);
         var text = Normalize(stdout);
         Assert.Contains("msf run <path>", text);
-        Assert.Contains("v0.1", text);
+        Assert.Contains("v0.3", text);
         Assert.Contains("Specification", text);
     }
 
@@ -156,7 +156,7 @@ public sealed class CliSmokeTests
     {
         var (exit, stdout, stderr) = RunCliWithEnv("MSF_DEBUG", "1", "--version");
         Assert.Equal(0, exit);
-        Assert.Equal("msf 0.1.0\n", Normalize(stdout));
+        Assert.Equal("msf 0.3.0-rc.1\n", Normalize(stdout));
         Assert.Equal("", Normalize(stderr));
     }
 
@@ -171,6 +171,37 @@ public sealed class CliSmokeTests
             Assert.Contains("error[E4002]", Normalize(stderr));
             Assert.DoesNotContain("at MsfLang.", Normalize(stderr));
             Assert.DoesNotContain("System.Exception", Normalize(stderr));
+        }
+        finally { File.Delete(path); }
+    }
+
+    [Fact]
+    public void Run_ModuleImport_Exits0_PrintsOutput()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "msf-cli-mod-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        File.WriteAllText(Path.Combine(dir, "math.msf"), "export fn square(n) { return n * n; }\n", new UTF8Encoding(false));
+        var mainPath = Path.Combine(dir, "main.msf");
+        File.WriteAllText(mainPath, "import \"./math.msf\";\nprint(math.square(6));\n", new UTF8Encoding(false));
+        try
+        {
+            var (exit, stdout, stderr) = RunCli("run", mainPath);
+            Assert.Equal(0, exit);
+            Assert.Equal("36\n", Normalize(stdout));
+            Assert.Equal("", Normalize(stderr));
+        }
+        finally { Directory.Delete(dir, recursive: true); }
+    }
+
+    [Fact]
+    public void Run_ModuleNotFound_Exits4()
+    {
+        var path = WriteTemp("import \"./missing.msf\";\nprint(1);\n");
+        try
+        {
+            var (exit, _, stderr) = RunCli("run", path);
+            Assert.Equal(4, exit);
+            Assert.Contains("error[E4010]", Normalize(stderr));
         }
         finally { File.Delete(path); }
     }

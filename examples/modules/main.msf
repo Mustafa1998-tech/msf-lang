@@ -1,0 +1,9 @@
+// Run from the examples/modules directory:
+//   msf run main.msf
+import "./math.msf";
+
+print(math.square(9));     // 81
+print(math.PI);            // 3.5
+print(math.circleArea(2)); // 14
+// print(math.secret);     // E4013: not exported
+// print(square(9));       // E3001: names are not imported unqualified

@@ -1,3 +1,5 @@
+using System.Text;
+using MsfLang.Core.Modules;
 using MsfLang.Core.Repl;
 using MsfLang.Core.Runtime;
 using Xunit;
@@ -65,6 +67,34 @@ public sealed class ReplSessionTests
         var b = repl.Evaluate("b;");
         Assert.False(b.Ok);
         Assert.Equal("E3001", b.Diagnostic!.Code);
+    }
+
+    [Fact]
+    public void Import_Module_UsableAcrossEntries()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "msf-repl-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        var modulePath = Path.Combine(dir, "math.msf");
+        File.WriteAllText(modulePath, "export fn square(n) { return n * n; }\nvar helper = 1;\n", new UTF8Encoding(false));
+
+        try
+        {
+            var modules = new ModuleLoadContext(dir);
+            var stdout = new StringWriter { NewLine = "\n" };
+            var repl = new ReplSession(stdout, modules);
+
+            var r1 = repl.Evaluate("import \"./math.msf\";");
+            Assert.True(r1.Ok);
+
+            var r2 = repl.Evaluate("math.square(7);");
+            Assert.True(r2.Ok);
+            Assert.Single(r2.Displays);
+            Assert.Equal("49", ValueFormatter.Format(r2.Displays[0]));
+        }
+        finally
+        {
+            try { Directory.Delete(dir, recursive: true); } catch (IOException) { }
+        }
     }
 
     [Fact]

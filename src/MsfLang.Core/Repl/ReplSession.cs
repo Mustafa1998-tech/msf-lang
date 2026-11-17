@@ -1,5 +1,6 @@
 using MsfLang.Core.Diagnostics;
 using MsfLang.Core.Lexing;
+using MsfLang.Core.Modules;
 using MsfLang.Core.Runtime;
 using MsfLang.Core.Semantics;
 using MsfLang.Core.Source;
@@ -11,13 +12,16 @@ public sealed class ReplSession
 {
     private readonly TextWriter _stdout;
     private readonly MsEnvironment _globals = new();
+    private readonly ModuleLoadContext _modules;
+    private readonly ModuleRuntimeState _moduleState = new();
     private ResolverSnapshot _resolverSnapshot;
     private SemanticModel _committedModel;
 
-    public ReplSession(TextWriter? stdout = null)
+    public ReplSession(TextWriter? stdout = null, ModuleLoadContext? modules = null)
     {
         _stdout = stdout ?? Console.Out;
-        Resolver.CreateForRepl(out _resolverSnapshot, out _committedModel);
+        _modules = modules ?? new ModuleLoadContext(Environment.CurrentDirectory);
+        Resolver.CreateForRepl(out _resolverSnapshot, out _committedModel, _modules);
     }
 
     public ReplResult Evaluate(string sourceText)
@@ -36,7 +40,7 @@ public sealed class ReplSession
             // pre-entry model for rollback if runtime fails.
             var executionModel = committedModelBefore.Clone();
             executionModel.MergeFrom(entryModel);
-            var interpreter = new Interpreter(executionModel, _stdout);
+            var interpreter = new Interpreter(executionModel, _stdout, "<repl>", _moduleState);
             var displays = interpreter.ExecuteReplEntry(program, _globals);
 
             _resolverSnapshot = new ResolverSnapshot(afterSnapshot.Global, afterSnapshot.NextId, executionModel);
@@ -72,9 +76,9 @@ public sealed class ReplSession
         _committedModel = _resolverSnapshot.Model;
     }
 
-    private static (SemanticModel Model, ResolverSnapshot Snapshot) ResolveWithSnapshot(ResolverSnapshot before, ProgramNode program)
+    private (SemanticModel Model, ResolverSnapshot Snapshot) ResolveWithSnapshot(ResolverSnapshot before, ProgramNode program)
     {
-        var resolver = new Resolver();
+        var resolver = new Resolver(_modules, "<repl>");
         ResolverSeeder.Seed(resolver, before);
         var model = new SemanticModel();
         ResolverSeeder.SetModel(resolver, model);

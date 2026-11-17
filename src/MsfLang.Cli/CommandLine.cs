@@ -106,7 +106,7 @@ internal static class CommandLine
         var result = RunOnDedicatedStack(() => MsfEngine.Run(source, Console.Out));
         if (result.Diagnostic is not null)
         {
-            Console.Error.Write(DiagnosticFormatter.Format(result.Diagnostic, source));
+            Console.Error.Write(DiagnosticFormatter.Format(result.Diagnostic, DiagnosticSource.Resolve(result.Diagnostic, source)));
         }
 
         return result.ExitCode;
@@ -124,7 +124,7 @@ internal static class CommandLine
         var session = new Core.Repl.ReplSession(Console.Out);
         if (interactive)
         {
-            Console.Out.Write("MSF Lang REPL v0.1.0\n");
+            Console.Out.Write("MSF Lang REPL v0.3.0-rc.1\n");
             Console.Out.Write("Type :help for help, :quit to exit.\n");
         }
 
@@ -148,7 +148,7 @@ internal static class CommandLine
                     if (!result.Ok && result.Diagnostic is not null)
                     {
                         var src = new SourceText("<repl>", buffer.ToString());
-                        Console.Error.Write(DiagnosticFormatter.Format(result.Diagnostic, src));
+                        Console.Error.Write(DiagnosticFormatter.Format(result.Diagnostic, DiagnosticSource.Resolve(result.Diagnostic, src)));
                     }
                 }
                 return ExitCode.Success;
@@ -182,7 +182,7 @@ internal static class CommandLine
                 if (!result.Ok && result.Diagnostic is not null)
                 {
                     var src = new SourceText("<repl>", pending);
-                    Console.Error.Write(DiagnosticFormatter.Format(result.Diagnostic, src));
+                    Console.Error.Write(DiagnosticFormatter.Format(result.Diagnostic, DiagnosticSource.Resolve(result.Diagnostic, src)));
                 }
                 continue;
             }
@@ -203,7 +203,7 @@ internal static class CommandLine
                 if (eval.Diagnostic is not null)
                 {
                     var src = new SourceText("<repl>", sourceText);
-                    Console.Error.Write(DiagnosticFormatter.Format(eval.Diagnostic, src));
+                    Console.Error.Write(DiagnosticFormatter.Format(eval.Diagnostic, DiagnosticSource.Resolve(eval.Diagnostic, src)));
                 }
                 continue;
             }
@@ -224,7 +224,7 @@ internal static class CommandLine
 
     private static int Version()
     {
-        Console.Out.Write("msf 0.1.0\n");
+        Console.Out.Write("msf 0.3.0-rc.1\n");
         return ExitCode.Success;
     }
 
@@ -249,9 +249,10 @@ internal static class CommandLine
             "  msf --help       Show this help\n" +
             "  msf --version    Print version\n" +
             "\n" +
-            "MSF Lang v0.1 scope: values (number/string/boolean/nil), let/var block scope,\n" +
-            "if/else-if/else, functions (top-level only, direct recursion), built-in print,\n" +
-            "strict boolean conditions, UTF-8 source, stable diagnostics (E1xxx-E5xxx).\n" +
+            "MSF Lang v0.3 scope: values (number/string/boolean/nil/list/map), let/var block scope,\n" +
+            "if/else-if/else, while/break/continue, functions (top-level only, direct recursion),\n" +
+            "local file modules with 'import' + 'export' and qualified access (math.square),\n" +
+            "built-in print, strict boolean conditions, UTF-8 source, stable diagnostics (E1xxx-E5xxx).\n" +
             "Specification: https://github.com/Mustafa1998-tech/msf-lang/blob/master/docs/en/SPEC-v0.1.md\n");
     }
 }

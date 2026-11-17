@@ -19,20 +19,30 @@ dotnet run --project src/MsfLang.Cli -c Release -- run examples/hello.msf
 - Program output is written to **stdout**
 - Diagnostics/errors are written to **stderr**
 - On success, exits with code `0`
-- The `.msf` extension is recommended but not required by the CLI
+- The `.msf` extension is recommended but not required by the CLI; **imported modules must use `.msf`** (v0.3)
+- Module diagnostics point into the imported file (its path is shown in `error[Exxxx]:` headers)
 
 ### `msf --help` / `msf -h`
-Prints usage, the command list, a v0.1 scope summary, and a link to the normative specification, then exits `0`.
+Prints usage, the command list, a short v0.3 scope summary, and a link to the specification, then exits `0`.
 
 ### `msf --version` / `msf -v`
-Prints the version string (e.g. `msf 0.1.0`) and exits `0`.
+Prints the version string (e.g. `msf 0.3.0-rc.1`) and exits `0`.
 
 ### `msf repl`
 Starts a REPL session.
 
 - **Interactive mode:** shows a banner and prompts (`msf>`, `...>`), supports multiline input and commands `:help`, `:quit`
 - **Piped/non-interactive mode:** no banner/prompts; reads input from stdin and prints auto-displayed expression results
-- Persists declarations/state across entries (spec-contract edge cases such as rollback and incomplete-input details continue to be hardened)
+- Persists declarations/state across entries; imported modules stay loaded for the session
+
+## Modules (v0.3)
+
+```msf
+import "./math.msf";
+print(math.square(9));
+```
+
+Rules in brief: relative `.msf` paths only, `export` marks public names, access is qualified (`math.name`), a module runs once, cycles are `E4014`. Full rules: [v0.3 modules spec](../en/SPEC-v0.3-modules.md) and [example](../guide/examples.md#8-local-modules-v03).
 
 ## Exit Codes
 
@@ -53,5 +63,6 @@ Starts a REPL session.
 
 ## Current Limitations
 
-- Script arguments, `--` separator, and additional subcommands are not available in v0.1
-- REPL is usable, but full spec-contract compliance (all rollback/incomplete-input edge cases and complete contract test coverage) is still in progress
+- Script arguments, `--` separator, and additional subcommands are not available
+- Full spec-contract compliance (all rollback/incomplete-input edge cases) is still in progress
+- No packages, package manifests, or sandbox yet; MSF Lang should not be treated as production-ready

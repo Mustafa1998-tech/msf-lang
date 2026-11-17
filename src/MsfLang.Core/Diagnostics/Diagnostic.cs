@@ -7,4 +7,5 @@ public sealed record Diagnostic(
     DiagnosticPhase Phase,
     string Message,
     TextSpan Span,
-    string? Hint = null);
+    string? Hint = null,
+    string? SourcePath = null);
