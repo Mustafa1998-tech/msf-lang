@@ -41,8 +41,8 @@ plan.
 | 2026-11-17 | v0.3 manual run | `dotnet run --project src/MsfLang.Cli -c Release --no-build -- run examples/modules/main.msf` | Exit 0. Output: `81`, `3.5`, `14`. | Multi-file program with qualified module access works |
 | 2026-11-17 | v0.3 full suite | `dotnet test MSFLang.slnx -c Release` | Exit 0. Passed: 216, Failed: 0, Skipped: 0 (Core 110, Conformance 87, CLI 19). | Local file modules: `import`/`export`, qualified access (`math.square(9)`), module-executes-once across importers, import-cycle detection `E4014`, missing module `E4010` (exit 4), REPL module persistence across entries; ADR-0021 accepted |
 | 2026-11-17 | v0.3 manual acceptance (10/10) | Manual scenarios on built CLI (`bin/Release/net10.0/msf.dll`) | All passed: hello/factorial/lists examples exit 0; runtime error exit 2 (`E4002`); semantic error exit 1 (`E3013`); missing file exit 4 (`E5003`); missing module exit 4 (`E4010`); piped REPL multiline function prints `5`; REPL rollback leaves `a=1` (runtime error rolls back `boom()` entry); `--version` prints `msf 0.3.0-rc.1`; path with spaces + UTF-8 Arabic output OK; module multi-file sample prints 81/3.5/14 |
-| 2026-11-17 | v0.3.0-rc.1 prep | Release notes added; annotated RC tag to be created on master after docs sync | Docs evidence updated to v0.3 state; RC tag is approved per user directive "أكمل v0.3 كاملة ثم RC" |
-| — | M9 | — | v0.3.0-rc.1 created; further distribution/signing still approval-gated |
+| 2026-11-17 | v0.3.0-rc.1 | Release candidate published | `git tag -a v0.3.0-rc.1 a600cbd`; `git push origin v0.3.0-rc.1`; `gh release create v0.3.0-rc.1 --prerelease` | Annotated tag created on master @ a600cbd; GitHub pre-release published: https://github.com/Mustafa1998-tech/msf-lang/releases/tag/v0.3.0-rc.1 |
+| — | M9 | — | RC published | v0.3.0-rc.1 tagged and pre-released (2026-11-17). NOT a production release. 10/10 manual acceptance scenarios re-verified. Production release/signing still approval-gated |
 
 ---
 
