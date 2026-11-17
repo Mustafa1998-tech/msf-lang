@@ -41,6 +41,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   - Import cycle detection (`E4014`), missing module (`E4010`, exit 4), invalid path/extension/stem (`E4012`), unexported access (`E4013`), module used as value (`E3017`), `import`/`export` outside top level (`E3015`/`E3016`), new syntax diagnostics (`E2014`, `E2015`)
   - Multi-file diagnostics carry the module's source path (CLI renders the correct file)
   - Specs: `docs/en/SPEC-v0.3-modules.md` (AR mirror), grammar `grammar/msf-v0.3-modules.ebnf`, ADR-0021
+  - Release notes for v0.3.0-rc.1: `docs/RELEASE-NOTES-v0.3.0-rc.1.md`
   - 216 tests green (Core 110, Conformance 87, CLI 19)
 
 ### Notes
